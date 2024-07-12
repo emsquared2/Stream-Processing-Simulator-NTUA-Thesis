@@ -1,5 +1,7 @@
 from Node import Node
-from partition_strategies import HashingStrategy, KeyGroupingStrategy, RoundRobinStrategy
+from partition_strategies.HashingStrategy import HashingStrategy
+from partition_strategies.KeyGroupingStrategy import KeyGroupingStrategy
+from partition_strategies.RoundRobinStrategy import RoundRobinStrategy
 
 class Simulator:
     def __init__(self, num_nodes, strategy_name, prefix_length = 1):
@@ -14,11 +16,11 @@ class Simulator:
     
     def _init_strategy(self, strategy_name):
         if strategy_name == "round_robin":
-            return RoundRobinStrategy.RoundRobinStrategy()
-        elif strategy_name == "key_grouping":
-            return KeyGroupingStrategy.KeyGroupingStrategy(self.prefix_length)
+            return RoundRobinStrategy()
         elif strategy_name == "hashing":
-            return HashingStrategy.HashingStrategy()
+            return HashingStrategy()
+        elif strategy_name == "key_grouping":
+            return KeyGroupingStrategy(self.prefix_length)
         else:
             raise ValueError(f"Unknown strategy: {strategy_name}")
 
