@@ -1,5 +1,7 @@
 {
-    "steps": 10,
-    "number of keys": 3,
-    "arrival rate": 5
+    "simulator": {
+        "number_of_nodes": 3,
+        "strategy": "key_grouping",
+        "prefix_length": 3
+    }
 }
