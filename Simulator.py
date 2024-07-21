@@ -73,6 +73,7 @@ class Simulator:
         step_count (int): The current step count.
         """
         for node_id, keys in self.buffers.items():
+            keys.append("step_update")
             self.nodes[node_id].receive(keys, step_count)
             self.buffers[node_id] = []  # Clear the buffer for the next step
 
