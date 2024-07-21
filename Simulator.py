@@ -11,12 +11,13 @@ class Simulator:
     num_nodes (int): The number of nodes in the simulation.
     window_size (int): The size of the time window.
     slide (int): The sliding interval for the windows.
+    throughput (int): The number of keys that each node can process in each step
     nodes (list): A list of Node instances.
     strategy (PartitionStrategy): The partitioning strategy used for distributing keys.
     buffers (dict): A dictionary to buffer keys for each node before sending.
     """
     
-    def __init__(self, num_nodes, strategy_name, window_size, slide, strategy_params=None):
+    def __init__(self, num_nodes, strategy_name, window_size, slide, throughput, strategy_params=None):
         """
         Initializes a new Simulator instance.
 
@@ -25,14 +26,16 @@ class Simulator:
         strategy_name (str): The name of the partitioning strategy.
         window_size (int): The size of the time window.
         slide (int): The sliding interval for the windows.
+        throughput (int): The number of keys that each node can process in each step
         strategy_params (dict, optional): Additional parameters for the strategy.
         """
         self.num_nodes = num_nodes
         self.window_size = window_size
         self.slide = slide
+        self.throughput = throughput
 
         # Create the nodes with the given window size and slide
-        self.nodes = [Node(i, window_size, slide) for i in range(num_nodes)]
+        self.nodes = [Node(i, window_size, slide, throughput) for i in range(num_nodes)]
         self.buffers = {i: [] for i in range(num_nodes)}
 
         # Initialize the strategy

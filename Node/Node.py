@@ -8,9 +8,9 @@ class Node:
     node_id (int): The identifier for the node.
     internal_state (NodeState): The internal state of the node.
     """
-    def __init__(self, node_id: int, window_size: int, slide: int) -> None:
+    def __init__(self, node_id: int, window_size: int, slide: int, throughput: int) -> None:
         self.node_id = node_id
-        self.internal_state = NodeState(window_size, slide, self.node_id)
+        self.internal_state = NodeState(window_size, slide, self.node_id, throughput)
        
     def receive(self, keys: list, step: int) -> None:
         """
