@@ -2,18 +2,18 @@ from Simulator import Simulator
 from utils.load_file import load_file
 
 def main():
-    
     # Load configuration file
     config_file = "config.json"
     config = load_file(config_file)
-    
+
     # Read simulator properties
     num_nodes = config["simulator"]["number_of_nodes"]
-    strategy_name = config["simulator"]["strategy"]
-    prefix_length = config["simulator"]["prefix_length"]
+    strategy_name = config["simulator"]["strategy"]["name"]
+    strategy_params = {key: value for key, value in config["simulator"]["strategy"].items()}
+    window_size = config["node"]["window_size"]
+    slide = config["node"]["slide"]
 
-    # Create simulator instance
-    simulator = Simulator(num_nodes, strategy_name, prefix_length)
+    simulator = Simulator(num_nodes, strategy_name, window_size, slide, strategy_params)
 
     # Simulate receiving data in steps
     steps_data = [
