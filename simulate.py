@@ -12,8 +12,9 @@ def main():
     strategy_params = {key: value for key, value in config["simulator"]["strategy"].items()}
     window_size = config["node"]["window_size"]
     slide = config["node"]["slide"]
+    throughput = config["node"]["throughput"]
 
-    simulator = Simulator(num_nodes, strategy_name, window_size, slide, strategy_params)
+    simulator = Simulator(num_nodes, strategy_name, window_size, slide, throughput, strategy_params)
 
     # Simulate receiving data in steps
     steps_data = [

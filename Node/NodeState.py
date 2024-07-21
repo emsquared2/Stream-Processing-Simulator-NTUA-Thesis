@@ -9,6 +9,7 @@ class NodeState:
     window_size (int): The size of the time window.
     slide (int): The sliding interval for the windows.
     node_id (int): The identifier for the node.
+    throughput (int): The number of keys per step that a node can process.
     received_keys (list): A list of keys received by the node.
     state (dict): A dictionary to track the state of keys.
     windows (dict): A dictionary to manage the windows.
@@ -16,10 +17,11 @@ class NodeState:
     minimum_step (int): The minimum step to consider for processing keys.
     """
 
-    def __init__(self, window_size: int, slide: int, node_id: int) -> None:
+    def __init__(self, window_size: int, slide: int, node_id: int, throughput: int) -> None:
         self.window_size = window_size
         self.slide = slide
         self.node_id = node_id
+        self.throughput = throughput
         
         self.received_keys = []
         self.state = {}
@@ -93,13 +95,19 @@ class NodeState:
         Args:
         window (Window): The window to process.
         """
-        print(f"\n\nProcessing {window}...\n\n")
+        
         window_key_count = {}
+        keys_processed = 0
+        
         for key in window.keys:
+            if keys_processed >= self.throughput:
+                break
+            # print(f"\n\nProcessing {window}...\n\n")
             if key in window_key_count:
                 window_key_count[key] += 1
             else:
                 window_key_count[key] = 1
+            keys_processed += 1
 
         # Example processing: just printing the window content
         for key, count in window_key_count.items():

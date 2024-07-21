@@ -7,7 +7,7 @@
         }
     },
     "node": {
-        "capacity": 500,
+        "throughput": 1000,
         "window_size": 3,
         "slide": 1
     }
