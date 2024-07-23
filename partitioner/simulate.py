@@ -1,5 +1,6 @@
 from Simulator import Simulator
 from utils.load_file import load_file
+from utils.load_sim_steps import load_steps_from_file
 
 def main():
     
@@ -15,15 +16,9 @@ def main():
     # Create simulator instance
     simulator = Simulator(num_nodes, strategy_name, prefix_length)
 
-    # Simulate receiving data in steps
-    steps_data = [
-        ["apple", "apricot", "banana", "blueberry", "cherry"],
-        ["apple", "date", "elderberry", "fig", "grape"],
-        ["grapefruit", "banana", "apple", "kiwi", "lemon"],
-        ["honeydew", "kiwi", "lemon", "mango", "nectarine"],
-        ["orange", "nectarine", "papaya", "peach", "plum"],
-        ["apple", "blueberry", "grape"]
-    ]
+    # Read steps data from file
+    steps_file = "../inputs/file.txt"
+    steps_data = load_steps_from_file(steps_file)
 
     # Run the simulation
     simulator.sim(steps_data)
