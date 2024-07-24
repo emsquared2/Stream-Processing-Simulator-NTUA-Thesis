@@ -1,5 +1,6 @@
 from Simulator import Simulator
 from utils.load_file import load_file
+from utils.load_sim_steps import load_steps_from_file
 
 
 def main():
@@ -26,15 +27,9 @@ def main():
         num_nodes, strategy_name, window_size, slide, throughput, strategy_params
     )
 
-    # Define data to be simulated in each step
-    steps_data = [
-        ["apple", "apricot", "banana", "blueberry", "cherry"],
-        ["apple", "date", "elderberry", "fig", "grape"],
-        ["grapefruit", "banana", "apple", "kiwi", "lemon"],
-        ["honeydew", "kiwi", "lemon", "mango", "nectarine"],
-        ["orange", "nectarine", "papaya", "peach", "plum"],
-        ["apple", "blueberry", "grape"],
-    ]
+    # Read steps data from file
+    steps_file = "../input/stream_output0.txt"
+    steps_data = load_steps_from_file(steps_file)
 
     # Run the simulation with the provided data
     simulator.sim(steps_data)
