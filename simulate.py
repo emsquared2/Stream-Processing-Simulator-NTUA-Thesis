@@ -3,11 +3,15 @@ from utils.load_file import load_file
 
 
 def main():
-    # Load configuration file
+    """
+    Main function to configure and run the simulation.
+    """
+
+    # Load the configuration file
     config_file = "config.json"
     config = load_file(config_file)
 
-    # Read simulator properties
+    # Extract simulator properties from the configuration
     num_nodes = config["simulator"]["number_of_nodes"]
     strategy_name = config["simulator"]["strategy"]["name"]
     strategy_params = {
@@ -17,11 +21,12 @@ def main():
     slide = config["node"]["slide"]
     throughput = config["node"]["throughput"]
 
+    # Initialize the simulator with the extracted properties
     simulator = Simulator(
         num_nodes, strategy_name, window_size, slide, throughput, strategy_params
     )
 
-    # Simulate receiving data in steps
+    # Define data to be simulated in each step
     steps_data = [
         ["apple", "apricot", "banana", "blueberry", "cherry"],
         ["apple", "date", "elderberry", "fig", "grape"],
@@ -31,7 +36,7 @@ def main():
         ["apple", "blueberry", "grape"],
     ]
 
-    # Run the simulation
+    # Run the simulation with the provided data
     simulator.sim(steps_data)
 
 
