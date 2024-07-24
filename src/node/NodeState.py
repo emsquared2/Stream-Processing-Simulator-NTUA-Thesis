@@ -1,5 +1,5 @@
 from collections import Counter
-from Node.Window import Window
+from .Window import Window
 
 
 class NodeState:
@@ -18,7 +18,9 @@ class NodeState:
         minimum_step (int): The minimum step to consider for processing keys.
     """
 
-    def __init__(self, node_id: int, window_size: int, slide: int, throughput: int) -> None:
+    def __init__(
+        self, node_id: int, window_size: int, slide: int, throughput: int
+    ) -> None:
         """
         Initializes the NodeState with the given parameters.
 
