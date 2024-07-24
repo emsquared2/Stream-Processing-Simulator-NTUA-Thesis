@@ -1,4 +1,4 @@
-from Node.NodeState import NodeState
+from .NodeState import NodeState
 
 
 class Node:
@@ -10,7 +10,9 @@ class Node:
         internal_state (NodeState): The internal state of the node.
     """
 
-    def __init__(self, node_id: int, window_size: int, slide: int, throughput: int) -> None:
+    def __init__(
+        self, node_id: int, window_size: int, slide: int, throughput: int
+    ) -> None:
         """
         Initializes the node with the specified parameters.
 
