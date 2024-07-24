@@ -47,7 +47,7 @@ def load_steps_from_file(file_path):
     try:
         with open(file_path, "r") as file:
             for line in file:
-                step = line.strip().split(",")
+                step = line.strip().split(" ")
                 # Add the step to the steps_data list
                 steps_data.append(step)
     except FileNotFoundError:
