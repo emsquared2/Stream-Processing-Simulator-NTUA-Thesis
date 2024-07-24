@@ -3,8 +3,7 @@ from .base import Distribution
 
 
 class NormalDistribution(Distribution):
-    """Normal distribution class for generating keys.
-    """
+    """Normal distribution class for generating keys."""
 
     def __init__(self, keys, mean, stddev):
         """Constructor for the NormalDistribution class.
