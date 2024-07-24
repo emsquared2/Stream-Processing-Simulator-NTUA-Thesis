@@ -1,11 +1,12 @@
-
 from typing import Any, List
 from partition_strategies.PartitionStrategy import PartitionStrategy
+
 
 class Hashing(PartitionStrategy):
     """
     A partitioning strategy that distributes keys based on their hash values.
     """
+
     def partition(self, keys: List[str], nodes: List[Any], buffers: dict) -> None:
         """
         Distributes keys to nodes based on their hash values and buffers them.

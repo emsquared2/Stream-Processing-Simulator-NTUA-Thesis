@@ -1,6 +1,7 @@
 from typing import Any, List
 from partition_strategies.PartitionStrategy import PartitionStrategy
 
+
 class ShuffleGrouping(PartitionStrategy):
     """
     A partitioning strategy that distributes keys in a round-robin fashion.
@@ -8,9 +9,10 @@ class ShuffleGrouping(PartitionStrategy):
     Attributes:
     current_index (int): The index of the next node to receive a key.
     """
+
     def __init__(self):
         self.current_index = 0
-    
+
     def partition(self, keys: List[str], nodes: List[Any], buffers: dict) -> None:
         """
         Distributes keys to nodes in a round-robin manner and buffers them.
