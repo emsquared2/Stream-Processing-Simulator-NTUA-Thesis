@@ -1,0 +1,11 @@
+{
+    "streams": 1,
+    "steps": 2,
+    "number of keys": 3,
+    "arrival rate": 10,
+    "distribution": {
+        "type": "normal",
+        "mean": 5,
+        "stddev": 0.2
+    }
+}
