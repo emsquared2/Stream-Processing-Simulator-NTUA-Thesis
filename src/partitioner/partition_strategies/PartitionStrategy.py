@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
-from Node.Node import Node
+from node.Node import Node
 
 
 class PartitionStrategy(ABC):
