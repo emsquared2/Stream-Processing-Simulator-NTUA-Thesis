@@ -8,7 +8,7 @@ import distributions.normal as distNormal
 import distributions.uniform as distUniform
 
 
-def create_key_array(len, key=False):
+def create_key_array(length, key=False):
     """
     Creates an array of keys or integers based on the provided length and key flag.
 
@@ -28,12 +28,7 @@ def create_key_array(len, key=False):
         ['0', '1', '2']
     """
 
-    key_array = []
-    for i in range(len):
-        if key:
-            key_array.append(f"key{i}")
-        else:
-            key_array.append(f"{i}")    
+    key_array = [f"key{i}" if key else f"{i}" for i in range(length)]     
     return key_array
 
 
@@ -46,7 +41,7 @@ def adjust_or_create_key_dist(key_array, swap):
 
     Args:
         key_array (list): List of keys to be adjusted or shuffled.
-        init (bool): Flag indicating whether to adjust (True) or create | shuffle (False) the key distribution.
+        swap (bool): Flag indicating whether to adjust (True) or create | shuffle (False) the key distribution.
 
     Returns:
         list: The adjusted or newly created key array frequency hierarchy.
@@ -102,7 +97,7 @@ def replace_step_with_keys(step, keys):
 
     Example:
         >>> replace_step_with_keys(['a', 'b', 'a', 'c', 'a', 'b'], ['key0', 'key1', 'key2'])
-        ['key0', 'key1', 'key0', 'key2', 'key1', 'key1'] 
+        ['key0', 'key1', 'key0', 'key2', 'key0', 'key1'] 
         # Here 'a' is replaced by 'key0', 'b' by 'key1', and 'c' by 'key2'.
         # As we can see the frequency order is kept intact after the map function.
 
@@ -220,13 +215,13 @@ def generate_input(config, output_file):
     # Validates the json configuration file
     validate_config(config)
 
-    distType = config["distribution"]["type"]    
-    if distType == "normal":            
+    dist_type = config["distribution"]["type"]    
+    if dist_type == "normal":            
         num_keys = config["number of keys"]
         mean = config["distribution"]["mean"]
         stddev = config["distribution"]["stddev"]
         distribution = distNormal.NormalDistribution(create_key_array(num_keys), mean, stddev)
-    elif distType == "uniform":
+    elif dist_type == "uniform":
         num_keys = config["number of keys"]
         distribution = distUniform.UniformDistribution(create_key_array(num_keys))
     else:
