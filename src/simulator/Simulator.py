@@ -1,8 +1,9 @@
 from typing import Optional, Dict, Any
-from Node.Node import Node
-from partition_strategies.Hashing import Hashing
-from partition_strategies.KeyGrouping import KeyGrouping
-from partition_strategies.ShuffleGrouping import ShuffleGrouping
+
+from node.Node import Node
+from partitioner.partition_strategies.Hashing import Hashing
+from partitioner.partition_strategies.KeyGrouping import KeyGrouping
+from partitioner.partition_strategies.ShuffleGrouping import ShuffleGrouping
 
 
 class Simulator:

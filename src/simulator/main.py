@@ -1,16 +1,15 @@
 from Simulator import Simulator
-from utils.load_file import load_file
-from utils.load_sim_steps import load_steps_from_file
+from keygen.utils import load_config, load_steps_from_file
+from pathlib import Path
 
 
-def main():
+def main(config_file, steps_file):
     """
     Main function to configure and run the simulation.
     """
 
     # Load the configuration file
-    config_file = "config.json"
-    config = load_file(config_file)
+    config = load_config(config_file)
 
     # Extract simulator properties from the configuration
     num_nodes = config["simulator"]["number_of_nodes"]
@@ -28,7 +27,6 @@ def main():
     )
 
     # Read steps data from file
-    steps_file = "../input/stream_output0.txt"
     steps_data = load_steps_from_file(steps_file)
 
     # Run the simulation with the provided data
@@ -36,4 +34,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    current_file = Path(__file__).resolve()
+    project_root = current_file.parent.parent.parent
+
+    config_file = project_root / "config.json"
+    steps_file = project_root / "input/stream_output0.txt"
+    main(config_file, steps_file)
