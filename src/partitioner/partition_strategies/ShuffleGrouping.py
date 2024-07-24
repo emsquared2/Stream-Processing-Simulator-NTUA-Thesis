@@ -1,6 +1,6 @@
-from typing import Any, List
-from Node.Node import Node
-from partition_strategies.PartitionStrategy import PartitionStrategy
+from typing import List
+from node.Node import Node
+from .PartitionStrategy import PartitionStrategy
 
 
 class ShuffleGrouping(PartitionStrategy):
