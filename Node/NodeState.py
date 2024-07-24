@@ -1,6 +1,7 @@
 from typing import Counter
 from Node.Window import Window
 
+
 class NodeState:
     """
     A class to represent the state of a node in the simulation.
@@ -17,18 +18,20 @@ class NodeState:
     minimum_step (int): The minimum step to consider for processing keys.
     """
 
-    def __init__(self, window_size: int, slide: int, node_id: int, throughput: int) -> None:
+    def __init__(
+        self, window_size: int, slide: int, node_id: int, throughput: int
+    ) -> None:
         self.window_size = window_size
         self.slide = slide
         self.node_id = node_id
         self.throughput = throughput
-        
+
         self.received_keys = []
         self.state = {}
         self.windows = {}
         self.current_step = 0
         self.minimum_step = 0
-        
+
     def update(self, keys: list, step: int) -> None:
         """
         Updates the node state with a list of keys and step.
@@ -45,7 +48,7 @@ class NodeState:
             if key != "step_update":
                 self.received_keys.append((key, step, max_step))
                 self.update_windows(key, step)
-        
+
         self.process_full_windows()
         self.remove_expired_windows()
         self.remove_expired_keys()
@@ -81,13 +84,17 @@ class NodeState:
         for start_step, window in list(self.windows.items()):
             if window.is_expired(self.current_step):
                 del self.windows[start_step]
-                
+
     def remove_expired_keys(self) -> None:
         """
         Removes keys that have expired.
         """
-        self.received_keys = [(key, step, max_step) for key, step, max_step in self.received_keys if self.current_step <= max_step]
-        
+        self.received_keys = [
+            (key, step, max_step)
+            for key, step, max_step in self.received_keys
+            if self.current_step <= max_step
+        ]
+
     def process_window(self, window: Window) -> None:
         """
         Processes a full window and updates the node's state.
@@ -95,10 +102,10 @@ class NodeState:
         Args:
         window (Window): The window to process.
         """
-        
+
         window_key_count = {}
         keys_processed = 0
-        
+
         for key in window.keys:
             if keys_processed >= self.throughput:
                 break

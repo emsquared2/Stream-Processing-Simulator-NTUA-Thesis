@@ -21,7 +21,7 @@ class Window:
         Checks if the window is full based on the current step.
         """
         return current_step - self.start_step == self.size
-    
+
     def is_expired(self, current_step: int):
         """
         Checks if the window is expired based on the current step.
@@ -29,4 +29,6 @@ class Window:
         return current_step - self.start_step > self.size
 
     def __repr__(self):
-        return f"Window(size={self.size}, start_step={self.start_step}, keys={self.keys})"
+        return (
+            f"Window(size={self.size}, start_step={self.start_step}, keys={self.keys})"
+        )

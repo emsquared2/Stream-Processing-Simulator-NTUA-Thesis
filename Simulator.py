@@ -3,6 +3,7 @@ from partition_strategies.Hashing import Hashing
 from partition_strategies.KeyGrouping import KeyGrouping
 from partition_strategies.ShuffleGrouping import ShuffleGrouping
 
+
 class Simulator:
     """
     A class to simulate the distribution and processing of keys across multiple nodes.
@@ -16,8 +17,16 @@ class Simulator:
     strategy (PartitionStrategy): The partitioning strategy used for distributing keys.
     buffers (dict): A dictionary to buffer keys for each node before sending.
     """
-    
-    def __init__(self, num_nodes, strategy_name, window_size, slide, throughput, strategy_params=None):
+
+    def __init__(
+        self,
+        num_nodes,
+        strategy_name,
+        window_size,
+        slide,
+        throughput,
+        strategy_params=None,
+    ):
         """
         Initializes a new Simulator instance.
 
@@ -62,12 +71,12 @@ class Simulator:
         for step_count, step_keys in enumerate(steps_data):
             # Distribute keys to nodes based on the selected strategy
             self.strategy.partition(step_keys, self.nodes, self.buffers)
-            
+
             # Send buffered keys to nodes
             self.send_buffered_keys(step_count)
 
         self.report()
-        
+
     def send_buffered_keys(self, step_count):
         """
         Sends buffered keys to their respective nodes for processing.
@@ -84,8 +93,7 @@ class Simulator:
         """
         Prints the final state of all nodes.
         """
-        final_state_message = \
-"""
+        final_state_message = """
 ------------------------
 |                      |
 | Final state of nodes |
