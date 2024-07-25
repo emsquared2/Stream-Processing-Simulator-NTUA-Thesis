@@ -1,7 +1,67 @@
+import json
 import sys
 
+
+def load_config(config_file):
+    """
+    Loads the configuration file.
+
+    Args:
+        config_file (str): Path to the JSON file that holds the configuration.
+
+    Returns:
+        dict: The loaded configuration as a dictionary.
+    """
+    try:
+        with open(config_file, "r") as file:
+            return json.load(file)
+    except (FileNotFoundError, IOError) as e:
+        sys.exit(f"Error: {e}")
+
+
+def write_output(stream, output_file):
+    """
+    Writes the generated stream to an output file specified from "output_file".
+
+    Args:
+        stream (list):  List of strings that represent a step in the stream simulation
+                        or a line in the output file.
+        output_file (str): Path to the output file where the stream will be written.
+    """
+    with open(output_file, "w") as file:
+        file.writelines(line + "\n" for line in stream)
+
+
+def load_steps_from_file(file_path):
+    """
+    Loads simulation key steps from input file.
+
+    Args:
+        file_path (string): Path to the stream simulator step input file.
+
+    Returns:
+        list: A list of lists, where each inner list contains keys for one simulation step.
+
+    """
+    steps_data = []
+    try:
+        with open(file_path, "r") as file:
+            for line in file:
+                step = line.strip().split(" ")
+                # Add the step to the steps_data list
+                steps_data.append(step)
+    except FileNotFoundError:
+        print(f"Error: The file {file_path} was not found.")
+        sys.exit(1)
+    except IOError:
+        print(f"Error: An IOError occurred while reading the file {file_path}.")
+        sys.exit(1)
+    return steps_data
+
+
 def validate_config(config):
-    """Validates the configuration for the key generation and distribution.
+    """
+    Validates the configuration for the key generation and distribution.
 
     Args:
         config (json): Json object that holds the configuration
@@ -26,7 +86,7 @@ def validate_config(config):
         SystemExit: If any required configuration key is missing or has an invalid value.
 
     """
-    
+
     # Define required top-level keys
     required_keys = [
         "streams",
@@ -37,7 +97,7 @@ def validate_config(config):
     ]
     distribution_required_keys = {
         "normal": ["mean", "stddev"],
-        "uniform": [], 
+        "uniform": [],
     }
 
     # Check for missing top-level keys

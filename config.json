@@ -1,0 +1,25 @@
+{
+    "keygen": {
+        "streams": 1,
+        "steps": 2,
+        "number of keys": 3,
+        "arrival rate": 10,
+        "distribution": {
+            "type": "normal",
+            "mean": 5,
+            "stddev": 0.2
+        }
+    },
+    "simulator": {
+        "number_of_nodes": 3,
+        "strategy": {
+            "name": "key_grouping",
+            "prefix_length": 3
+        }
+    },
+    "node": {
+        "throughput": 1000,
+        "window_size": 3,
+        "slide": 1
+    }
+}

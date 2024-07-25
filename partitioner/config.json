@@ -1,7 +1,0 @@
-{
-    "simulator": {
-        "number_of_nodes": 3,
-        "strategy": "key_grouping",
-        "prefix_length": 3
-    }
-}

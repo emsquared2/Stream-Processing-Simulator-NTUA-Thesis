@@ -3,8 +3,7 @@ from .base import Distribution
 
 
 class UniformDistribution(Distribution):
-    """Uniform distribution class for generating keys.
-    """
+    """Uniform distribution class for generating keys."""
 
     def generate(self, arrival_rate):
         """Generate keys based on a uniform distribution.
