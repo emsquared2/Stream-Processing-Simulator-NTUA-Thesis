@@ -1,5 +1,5 @@
 from Simulator import Simulator
-from keygen.utils import load_config, load_steps_from_file
+from utils.utils import load_config, load_steps_from_file
 from pathlib import Path
 
 

@@ -3,7 +3,7 @@ import sys
 import os
 from pathlib import Path
 from collections import Counter
-from utils import validate_config, load_config, write_output
+from utils.utils import validate_config, load_config, write_output
 from distributions.normal import NormalDistribution
 from distributions.uniform import UniformDistribution
 
