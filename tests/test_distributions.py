@@ -12,6 +12,8 @@ class TestDistributions(unittest.TestCase):
 
     def _check_key_counts(self, generated_keys, expected_key_set):
         """Helper method to check key counts and frequencies."""
+        print(f"Generated {len(generated_keys)} keys.")
+
         self.assertEqual(
             len(generated_keys),
             self.arrival_rate,
@@ -25,6 +27,8 @@ class TestDistributions(unittest.TestCase):
     def _check_frequencies(self, key_counts, expected_frequency, tolerance=0.01):
         """Helper method to check the frequencies of the keys."""
         frequencies = np.array(list(key_counts.values())) / self.arrival_rate
+        print(f"Key frequencies: {frequencies}")
+
         for frequency in frequencies:
             self.assertAlmostEqual(
                 frequency,
@@ -44,12 +48,19 @@ class TestDistributions(unittest.TestCase):
             with self.subTest(mean=mean, stddev=stddev):
                 distribution = NormalDistribution(self.keys, mean, stddev)
                 generated_keys = distribution.generate(self.arrival_rate)
+                print(
+                    f"Generated keys (Normal Distribution, mean={mean}, stddev={stddev}): {generated_keys[:10]}..."
+                )  # Print only the first 10 keys for brevity
 
                 self._check_key_counts(generated_keys, self.keys)
 
                 # Calculate frequencies and check their sum
                 key_counts = {key: generated_keys.count(key) for key in self.keys}
                 frequencies = np.array(list(key_counts.values())) / self.arrival_rate
+                print(
+                    f"Frequencies (Normal Distribution, mean={mean}, stddev={stddev}): {frequencies}"
+                )
+
                 self.assertAlmostEqual(
                     np.sum(frequencies),
                     1,
@@ -60,12 +71,17 @@ class TestDistributions(unittest.TestCase):
     def test_uniform_distribution(self):
         distribution = UniformDistribution(self.keys)
         generated_keys = distribution.generate(self.arrival_rate)
+        print(
+            f"Generated keys (Uniform Distribution): {generated_keys[:10]}..."
+        )  # Print only the first 10 keys for brevity
 
         self._check_key_counts(generated_keys, self.keys)
 
         # Calculate frequencies and check that they are close to uniform
         key_counts = {key: generated_keys.count(key) for key in self.keys}
         expected_frequency = 1 / len(self.keys)
+        print(f"Expected frequency: {expected_frequency}")
+
         self._check_frequencies(key_counts, expected_frequency)
 
 
