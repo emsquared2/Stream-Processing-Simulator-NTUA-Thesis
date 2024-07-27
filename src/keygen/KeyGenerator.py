@@ -2,8 +2,8 @@ import os
 import random
 from collections import Counter
 from utils.utils import validate_config, write_output
-from distributions.normal import NormalDistribution
-from distributions.uniform import UniformDistribution
+from .distributions.normal import NormalDistribution
+from .distributions.uniform import UniformDistribution
 
 
 class KeyGenerator:
@@ -61,7 +61,9 @@ class KeyGenerator:
         if self.dist_type == "normal":
             mean = self.config["distribution"]["mean"]
             stddev = self.config["distribution"]["stddev"]
-            return NormalDistribution(self.create_key_array(self.num_keys), mean, stddev)
+            return NormalDistribution(
+                self.create_key_array(self.num_keys), mean, stddev
+            )
         elif self.dist_type == "uniform":
             return UniformDistribution(self.create_key_array(self.num_keys))
         else:
