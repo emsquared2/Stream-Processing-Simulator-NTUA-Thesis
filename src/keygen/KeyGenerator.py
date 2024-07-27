@@ -1,9 +1,10 @@
+import math
 import os
 import random
 from collections import Counter
 from utils.utils import validate_config, write_output
-from .distributions.normal import NormalDistribution
-from .distributions.uniform import UniformDistribution
+from distributions.normal import NormalDistribution
+from distributions.uniform import UniformDistribution
 
 
 class KeyGenerator:
@@ -187,7 +188,7 @@ class KeyGenerator:
         # Adjust arrival rate based on spike probability and magnitude
         if random.uniform(0, 100) < self.spike_probability:
             change = random.uniform(-self.spike_magnitude, self.spike_magnitude)
-            self.arrival_rate = int(self.arrival_rate * (1 + change / 100))
+            self.arrival_rate = math.ceil(self.arrival_rate * (1 + change / 100))
 
         step = self.distribution.generate(self.arrival_rate)
         print(step)
