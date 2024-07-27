@@ -13,18 +13,38 @@ class KeyGenerator:
 
         Args:
             config (dict): The configuration dictionary for the key generator.
+
+        Attributes:
+            config (json): The json configuration of the simulation.
+                "streams" (int): Number of discrete streams to generate.
+                "steps" (int): Number of simulation steps.
+                "number of keys" (int): Number of keys to use in the distribution.
+                "arrival rate" (int): Number of keys per step.
+                "distribution" (dict): Distribution configuration, including:
+                    "type" (str): Type of distribution, either "normal" or "uniform".
+                    "mean" (float): Mean for normal distribution (required if type is "normal").
+                    "stddev" (float): Standard deviation for normal distribution (required if type is "normal").
+            output_file (str): Path to the output file where the stream will be written
+            distribution (class): The distribution class oject which generates keys based on
+                                  the distribution the keys are following in this step.
         """
+
         # Validate the keygen configuration before proceeding
         validate_config(config)
 
         self.config = config
-        self.num_keys = self.config["number of keys"]
-        self.dist_type = self.config["distribution"]["type"]
+        self.streams = config["streams"]
+        self.steps = config["steps"]
+        self.num_keys = config["number of keys"]
+        self.arrival_rate = config["arrival rate"]
+        self.spike_probability = config["spike_probability"]
+        self.spike_magnitude = config["spike_magnitude"]
+        self.dist_type = config["distribution"]["type"]
 
         # Initialize the key distribution
-        self.distribution = self._init_distribution(self.num_keys, self.dist_type)
+        self.distribution = self._init_distribution()
 
-    def _init_distribution(self, num_keys, dist_type):
+    def _init_distribution(self):
         """
         Initializes the key distribution based on distribution type.
 
@@ -38,12 +58,12 @@ class KeyGenerator:
         Raises:
         - ValueError: If the distribution type is not supproted.
         """
-        if dist_type == "normal":
+        if self.dist_type == "normal":
             mean = self.config["distribution"]["mean"]
             stddev = self.config["distribution"]["stddev"]
-            return NormalDistribution(self.create_key_array(num_keys), mean, stddev)
-        elif dist_type == "uniform":
-            return UniformDistribution(self.create_key_array(num_keys))
+            return NormalDistribution(self.create_key_array(self.num_keys), mean, stddev)
+        elif self.dist_type == "uniform":
+            return UniformDistribution(self.create_key_array(self.num_keys))
         else:
             raise ValueError("Unsupported distribution type")
 
@@ -148,7 +168,7 @@ class KeyGenerator:
         value_to_key = {value: keys[i] for i, value in enumerate(sorted_values)}
         return [value_to_key[value] for value in step]
 
-    def generate_step(self, arrival_rate, key_dist):
+    def generate_step(self, key_dist):
         """Generates a step in the key distribution in the stream simulation
 
         Args:
@@ -162,7 +182,12 @@ class KeyGenerator:
         Returns:
             list: The list of keys that were created in this step.
         """
-        step = self.distribution.generate(arrival_rate)
+        # Adjust arrival rate based on spike probability and magnitude
+        if random.uniform(0, 100) < self.spike_probability:
+            change = random.uniform(-self.spike_magnitude, self.spike_magnitude)
+            self.arrival_rate = int(self.arrival_rate * (1 + change / 100))
+
+        step = self.distribution.generate(self.arrival_rate)
         print(step)
         keys = self.replace_step_with_keys(step, key_dist)
         print(keys)
@@ -170,23 +195,7 @@ class KeyGenerator:
 
     def generate_stream(self, output_file):
         """Generates a key stream for the simulation. Runs the helper function generate_step
-            for each step generation.
-
-
-        Vars:
-            config (json): The json configuration of the simulation.
-                "streams" (int): Number of discrete streams to generate.
-                "steps" (int): Number of simulation steps.
-                "number of keys" (int): Number of keys to use in the distribution.
-                "arrival rate" (int): Number of keys per step.
-                "distribution" (dict): Distribution configuration, including:
-                    "type" (str): Type of distribution, either "normal" or "uniform".
-                    "mean" (float): Mean for normal distribution (required if type is "normal").
-                    "stddev" (float): Standard deviation for normal distribution (required if type is "normal").
-            output_file (str): Path to the output file where the stream will be written
-            distribution (class): The distribution class oject which generates keys based on
-                                  the distribution the keys are following in this step.
-
+        for each step generation.
         """
         stream = []
         # TODO: Further functionalities can be added here on the following topics:
@@ -201,7 +210,7 @@ class KeyGenerator:
             key_dist = self.adjust_or_create_key_dist(key_dist, i)
 
             print(f"Key dist: {key_dist}")
-            step = self.generate_step(self.config["arrival rate"], key_dist)
+            step = self.generate_step(key_dist)
             stream.append(" ".join(step))
         write_output(stream, output_file)
 
