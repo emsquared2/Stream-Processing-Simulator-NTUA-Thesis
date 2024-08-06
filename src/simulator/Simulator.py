@@ -27,6 +27,7 @@ class Simulator:
         window_size: int,
         slide: int,
         throughput: int,
+        complexity_type: str,
         strategy_params: Optional[Dict[str, Any]] = None,
     ):
         """
@@ -44,9 +45,10 @@ class Simulator:
         self.window_size = window_size
         self.slide = slide
         self.throughput = throughput
+        self.complexity_type = complexity_type
 
         # Create a list of Node instances
-        self.nodes = [Node(i, window_size, slide, throughput) for i in range(num_nodes)]
+        self.nodes = [Node(i, window_size, slide, throughput, complexity_type) for i in range(num_nodes)]
 
         # Initialize a buffer for each node to temporarily store keys
         self.buffers = {i: [] for i in range(num_nodes)}
