@@ -1,9 +1,11 @@
 {
     "keygen": {
         "streams": 1,
-        "steps": 2,
-        "number of keys": 3,
+        "steps": 15,
+        "number of keys": 10,
         "arrival rate": 10,
+        "spike_probability": 30,
+        "spike_magnitude": 15,
         "distribution": {
             "type": "normal",
             "mean": 5,

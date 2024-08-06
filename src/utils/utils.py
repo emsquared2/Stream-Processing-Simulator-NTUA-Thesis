@@ -74,6 +74,8 @@ def validate_config(config):
             "steps": (int),
             "number of keys": (int),
             "arrival rate": (int),
+            "spike_probability": (int),
+            "spike_magnitude": (int),
             "distribution":
             {
                 "type": "normal | uniform",
@@ -93,6 +95,8 @@ def validate_config(config):
         "steps",
         "number of keys",
         "arrival rate",
+        "spike_probability",
+        "spike_magnitude",
         "distribution",
     ]
     distribution_required_keys = {
@@ -114,6 +118,11 @@ def validate_config(config):
         sys.exit("Invalid value for 'number of keys'. Must be a positive integer.")
     if not isinstance(config["arrival rate"], int) or config["arrival rate"] <= 0:
         sys.exit("Invalid value for 'arrival rate'. Must be a positive integer.")
+    if not isinstance(config["spike_probability"], int) or not (0 <= config["spike_probability"] <= 100):
+        sys.exit("Invalid value for 'spike_probability'. Must be an integer between 0 and 100.")
+    if not isinstance(config["spike_magnitude"], (int, float)) or not (0 <= config["spike_magnitude"]):
+        sys.exit("Invalid value for 'spike_magnitude'. Must be a number greater than 0.")
+
 
     # Check 'distribution' dictionary
     if not isinstance(config["distribution"], dict):
