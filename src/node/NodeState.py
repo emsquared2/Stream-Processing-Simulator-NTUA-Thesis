@@ -1,3 +1,6 @@
+import logging
+import os
+import time
 from collections import Counter
 from .Window import Window
 from utils.utils import create_complexity
@@ -20,7 +23,12 @@ class NodeState:
     """
 
     def __init__(
-        self, node_id: int, window_size: int, slide: int, throughput: int, complexity_type: str
+        self,
+        node_id: int,
+        window_size: int,
+        slide: int,
+        throughput: int,
+        complexity_type: str,
     ) -> None:
         """
         Initializes the NodeState with the given parameters.
@@ -31,11 +39,10 @@ class NodeState:
             slide (int): Sliding interval for the windows.
             throughput (int): Number of keys per step that a node can process.
         """
+        self.node_id = node_id
         self.window_size = window_size
         self.slide = slide
-        self.node_id = node_id
         self.throughput = throughput
-
         self.complexity = create_complexity(complexity_type)
 
         self.received_keys: list[tuple[str, int, int]] = []
@@ -43,6 +50,31 @@ class NodeState:
         self.windows: dict[int, Window] = {}
         self.current_step = 0
         self.minimum_step = 0
+
+        self._initialize_logging()
+
+    def _initialize_logging(self):
+        """
+        Initializes the logging setup.
+        """
+        log_dir = "../logs"
+        os.makedirs(log_dir, exist_ok=True)
+        timestamp = time.strftime("%Y%m%d%H%M%S")
+        log_file = os.path.join(log_dir, f"log{timestamp}.log")
+
+        logging.basicConfig(
+            filename=log_file,
+            level=logging.INFO,
+            format="%(asctime)s - Node %(node_id)d - %(levelname)s - %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+        self.logger = logging.getLogger(__name__)
+
+    def log_info(self, message):
+        """
+        Logs an info message with the node_id included.
+        """
+        self.logger.info(message, extra={"node_id": self.node_id})
 
     def update(self, keys: list[str], step: int) -> None:
         """
@@ -52,22 +84,19 @@ class NodeState:
             keys (list[str]): List of keys received.
             step (int): The current step in the simulation.
         """
+        self.log_info(f"Updating node at step {step} with keys: {keys}")
         self.current_step = max(self.current_step, step)
         self.minimum_step = max(0, self.current_step - self.window_size)
         max_step = self.minimum_step + self.window_size
 
         for key in keys:
-            # The "key_update" key is a special marker added at the end of each node's buffer during key partitioning.
-            # It is used to indicate the current step when no other keys are sent to the node.
             if key != "step_update":
-                # The max_step is used to determine when a key has expired.
                 self.received_keys.append((key, step, max_step))
                 self.update_windows(key, step)
 
         self.process_full_windows()
         self.remove_expired_windows()
         self.remove_expired_keys()
-        # print(f"Node {self.node_id} received keys: {keys} at step: {step}")
 
     def update_windows(self, key: str, step: int) -> None:
         """
@@ -77,6 +106,7 @@ class NodeState:
             key (str): The key to add.
             step (int): The step at which the key was received.
         """
+        self.log_info(f"Updating windows for key: {key} at step: {step}")
         for start_step in range(self.minimum_step, self.current_step + 1, self.slide):
             if step - start_step <= self.window_size:
                 if start_step not in self.windows:
@@ -96,6 +126,7 @@ class NodeState:
         """
         Removes windows that have expired based on the current step.
         """
+        self.log_info("Removing expired windows.")
         for start_step, window in list(self.windows.items()):
             if window.is_expired(self.current_step):
                 del self.windows[start_step]
@@ -104,6 +135,7 @@ class NodeState:
         """
         Removes keys that have expired based on their max_step.
         """
+        self.log_info("Removing expired keys.")
         self.received_keys = [
             (key, step, max_step)
             for key, step, max_step in self.received_keys
@@ -117,8 +149,9 @@ class NodeState:
         Args:
             window (Window): The window to process.
         """
+        self.log_info(f"Processing window starting at step {window.start_step}")
         window_key_count: dict[str, int] = {}
-        cycles = 0 # old keys_processed
+        cycles = 0
 
         for key in window.keys:
             if cycles >= self.throughput:
@@ -126,10 +159,7 @@ class NodeState:
             window_key_count[key] = window_key_count.get(key, 0) + 1
             cycles += self.complexity.calculate_cycles(len(window.keys))
 
-
-        # Example processing: printing key counts
-        # for key, count in window_key_count.items():
-        #     print(f"Processing key: {key} with count: {count}")
+        self.log_info(f"Processed {cycles} computational cycles for window.")
 
     def __repr__(self) -> str:
         """
