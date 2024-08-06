@@ -20,10 +20,11 @@ def main(config_file, steps_file):
     window_size = config["node"]["window_size"]
     slide = config["node"]["slide"]
     throughput = config["node"]["throughput"]
+    complexity_type = config["node"]["complexity_type"]
 
     # Initialize the simulator with the extracted properties
     simulator = Simulator(
-        num_nodes, strategy_name, window_size, slide, throughput, strategy_params
+        num_nodes, strategy_name, window_size, slide, throughput, complexity_type, strategy_params
     )
 
     # Read steps data from file

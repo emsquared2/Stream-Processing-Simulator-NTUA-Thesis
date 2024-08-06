@@ -11,7 +11,7 @@ class Node:
     """
 
     def __init__(
-        self, node_id: int, window_size: int, slide: int, throughput: int
+        self, node_id: int, window_size: int, slide: int, throughput: int, complexity_type: str
     ) -> None:
         """
         Initializes the node with the specified parameters.
@@ -23,7 +23,7 @@ class Node:
             throughput (int): Throughput rate used in the internal state.
         """
         self.node_id = node_id
-        self.internal_state = NodeState(self.node_id, window_size, slide, throughput)
+        self.internal_state = NodeState(self.node_id, window_size, slide, throughput, complexity_type)
 
     def receive(self, keys: list, step: int) -> None:
         """

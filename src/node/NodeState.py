@@ -1,5 +1,6 @@
 from collections import Counter
 from .Window import Window
+from utils.utils import create_complexity
 
 
 class NodeState:
@@ -19,7 +20,7 @@ class NodeState:
     """
 
     def __init__(
-        self, node_id: int, window_size: int, slide: int, throughput: int
+        self, node_id: int, window_size: int, slide: int, throughput: int, complexity_type: str
     ) -> None:
         """
         Initializes the NodeState with the given parameters.
@@ -34,6 +35,8 @@ class NodeState:
         self.slide = slide
         self.node_id = node_id
         self.throughput = throughput
+
+        self.complexity = create_complexity(complexity_type)
 
         self.received_keys: list[tuple[str, int, int]] = []
         self.state: dict[str, int] = {}
@@ -115,13 +118,14 @@ class NodeState:
             window (Window): The window to process.
         """
         window_key_count: dict[str, int] = {}
-        keys_processed = 0
+        cycles = 0 # old keys_processed
 
         for key in window.keys:
-            if keys_processed >= self.throughput:
+            if cycles >= self.throughput:
                 break
             window_key_count[key] = window_key_count.get(key, 0) + 1
-            keys_processed += 1
+            cycles += self.complexity.calculate_cycles(len(window.keys))
+
 
         # Example processing: printing key counts
         # for key, count in window_key_count.items():
