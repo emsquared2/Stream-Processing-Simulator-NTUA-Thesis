@@ -21,6 +21,7 @@ class Node:
             window_size (int): Size of the window for the internal state.
             slide (int): Sliding interval for the window.
             throughput (int): Throughput rate used in the internal state.
+            complexity_type (str): Complexity type used by interal state for computational cycle calculation.
         """
         self.node_id = node_id
         self.internal_state = NodeState(self.node_id, window_size, slide, throughput, complexity_type)

@@ -14,7 +14,8 @@ class NodeState:
         node_id (int): Unique identifier for the node.
         window_size (int): Size of the time window.
         slide (int): Sliding interval for the windows.
-        throughput (int): Number of keys per step that a node can process.
+        throughput (int): Maximum computational cycles a node can run per step.
+        complexity_type (str): The complexity that the computation follows.
         received_keys (list[tuple[str, int, int]]): List of keys received, with their arrival step and max_step.
         state (dict[str, int]): Dictionary to track the state of keys.
         windows (dict[int, Window]): Dictionary to manage the time windows.
@@ -37,7 +38,8 @@ class NodeState:
             node_id (int): Unique identifier for the node.
             window_size (int): Size of the time window.
             slide (int): Sliding interval for the windows.
-            throughput (int): Number of keys per step that a node can process.
+            Number of keys per step that a node can process.
+            complexity_type (str): The complexity that the computation follows.
         """
         self.node_id = node_id
         self.window_size = window_size
@@ -57,8 +59,13 @@ class NodeState:
         """
         Initializes the logging setup.
         """
-        log_dir = "../logs"
+        # Get NodeState directory path
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Ger from the parent directory the logs directory
+        log_dir = os.path.join(base_dir, "../logs")
         os.makedirs(log_dir, exist_ok=True)
+
         timestamp = time.strftime("%Y%m%d%H%M%S")
         log_file = os.path.join(log_dir, f"log{timestamp}.log")
 
@@ -73,6 +80,9 @@ class NodeState:
     def log_info(self, message):
         """
         Logs an info message with the node_id included.
+
+        Args:
+            message (str): The message about to be logged.
         """
         self.logger.info(message, extra={"node_id": self.node_id})
 

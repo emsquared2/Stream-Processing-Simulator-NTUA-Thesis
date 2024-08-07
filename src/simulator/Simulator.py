@@ -14,7 +14,8 @@ class Simulator:
     - num_nodes (int): The number of nodes in the simulation.
     - window_size (int): The size of the time window for each node.
     - slide (int): The sliding interval for the windows.
-    - throughput (int): The number of keys each node can process per step.
+    - throughput (int): Maximum computational cycles a node can run per step.
+    - complexity_type (str): The complexity that the computation follows.
     - nodes (list): A list of Node instances.
     - strategy (PartitionStrategy): The partitioning strategy used for distributing keys.
     - buffers (dict): A dictionary to buffer keys for each node before processing.
@@ -38,7 +39,8 @@ class Simulator:
         - strategy_name (str): The name of the partitioning strategy to use.
         - window_size (int): The size of the time window for each node.
         - slide (int): The sliding interval for the time windows.
-        - throughput (int): The number of keys each node can process per step.
+        - throughput (int): Maximum computational cycles a node can run per step.
+        - complexity_type (str): The complexity that the computation follows.
         - strategy_params (dict, optional): Additional parameters for the partitioning strategy.
         """
         self.num_nodes = num_nodes
