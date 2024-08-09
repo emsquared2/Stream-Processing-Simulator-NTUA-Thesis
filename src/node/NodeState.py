@@ -57,34 +57,71 @@ class NodeState:
 
     def _initialize_logging(self):
         """
-        Initializes the logging setup.
+        Initializes both the default and per-node logging setup.
         """
         # Get NodeState directory path
         base_dir = os.path.dirname(os.path.abspath(__file__))
 
-        # Ger from the parent directory the logs directory
-        log_dir = os.path.join(base_dir, "../logs")
+        # Define log directory and ensure it exists
+        log_dir = os.path.join(base_dir, "../../logs")
         os.makedirs(log_dir, exist_ok=True)
 
+        # Create a default log file with a timestamp
         timestamp = time.strftime("%Y%m%d%H%M%S")
-        log_file = os.path.join(log_dir, f"log{timestamp}.log")
+        default_log_file = os.path.join(log_dir, f"log_{timestamp}.log")
 
+        # Set up the default logger
         logging.basicConfig(
-            filename=log_file,
+            filename=default_log_file,
             level=logging.INFO,
-            format="%(asctime)s - Node %(node_id)d - %(levelname)s - %(message)s",
+            format="%(asctime)s - %(levelname)s - %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
         )
-        self.logger = logging.getLogger(__name__)
+        self.default_logger = logging.getLogger("default_logger")
 
-    def log_info(self, message):
+        # Create a log file specific to this node
+        node_log_file = os.path.join(log_dir, f"log_{timestamp}_node{self.node_id}.log")
+
+        # Set up the per-node logger
+        node_logger = logging.getLogger(f"Node_{self.node_id}")
+        node_logger.setLevel(logging.DEBUG)  # Set to the desired logging level
+
+        # Create a file handler for the node-specific logger
+        node_handler = logging.FileHandler(node_log_file)
+        node_handler.setLevel(logging.DEBUG)  # Set to the desired logging level
+
+        # Create a common formatter
+        formatter = logging.Formatter(
+            "%(asctime)s - Node %(node_id)d - %(levelname)s - %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+        node_handler.setFormatter(formatter)
+
+        # Add the handler to the per-node logger
+        node_logger.addHandler(node_handler)
+
+        # Store the per-node logger in the instance
+        self.node_logger = node_logger
+
+
+    def log_default_info(self, message):
         """
-        Logs an info message with the node_id included.
+        Logs an info message to the default logger.
 
         Args:
-            message (str): The message about to be logged.
+            message (str): The message to log.
         """
-        self.logger.info(message, extra={"node_id": self.node_id})
+        self.default_logger.info(message)
+
+
+    def log_node_info(self, message):
+        """
+        Logs an info message with the node_id included to the per-node logger.
+
+        Args:
+            message (str): The message to log.
+        """
+        self.node_logger.info(message, extra={"node_id": self.node_id})
 
     def update(self, keys: list[str], step: int) -> None:
         """
@@ -94,7 +131,7 @@ class NodeState:
             keys (list[str]): List of keys received.
             step (int): The current step in the simulation.
         """
-        self.log_info(f"Updating node at step {step} with keys: {keys}")
+        self.log_default_info(f"Updating node at step {step} with keys: {keys}")
         self.current_step = max(self.current_step, step)
         self.minimum_step = max(0, self.current_step - self.window_size)
         max_step = self.minimum_step + self.window_size
@@ -116,7 +153,7 @@ class NodeState:
             key (str): The key to add.
             step (int): The step at which the key was received.
         """
-        self.log_info(f"Updating windows for key: {key} at step: {step}")
+        self.log_default_info(f"Updating windows for key: {key} at step: {step}")
         for start_step in range(self.minimum_step, self.current_step + 1, self.slide):
             if step - start_step <= self.window_size:
                 if start_step not in self.windows:
@@ -136,7 +173,7 @@ class NodeState:
         """
         Removes windows that have expired based on the current step.
         """
-        self.log_info("Removing expired windows.")
+        self.log_default_info("Removing expired windows.")
         for start_step, window in list(self.windows.items()):
             if window.is_expired(self.current_step):
                 del self.windows[start_step]
@@ -145,7 +182,7 @@ class NodeState:
         """
         Removes keys that have expired based on their max_step.
         """
-        self.log_info("Removing expired keys.")
+        self.log_default_info("Removing expired keys.")
         self.received_keys = [
             (key, step, max_step)
             for key, step, max_step in self.received_keys
@@ -159,17 +196,22 @@ class NodeState:
         Args:
             window (Window): The window to process.
         """
-        self.log_info(f"Processing window starting at step {window.start_step}")
+        self.log_default_info(f"Processing window starting at step {window.start_step}")
         window_key_count: dict[str, int] = {}
+        processed_keys = 0
         cycles = 0
 
         for key in window.keys:
             if cycles >= self.throughput:
                 break
+            processed_keys += 1
             window_key_count[key] = window_key_count.get(key, 0) + 1
             cycles += self.complexity.calculate_cycles(len(window.keys))
 
-        self.log_info(f"Processed {cycles} computational cycles for window.")
+        self.log_default_info(f"Processed {cycles} computational cycles for window.")
+        self.log_node_info(
+            f"Step {self.current_step} - Processed {processed_keys} keys - Node load {(cycles*100)/self.throughput}%"
+        )
 
     def __repr__(self) -> str:
         """

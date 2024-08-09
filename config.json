@@ -13,7 +13,7 @@
     "simulator": {
         "number_of_nodes": 3,
         "strategy": {
-            "name": "key_grouping",
+            "name": "hashing",
             "prefix_length": 3
         }
     },
