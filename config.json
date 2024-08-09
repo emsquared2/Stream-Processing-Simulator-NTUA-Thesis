@@ -1,8 +1,8 @@
 {
     "keygen": {
         "streams": 1,
-        "steps": 15,
-        "number of keys": 10,
+        "steps": 10,
+        "number of keys": 3,
         "arrival rate": 10,
         "spike_probability": 30,
         "spike_magnitude": 15,
@@ -15,12 +15,13 @@
     "simulator": {
         "number_of_nodes": 3,
         "strategy": {
-            "name": "key_grouping",
+            "name": "hashing",
             "prefix_length": 3
         }
     },
     "node": {
         "throughput": 1000,
+        "complexity_type": "O(n)",
         "window_size": 3,
         "slide": 1
     }

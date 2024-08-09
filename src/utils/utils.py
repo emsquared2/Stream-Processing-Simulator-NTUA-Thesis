@@ -1,5 +1,6 @@
 import json
 import sys
+from complexities.Complexities import O1Complexity, OLogNComplexity, ONComplexity, ONLogNComplexity, ON2Complexity, Complexity
 
 
 def load_config(config_file):
@@ -151,3 +152,18 @@ def validate_config(config):
 
     # If all checks pass
     print("Config is valid.")
+
+
+def create_complexity(complexity_type: str) -> Complexity:
+    if complexity_type == "O(1)":
+        return O1Complexity()
+    elif complexity_type == "O(logn)":
+        return OLogNComplexity()
+    elif complexity_type == "O(n)":
+        return ONComplexity()
+    elif complexity_type == "O(nlogn)":
+        return ONLogNComplexity()
+    elif complexity_type == "O(n^2)":
+        return ON2Complexity()
+    else:
+        raise ValueError(f"Unknown complexity type: {complexity_type}")

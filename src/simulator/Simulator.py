@@ -14,7 +14,8 @@ class Simulator:
     - num_nodes (int): The number of nodes in the simulation.
     - window_size (int): The size of the time window for each node.
     - slide (int): The sliding interval for the windows.
-    - throughput (int): The number of keys each node can process per step.
+    - throughput (int): Maximum computational cycles a node can run per step.
+    - complexity_type (str): The complexity that the computation follows.
     - nodes (list): A list of Node instances.
     - strategy (PartitionStrategy): The partitioning strategy used for distributing keys.
     - buffers (dict): A dictionary to buffer keys for each node before processing.
@@ -27,6 +28,7 @@ class Simulator:
         window_size: int,
         slide: int,
         throughput: int,
+        complexity_type: str,
         strategy_params: Optional[Dict[str, Any]] = None,
     ):
         """
@@ -37,16 +39,18 @@ class Simulator:
         - strategy_name (str): The name of the partitioning strategy to use.
         - window_size (int): The size of the time window for each node.
         - slide (int): The sliding interval for the time windows.
-        - throughput (int): The number of keys each node can process per step.
+        - throughput (int): Maximum computational cycles a node can run per step.
+        - complexity_type (str): The complexity that the computation follows.
         - strategy_params (dict, optional): Additional parameters for the partitioning strategy.
         """
         self.num_nodes = num_nodes
         self.window_size = window_size
         self.slide = slide
         self.throughput = throughput
+        self.complexity_type = complexity_type
 
         # Create a list of Node instances
-        self.nodes = [Node(i, window_size, slide, throughput) for i in range(num_nodes)]
+        self.nodes = [Node(i, window_size, slide, throughput, complexity_type) for i in range(num_nodes)]
 
         # Initialize a buffer for each node to temporarily store keys
         self.buffers = {i: [] for i in range(num_nodes)}
