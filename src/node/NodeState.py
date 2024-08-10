@@ -34,6 +34,7 @@ class NodeState:
         slide: int,
         throughput: int,
         complexity_type: str,
+        extra_dir: str = None,
     ) -> None:
         """
         Initializes the NodeState with the given parameters.
@@ -62,6 +63,8 @@ class NodeState:
         self.total_expired = 0
         self.total_cycles = 0
 
+        self.extra_dir = extra_dir
+
         self._initialize_logging()
 
     def _initialize_logging(self):
@@ -75,7 +78,9 @@ class NodeState:
         timestamp = time.strftime("%Y%m%d%H%M%S")
 
         # Define log directory and create a subdirectory for the current timestamp
-        log_dir = os.path.join(base_dir, "../../logs", timestamp)
+        log_dir = os.path.join(base_dir, "../../logs")
+        if self.extra_dir:
+            log_dir = os.path.join(log_dir, self.extra_dir, timestamp)
         os.makedirs(log_dir, exist_ok=True)
 
         # Create a default log file within the timestamped directory

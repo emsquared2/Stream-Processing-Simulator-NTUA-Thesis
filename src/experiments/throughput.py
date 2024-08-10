@@ -20,8 +20,9 @@ def main():
     # Run the experiment for each throughput value
     for throughput in throughput_values:
         output_file = f"{base_output_file}_{throughput}_stream_"
+        extra_dir = f"throughput_{throughput}"
         print(f"Running experiment with throughput={throughput}")
-        run_experiment(config_file, output_file, throughput=throughput)
+        run_experiment(config_file, output_file, extra_dir, throughput=throughput)
 
         time.sleep(1)
 
