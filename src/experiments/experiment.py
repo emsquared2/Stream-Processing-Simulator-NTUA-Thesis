@@ -27,7 +27,7 @@ def update_config(config, updates):
     return config
 
 
-def run_experiment(config_file, output_file, **kwargs):
+def run_experiment(config_file, output_file, extra_dir=None, **kwargs):
     """
     Run an experiment with specific parameters modified from the config file.
 
@@ -66,6 +66,7 @@ def run_experiment(config_file, output_file, **kwargs):
         throughput,
         complexity_type,
         strategy_params,
+        extra_dir,
     )
 
     # Read steps data from all generated files

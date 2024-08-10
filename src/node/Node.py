@@ -11,7 +11,13 @@ class Node:
     """
 
     def __init__(
-        self, node_id: int, window_size: int, slide: int, throughput: int, complexity_type: str
+        self,
+        node_id: int,
+        window_size: int,
+        slide: int,
+        throughput: int,
+        complexity_type: str,
+        extra_dir: str = None,
     ) -> None:
         """
         Initializes the node with the specified parameters.
@@ -24,7 +30,9 @@ class Node:
             complexity_type (str): Complexity type used by interal state for computational cycle calculation.
         """
         self.node_id = node_id
-        self.internal_state = NodeState(self.node_id, window_size, slide, throughput, complexity_type)
+        self.internal_state = NodeState(
+            self.node_id, window_size, slide, throughput, complexity_type, extra_dir
+        )
 
     def receive(self, keys: list, step: int) -> None:
         """
