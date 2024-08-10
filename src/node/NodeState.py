@@ -21,6 +21,10 @@ class NodeState:
         windows (dict[int, Window]): Dictionary to manage the time windows.
         current_step (int): The current step in the simulation.
         minimum_step (int): The minimum step to consider for processing keys.
+        total_keys (int): Total keys received.
+        total_processed (int): Total keys processed.
+        total_expired (int): Total keys expired.
+        total_cycles (int): Total number of processing cycles used.
     """
 
     def __init__(
@@ -53,6 +57,11 @@ class NodeState:
         self.current_step = 0
         self.minimum_step = 0
 
+        self.total_keys = 0
+        self.total_processed = 0
+        self.total_expired = 0
+        self.total_cycles = 0
+
         self._initialize_logging()
 
     def _initialize_logging(self):
@@ -62,13 +71,15 @@ class NodeState:
         # Get NodeState directory path
         base_dir = os.path.dirname(os.path.abspath(__file__))
 
-        # Define log directory and ensure it exists
-        log_dir = os.path.join(base_dir, "../../logs")
+        # Generate the timestamp
+        timestamp = time.strftime("%Y%m%d%H%M%S")
+
+        # Define log directory and create a subdirectory for the current timestamp
+        log_dir = os.path.join(base_dir, "../../logs", timestamp)
         os.makedirs(log_dir, exist_ok=True)
 
-        # Create a default log file with a timestamp
-        timestamp = time.strftime("%Y%m%d%H%M%S")
-        default_log_file = os.path.join(log_dir, f"log_{timestamp}.log")
+        # Create a default log file within the timestamped directory
+        default_log_file = os.path.join(log_dir, "log_default.log")
 
         # Set up the default logger
         logging.basicConfig(
@@ -79,8 +90,8 @@ class NodeState:
         )
         self.default_logger = logging.getLogger("default_logger")
 
-        # Create a log file specific to this node
-        node_log_file = os.path.join(log_dir, f"log_{timestamp}_node{self.node_id}.log")
+        # Create a log file specific to this node within the timestamped directory
+        node_log_file = os.path.join(log_dir, f"log_node{self.node_id}.log")
 
         # Set up the per-node logger
         node_logger = logging.getLogger(f"Node_{self.node_id}")
@@ -103,7 +114,6 @@ class NodeState:
         # Store the per-node logger in the instance
         self.node_logger = node_logger
 
-
     def log_default_info(self, message):
         """
         Logs an info message to the default logger.
@@ -112,7 +122,6 @@ class NodeState:
             message (str): The message to log.
         """
         self.default_logger.info(message)
-
 
     def log_node_info(self, message):
         """
@@ -131,6 +140,8 @@ class NodeState:
             keys (list[str]): List of keys received.
             step (int): The current step in the simulation.
         """
+        self.total_keys += len(keys)
+
         self.log_default_info(f"Updating node at step {step} with keys: {keys}")
         self.current_step = max(self.current_step, step)
         self.minimum_step = max(0, self.current_step - self.window_size)
@@ -183,11 +194,17 @@ class NodeState:
         Removes keys that have expired based on their max_step.
         """
         self.log_default_info("Removing expired keys.")
-        self.received_keys = [
-            (key, step, max_step)
-            for key, step, max_step in self.received_keys
-            if self.current_step <= max_step
-        ]
+        expired_keys_count = 0
+        updated_received_keys = []
+
+        for key, step, max_step in self.received_keys:
+            if self.current_step <= max_step:
+                updated_received_keys.append((key, step, max_step))
+            else:
+                expired_keys_count += 1
+
+        self.received_keys = updated_received_keys
+        self.total_expired += expired_keys_count
 
     def process_window(self, window: Window) -> None:
         """
@@ -212,6 +229,8 @@ class NodeState:
         self.log_node_info(
             f"Step {self.current_step} - Processed {processed_keys} keys - Node load {(cycles*100)/self.throughput}%"
         )
+        self.total_cycles += cycles
+        self.total_processed += processed_keys
 
     def __repr__(self) -> str:
         """
@@ -221,11 +240,31 @@ class NodeState:
             str: A formatted string showing the node's ID, received keys, key counts, current step, minimum step, and windows.
         """
         key_counts = Counter(key for key, _, _ in self.received_keys)
+
+        report_message = (
+            f"\n------------------------------------------\n"
+            f"Node Report for Node ID: {self.node_id}\n"
+            f"Total Keys Received: {self.total_keys}\n"
+            f"Total Keys Processed: {self.total_processed}\n"
+            f"Total Keys Expired: {self.total_expired}\n"
+            f"Total Processing Cycles: {self.total_cycles}\n"
+            f"Current Step: {self.current_step}\n"
+            f"Minimum Step: {self.minimum_step}\n"
+            f"Number of Active Windows: {len(self.windows)}\n"
+            f"Number of Active Keys: {len(self.received_keys)}\n"
+            f"------------------------------------------"
+        )
+        self.log_default_info(report_message)
+
         return (
             f"Node ID: {self.node_id}\n"
             f"Received Keys: {self.received_keys}\n"
             f"Key Counts: {dict(key_counts)}\n"
             f"Minimum Step: {self.minimum_step}\n"
             f"Current Step: {self.current_step}\n"
-            f"Current Windows: {self.windows}"
+            f"Current Windows: {self.windows}\n"
+            f"Total Keys Received: {self.total_keys}\n"
+            f"Total Keys Processed: {self.total_processed}\n"
+            f"Total Keys Expired: {self.total_expired}\n"
+            f"Total Processing Cycles: {self.total_cycles}"
         )
