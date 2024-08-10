@@ -3,8 +3,8 @@ import os
 import random
 from collections import Counter
 from utils.utils import validate_config, write_output
-from distributions.normal import NormalDistribution
-from distributions.uniform import UniformDistribution
+from .distributions.normal import NormalDistribution
+from .distributions.uniform import UniformDistribution
 
 
 class KeyGenerator:
