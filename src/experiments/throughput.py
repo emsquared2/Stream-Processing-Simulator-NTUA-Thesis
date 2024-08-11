@@ -1,6 +1,6 @@
 from pathlib import Path
 import time
-from experiment import run_experiment
+from utils.experiment import run_experiment
 
 
 def main():
