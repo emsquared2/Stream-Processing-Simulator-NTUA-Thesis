@@ -81,6 +81,8 @@ class NodeState:
         log_dir = os.path.join(base_dir, "../../logs")
         if self.extra_dir:
             log_dir = os.path.join(log_dir, self.extra_dir, timestamp)
+        else:
+            log_dir = os.path.join(log_dir, f"log_{timestamp}")
         os.makedirs(log_dir, exist_ok=True)
 
         # Create a default log file within the timestamped directory
