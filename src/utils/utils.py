@@ -19,6 +19,32 @@ def load_config(config_file):
     except (FileNotFoundError, IOError) as e:
         sys.exit(f"Error: {e}")
 
+def update_config(config, updates):
+    """
+    Update the configuration dictionary with the given updates.
+
+    Args:
+        config (dict): The original configuration dictionary.
+        updates (dict): A dictionary of parameters to update.
+
+    Returns:
+        dict: The updated configuration dictionary.
+    
+    Note:
+        Used in the automatic configuration updates used by the simulator experiments.
+    """
+    for key, value in updates.items():
+        if key in config["node"]:
+            config["node"][key] = value
+        elif key in config["simulator"]:
+            config["simulator"][key] = value
+        elif key in config["keygen"]:
+            config["keygen"][key] = value
+        else:
+            print(f"Warning: Unrecognized configuration parameter '{key}'")
+
+    return config
+
 
 def write_output(stream, output_file):
     """

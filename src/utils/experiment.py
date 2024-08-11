@@ -1,31 +1,6 @@
 from keygen.KeyGenerator import KeyGenerator
 from simulator.Simulator import Simulator
-from utils.utils import load_steps_from_file, load_config
-
-
-def update_config(config, updates):
-    """
-    Update the configuration dictionary with the given updates.
-
-    Args:
-        config (dict): The original configuration dictionary.
-        updates (dict): A dictionary of parameters to update.
-
-    Returns:
-        dict: The updated configuration dictionary.
-    """
-    for key, value in updates.items():
-        if key in config["node"]:
-            config["node"][key] = value
-        elif key in config["simulator"]:
-            config["simulator"][key] = value
-        elif key in config["keygen"]:
-            config["keygen"][key] = value
-        else:
-            print(f"Warning: Unrecognized configuration parameter '{key}'")
-
-    return config
-
+from utils.utils import load_steps_from_file, load_config, update_config
 
 def run_experiment(config_file, output_file, extra_dir=None, **kwargs):
     """
