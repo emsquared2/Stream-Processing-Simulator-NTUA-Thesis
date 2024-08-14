@@ -66,6 +66,6 @@ class StatefulNode(Node):
             f"window size: {self.window_size}\n"
             f"slide: {self.slide}\n"
             f"state:\n"
-            f"{self.state}"
+            f"{self.state}\n"
             f"--------------------"
         )
