@@ -1,5 +1,5 @@
-from node.StatelessNode import StatelessNode
-from node.StatefulNode import StatefulNode
+from ..node.StatelessNode import StatelessNode
+from ..node.StatefulNode import StatefulNode
 
 
 class Stage:
@@ -24,7 +24,7 @@ class Stage:
             list: A list of Node instances (StatefulNode or StatelessNode).
         """
         nodes = []
-        for node_data in enumerate(nodes_data):
+        for node_data in nodes_data:
             node_id = node_data["id"]
             node_type = node_data["type"]
             throughput = node_data["throughput"]
