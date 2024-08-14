@@ -1,6 +1,6 @@
 from typing import Optional, Dict, Any
 
-from node.Node import Node
+from topology.node.Node import Node
 from partitioner.Hashing import Hashing
 from partitioner.KeyGrouping import KeyGrouping
 from partitioner.ShuffleGrouping import ShuffleGrouping
