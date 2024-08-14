@@ -1,6 +1,13 @@
 import json
 import sys
-from complexities.Complexities import O1Complexity, OLogNComplexity, ONComplexity, ONLogNComplexity, ON2Complexity, Complexity
+from complexities.Complexities import (
+    O1Complexity,
+    OLogNComplexity,
+    ONComplexity,
+    ONLogNComplexity,
+    ON2Complexity,
+    Complexity,
+)
 
 
 def load_config(config_file):
@@ -19,6 +26,7 @@ def load_config(config_file):
     except (FileNotFoundError, IOError) as e:
         sys.exit(f"Error: {e}")
 
+
 def update_config(config, updates):
     """
     Update the configuration dictionary with the given updates.
@@ -29,17 +37,30 @@ def update_config(config, updates):
 
     Returns:
         dict: The updated configuration dictionary.
-    
-    Note:
-        Used in the automatic configuration updates used by the simulator experiments.
     """
     for key, value in updates.items():
-        if key in config["node"]:
-            config["node"][key] = value
-        elif key in config["simulator"]:
-            config["simulator"][key] = value
-        elif key in config["keygen"]:
-            config["keygen"][key] = value
+        if key == "topology":
+            # Update specific topology stage or nodes
+            for stage_update in value.get("stages", []):
+                stage_id = stage_update.get("id")
+                for stage in config["topology"]["stages"]:
+                    if stage["id"] == stage_id:
+                        stage.update(stage_update)
+
+        elif key == "simulator":
+            # Update simulator settings
+            config["simulator"].update(value)
+
+        elif key == "keygen":
+            # Update key generation settings
+            config["keygen"].update(value)
+
+        elif key == "throughput":
+            # Update throughput for all nodes in the topology
+            for stage in config.get("topology", {}).get("stages", []):
+                for node in stage.get("nodes", []):
+                    node["throughput"] = value
+
         else:
             print(f"Warning: Unrecognized configuration parameter '{key}'")
 
@@ -145,11 +166,18 @@ def validate_config(config):
         sys.exit("Invalid value for 'number of keys'. Must be a positive integer.")
     if not isinstance(config["arrival rate"], int) or config["arrival rate"] <= 0:
         sys.exit("Invalid value for 'arrival rate'. Must be a positive integer.")
-    if not isinstance(config["spike_probability"], int) or not (0 <= config["spike_probability"] <= 100):
-        sys.exit("Invalid value for 'spike_probability'. Must be an integer between 0 and 100.")
-    if not isinstance(config["spike_magnitude"], (int, float)) or not (0 <= config["spike_magnitude"]):
-        sys.exit("Invalid value for 'spike_magnitude'. Must be a number greater than 0.")
-
+    if not isinstance(config["spike_probability"], int) or not (
+        0 <= config["spike_probability"] <= 100
+    ):
+        sys.exit(
+            "Invalid value for 'spike_probability'. Must be an integer between 0 and 100."
+        )
+    if not isinstance(config["spike_magnitude"], (int, float)) or not (
+        0 <= config["spike_magnitude"]
+    ):
+        sys.exit(
+            "Invalid value for 'spike_magnitude'. Must be a number greater than 0."
+        )
 
     # Check 'distribution' dictionary
     if not isinstance(config["distribution"], dict):
