@@ -1,26 +1,27 @@
-import logging
-import os
-import time
 from collections import Counter
 from .Window import Window
+from .Logging import initialize_logging
 from utils.utils import create_complexity
 
 
-class NodeState:
+class State:
     """
     Represents the state of a node in the simulation.
 
     Attributes:
         node_id (int): Unique identifier for the node.
-        window_size (int): Size of the time window.
-        slide (int): Sliding interval for the windows.
         throughput (int): Maximum computational cycles a node can run per step.
-        complexity_type (str): The complexity that the computation follows.
+        complexity_type (str): Complexity type used for computational cycle calculation.
+        window_size (int): The size of the processing window.
+        slide (int): The slide of the processing window.
+
         received_keys (list[tuple[str, int, int]]): List of keys received, with their arrival step and max_step.
         state (dict[str, int]): Dictionary to track the state of keys.
         windows (dict[int, Window]): Dictionary to manage the time windows.
         current_step (int): The current step in the simulation.
         minimum_step (int): The minimum step to consider for processing keys.
+
+        TODO: Re-evaluate metrics and how they are computed
         total_keys (int): Total keys received.
         total_processed (int): Total keys processed.
         total_expired (int): Total keys expired.
@@ -30,10 +31,10 @@ class NodeState:
     def __init__(
         self,
         node_id: int,
-        window_size: int,
-        slide: int,
         throughput: int,
         complexity_type: str,
+        window_size: int,
+        slide: int,
         extra_dir: str = None,
     ) -> None:
         """
@@ -41,16 +42,16 @@ class NodeState:
 
         Args:
             node_id (int): Unique identifier for the node.
-            window_size (int): Size of the time window.
-            slide (int): Sliding interval for the windows.
-            Number of keys per step that a node can process.
-            complexity_type (str): The complexity that the computation follows.
+            throughput (int): Maximum computational cycles a node can run per step.
+            complexity_type (str): Complexity type used for computational cycle calculation.
+            window_size (int): The size of the processing window.
+            slide (int): The slide of the processing window.
         """
         self.node_id = node_id
-        self.window_size = window_size
-        self.slide = slide
         self.throughput = throughput
         self.complexity = create_complexity(complexity_type)
+        self.window_size = window_size
+        self.slide = slide
 
         self.received_keys: list[tuple[str, int, int]] = []
         self.state: dict[str, int] = {}
@@ -65,61 +66,10 @@ class NodeState:
 
         self.extra_dir = extra_dir
 
-        self._initialize_logging()
-
-    def _initialize_logging(self):
-        """
-        Initializes both the default and per-node logging setup.
-        """
-        # Get NodeState directory path
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-
-        # Generate the timestamp
-        timestamp = time.strftime("%Y%m%d%H%M%S")
-
-        # Define log directory and create a subdirectory for the current timestamp
-        log_dir = os.path.join(base_dir, "../../logs")
-        if self.extra_dir:
-            log_dir = os.path.join(log_dir, self.extra_dir, timestamp)
-        else:
-            log_dir = os.path.join(log_dir, f"log_{timestamp}")
-        os.makedirs(log_dir, exist_ok=True)
-
-        # Create a default log file within the timestamped directory
-        default_log_file = os.path.join(log_dir, "log_default.log")
-
-        # Set up the default logger
-        logging.basicConfig(
-            filename=default_log_file,
-            level=logging.INFO,
-            format="%(asctime)s - %(levelname)s - %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
+        # Initialize logging
+        self.default_logger, self.node_logger = initialize_logging(
+            self.node_id, self.extra_dir
         )
-        self.default_logger = logging.getLogger("default_logger")
-
-        # Create a log file specific to this node within the timestamped directory
-        node_log_file = os.path.join(log_dir, f"log_node{self.node_id}.log")
-
-        # Set up the per-node logger
-        node_logger = logging.getLogger(f"Node_{self.node_id}")
-        node_logger.setLevel(logging.DEBUG)  # Set to the desired logging level
-
-        # Create a file handler for the node-specific logger
-        node_handler = logging.FileHandler(node_log_file)
-        node_handler.setLevel(logging.DEBUG)  # Set to the desired logging level
-
-        # Create a common formatter
-        formatter = logging.Formatter(
-            "%(asctime)s - Node %(node_id)d - %(levelname)s - %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
-        )
-        node_handler.setFormatter(formatter)
-
-        # Add the handler to the per-node logger
-        node_logger.addHandler(node_handler)
-
-        # Store the per-node logger in the instance
-        self.node_logger = node_logger
 
     def log_default_info(self, message):
         """
@@ -185,6 +135,7 @@ class NodeState:
         for start_step, window in list(self.windows.items()):
             if window.is_full(self.current_step):
                 self.process_window(window)
+                # TODO: Re-examine based on issue #6: https://github.com/emsquared2/Stream-Processing-Simulator-NTUA-Thesis/issues/6
                 del self.windows[start_step]
 
     def remove_expired_windows(self) -> None:

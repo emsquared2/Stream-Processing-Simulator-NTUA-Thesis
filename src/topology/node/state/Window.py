@@ -39,7 +39,7 @@ class Window:
         Returns:
             bool: True if the window is full, False otherwise.
         """
-        return current_step - self.start_step >= self.size
+        return current_step - self.start_step == self.size
 
     def is_expired(self, current_step: int) -> bool:
         """
