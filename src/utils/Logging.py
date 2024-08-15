@@ -60,3 +60,23 @@ def initialize_logging(node_id: int, extra_dir: str = None):
     node_logger.addHandler(node_handler)
 
     return default_logger, node_logger
+
+
+def log_default_info(default_logger, message):
+    """
+    Logs an info message to the default logger.
+
+    Args:
+        message (str): The message to log.
+    """
+    default_logger.info(message)
+
+
+def log_node_info(node_logger, message, node_id):
+    """
+    Logs an info message with the node_id included to the per-node logger.
+
+    Args:
+        message (str): The message to log.
+    """
+    node_logger.info(message, extra={"node_id": node_id})
