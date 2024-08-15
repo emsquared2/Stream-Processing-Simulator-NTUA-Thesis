@@ -31,12 +31,15 @@
                     },
                     {
                         "id": 2,
-                        "type": "stateless",
+                        "type": "stateful",
                         "throughput": 1200,
-                        "complexity_type": "O(1)",
+                        "complexity_type": "O(n)",
                         "strategy": {
-                            "name": "hashing"
-                        }
+                            "name": "hashing",
+                            "prefix_length": 3
+                        },
+                        "window_size": 10,
+                        "slide": 5
                     }
                 ]
             },
@@ -45,15 +48,13 @@
                 "nodes": [
                     {
                         "id": 3,
-                        "type": "stateful",
+                        "type": "stateless",
                         "throughput": 800,
-                        "complexity_type": "O(nlogn)",
+                        "complexity_type": "O(logn)",
                         "strategy": {
                             "name": "hashing",
                             "prefix_length": 3
-                        },
-                        "window_size": 10,
-                        "slide": 5
+                        }
                     },
                     {
                         "id": 4,
@@ -61,7 +62,8 @@
                         "throughput": 1200,
                         "complexity_type": "O(1)",
                         "strategy": {
-                            "name": "hashing"
+                            "name": "hashing",
+                            "prefix_length": 3
                         }
                     }
                 ]

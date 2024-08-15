@@ -208,6 +208,118 @@ def validate_keygen_config(config):
     print("Config is valid.")
 
 
+def validate_topology(config):
+    """
+    Validates the topology configuration.
+
+    Args:
+        config (dict): The topology configuration dictionary.
+
+    Raises:
+        SystemExit: If any required configuration key is missing or has an invalid value.
+    """
+
+    if "stages" not in config:
+        sys.exit("Missing required key: stages")
+
+    stages = config["stages"]
+
+    if not isinstance(stages, list) or len(stages) == 0:
+        sys.exit("Invalid value for 'stages'. Must be a non-empty list.")
+
+    node_ids = set()
+
+    for i, stage in enumerate(stages):
+        if "id" not in stage:
+            sys.exit(f"Missing required key id in stage {i + 1}")
+        if stage["id"] != i + 1:
+            sys.exit(
+                f"Stage IDs must be sequential. Found {stage['id']} at position {i + 1}. Expected {i + 1}."
+            )
+
+        if "nodes" not in stage:
+            sys.exit(f"Missing required key: nodes in stage {stage['id']}")
+
+        nodes = stage["nodes"]
+
+        if not isinstance(nodes, list) or len(nodes) == 0:
+            sys.exit(
+                f"Invalid value for 'nodes' in stage {stage['id']}. Must be a non-empty list"
+            )
+
+        # Check that all nodes have the same type
+        first_node_type = nodes[0]["type"]
+
+        for node in nodes:
+            if "id" not in node:
+                sys.exit(f"Missing required key: id in a node in stage {stage['id']}")
+            if node["id"] in node_ids:
+                sys.exit(f"Node ID {node['id']} is not unique in the topology.")
+            node_ids.add(node["id"])
+
+            if "type" not in node or node["type"] not in ["stateless", "stateful"]:
+                sys.exit(
+                    f"Invalid or missing type for node {node['id']} in stage {stage['id']}. Must be 'stateless' or 'stateful'."
+                )
+
+            if node["type"] != first_node_type:
+                sys.exit(f"All nodes in stage {stage['id']} must have the same type.")
+
+            if "throughput" not in node or node["throughput"] <= 0:
+                sys.exit(
+                    f"Invalid throughput for node {node['id']} in stage {stage['id']}. Must be a positive number."
+                )
+
+            if "complexity_type" not in node or node["complexity_type"] not in [
+                "O(1)",
+                "O(logn)",
+                "O(n)",
+                "O(nlogn)",
+                "O(n^2)",
+            ]:
+                sys.exit(
+                    f"Invalid or missing complexity_type for node {node['id']} in stage {stage['id']}."
+                )
+
+            if "strategy" not in node or not isinstance(node["strategy"], dict):
+                sys.exit(
+                    f"Missing or invalid strategy for node {node['id']} in stage {stage['id']}. Must be a dictionary."
+                )
+
+            strategy = node["strategy"]
+            if "name" not in strategy or strategy["name"] not in [
+                "shuffle_grouping",
+                "hashing",
+                "key_grouping",
+            ]:
+                sys.exit(
+                    f"Invalid or missing strategy name for node {node['id']} in stage {stage['id']}."
+                )
+
+            if strategy["name"] == "key_grouping":
+                if "prefix_length" not in strategy or strategy["prefix_length"] <= 0:
+                    sys.exit(
+                        f"Invalid or missing prefix_length for key_grouping strategy in node {node['id']} in stage {stage['id']}."
+                    )
+
+            if node["type"] == "stateful":
+                if "window_size" not in node or node["window_size"] <= 0:
+                    sys.exit(
+                        f"Missing or invalid window_size for stateful node {node['id']} in stage {stage['id']}."
+                    )
+                if "slide" not in node or node["slide"] <= 0:
+                    sys.exit(
+                        f"Missing or invalid slide for stateful node {node['id']} in stage {stage['id']}."
+                    )
+
+            if node["type"] == "stateless" and (
+                "window_size" in node or "slide" in node
+            ):
+                sys.exit(
+                    f"Stateless node {node['id']} in stage {stage['id']} should not have window_size or slide."
+                )
+
+
 def create_complexity(complexity_type: str) -> Complexity:
     if complexity_type == "O(1)":
         return O1Complexity()
