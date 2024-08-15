@@ -2,7 +2,7 @@ import math
 import os
 import random
 from collections import Counter
-from utils.utils import validate_config, write_output
+from utils.utils import validate_keygen_config, write_output
 from .distributions.normal import NormalDistribution
 from .distributions.uniform import UniformDistribution
 
@@ -31,7 +31,7 @@ class KeyGenerator:
         """
 
         # Validate the keygen configuration before proceeding
-        validate_config(config)
+        validate_keygen_config(config)
 
         self.config = config
         self.streams = config["streams"]
