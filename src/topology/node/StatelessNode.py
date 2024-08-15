@@ -13,13 +13,7 @@ class StatelessNode(Node):
     """
 
     # TODO: Add strategy params
-    def __init__(
-        self,
-        node_id: int,
-        throughput: int,
-        complexity_type: str,
-        extra_dir: str = None,
-    ) -> None:
+    def __init__(self, node_id: int, throughput: int, complexity_type: str) -> None:
         """
         Initializes the stateless node with the specified parameters.
 
@@ -28,7 +22,7 @@ class StatelessNode(Node):
             throughput (int): Maximum computational cycles a node can run per step.
             complexity_type (str): Complexity type used for computational cycle calculation.
         """
-        super().__init__(node_id, "stateless", throughput, complexity_type, extra_dir)
+        super().__init__(node_id, "stateless", throughput, complexity_type)
 
         # TODO: Initialize strategy
         # Based on implementation of issue #9:

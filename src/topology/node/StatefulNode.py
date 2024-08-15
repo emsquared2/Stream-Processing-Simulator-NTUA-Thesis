@@ -22,7 +22,6 @@ class StatefulNode(Node):
         complexity_type: str,
         window_size: int,
         slide: int,
-        extra_dir: str = None,
     ) -> None:
         """
         Initializes the stateful node with the specified parameters.
@@ -34,12 +33,21 @@ class StatefulNode(Node):
             window_size (int): The size of the processing window.
             slide (int): The slide of the processing window.
         """
-        super().__init__(node_id, "stateful", throughput, complexity_type, extra_dir)
+        super().__init__(
+            node_id,
+            "stateful",
+            throughput,
+            complexity_type,
+        )
         self.window_size = window_size
         self.slide = slide
 
         self.state = State(
-            node_id, throughput, complexity_type, window_size, slide, extra_dir
+            node_id,
+            throughput,
+            complexity_type,
+            window_size,
+            slide,
         )
 
     def receive_and_process(self, keys: list, step: int) -> None:

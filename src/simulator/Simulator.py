@@ -25,7 +25,6 @@ class Simulator:
         topology_config: dict,
         strategy_name: str,
         strategy_params: Optional[Dict[str, Any]] = None,
-        extra_dir: str = None,
     ):
         """
         Initializes a new Simulator instance with the given parameters.
@@ -39,7 +38,7 @@ class Simulator:
         self.num_nodes = num_nodes
 
         # Initialize the topology
-        self.topology = Topology(topology_config, extra_dir)
+        self.topology = Topology(topology_config)
 
         # Select nodes from stage with id '1'
         self.nodes = self._select_stage_1_nodes()
