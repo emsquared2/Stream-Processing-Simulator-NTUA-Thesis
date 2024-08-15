@@ -5,6 +5,8 @@ from partitioner.Hashing import Hashing
 from partitioner.KeyGrouping import KeyGrouping
 from partitioner.ShuffleGrouping import ShuffleGrouping
 
+# TODO: Refactor sim flow (_init_strategy, send_buffered_keys, etc.)
+
 
 class Simulator:
     """
@@ -110,7 +112,9 @@ class Simulator:
         """
         for node_id, keys in self.buffers.items():
             keys.append("step_update")  # Add a step update marker to the keys
-            self.nodes[node_id].receive_and_process(keys, step_count)  # Send keys to the node
+            self.nodes[node_id].receive_and_process(
+                keys, step_count
+            )  # Send keys to the node
             self.buffers[node_id] = []  # Clear the buffer for the next step
 
     def report(self):

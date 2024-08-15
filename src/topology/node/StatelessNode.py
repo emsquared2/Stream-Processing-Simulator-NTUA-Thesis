@@ -49,12 +49,13 @@ class StatelessNode(Node):
 
     def __repr__(self) -> str:
         """
-        A string representation of the stateless node, including its ID.
+        A string representation of the stateless node.
 
         Returns:
             str: Description of the node.
         """
         return (
+            f"\n--------------------\n"
             f"StatelessNode {self.node_id} with:\n"
             f"throughput: {self.throughput}\n"
             f"complexity type: {self.complexity_type}\n"

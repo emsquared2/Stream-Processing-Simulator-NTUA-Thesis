@@ -60,6 +60,7 @@ class StatefulNode(Node):
             str: Description of the node.
         """
         return (
+            f"\n--------------------\n"
             f"StatefulNode {self.node_id} with:\n"
             f"throughput: {self.throughput}\n"
             f"complexity type: {self.complexity_type}\n"

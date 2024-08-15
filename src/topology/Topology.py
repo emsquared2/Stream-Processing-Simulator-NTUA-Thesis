@@ -2,14 +2,14 @@ from .stage.Stage import Stage
 
 
 class Topology:
-    def __init__(self, topology_data, extra_dir):
+    def __init__(self, topology_config, extra_dir):
         """
-        Initializes the Topology with stages based on the given topology data.
+        Initializes the Topology with stages based on the given topology configuration.
 
         Args:
-            topology_data (dict): A dictionary representing the entire topology.
+            topology_config (dict): A dictionary representing the entire topology.
         """
-        self.stages = self._create_stages(topology_data["stages"], extra_dir)
+        self.stages = self._create_stages(topology_config["stages"], extra_dir)
 
     def _create_stages(self, stages_data, extra_dir):
         """
@@ -28,4 +28,10 @@ class Topology:
         return stages
 
     def __repr__(self):
-        return f"Topology with {len(self.stages)} stages."
+        stages_repr = "\n".join(f"Stage {stage.id}: {stage}" for stage in self.stages)
+        return (
+            f"\n######### T O P O L O G Y #########\n"
+            f"Total stages: {len(self.stages)}\n"
+            f"{stages_repr}\n"
+            f"###################################\n"
+        )
