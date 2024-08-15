@@ -13,12 +13,7 @@ class Node(ABC):
     """
 
     def __init__(
-        self,
-        node_id: int,
-        type: str,
-        throughput: int,
-        complexity_type: str,
-        extra_dir: str = None,
+        self, node_id: int, type: str, throughput: int, complexity_type: str
     ) -> None:
         """
         Initializes the node with the specified parameters.
@@ -33,7 +28,6 @@ class Node(ABC):
         self.type = type
         self.throughput = throughput
         self.complexity_type = complexity_type
-        self.extra_dir = extra_dir
 
     @abstractmethod
     def receive_and_process(self, keys: list, step: int) -> None:

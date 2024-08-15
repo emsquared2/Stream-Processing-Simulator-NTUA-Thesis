@@ -1,5 +1,6 @@
 from collections import Counter
 from .Window import Window
+from simulator.GlobalConfig import GlobalConfig
 from utils.Logging import initialize_logging, log_default_info, log_node_info
 from utils.utils import create_complexity
 
@@ -35,7 +36,6 @@ class State:
         complexity_type: str,
         window_size: int,
         slide: int,
-        extra_dir: str = None,
     ) -> None:
         """
         Initializes the NodeState with the given parameters.
@@ -64,7 +64,7 @@ class State:
         self.total_expired = 0
         self.total_cycles = 0
 
-        self.extra_dir = extra_dir
+        self.extra_dir = GlobalConfig.extra_dir
 
         # Initialize logging
         self.default_logger, self.node_logger = initialize_logging(
