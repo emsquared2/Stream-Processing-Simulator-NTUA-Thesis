@@ -161,16 +161,10 @@ class State:
             self.default_logger,
             f"Processing window starting at step {window.start_step}",
         )
-        window_key_count: dict[str, int] = {}
-        processed_keys = 0
-        cycles = 0
 
-        for key in window.keys:
-            if cycles >= self.throughput:
-                break
-            processed_keys += 1
-            window_key_count[key] = window_key_count.get(key, 0) + 1
-            cycles += self.complexity.calculate_cycles(len(window.keys))
+        processed_keys, cycles, window_key_count = window.process(
+            self.throughput, self.complexity
+        )
 
         log_default_info(
             self.default_logger, f"Processed {cycles} computational cycles for window."
@@ -182,6 +176,7 @@ class State:
         )
         self.total_cycles += cycles
         self.total_processed += processed_keys
+        # TODO: We can use window_key_count to aggregate/store the key_count for all processed keys
 
     def __repr__(self) -> str:
         """
