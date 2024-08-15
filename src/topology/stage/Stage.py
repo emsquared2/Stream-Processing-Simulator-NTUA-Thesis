@@ -41,4 +41,10 @@ class Stage:
         return nodes
 
     def __repr__(self):
-        return f"Stage {self.id} with {len(self.nodes)} nodes."
+        stage_repr = "\n".join(f"Node {node.id}: {node}" for node in self.nodes)
+        return (
+            f"\n######### Stage {self.id} #########\n"
+            f"Total nodes: {len(self.nodes)}\n"
+            f"{stage_repr}\n"
+            f"###################################\n"
+        )
