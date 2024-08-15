@@ -107,7 +107,7 @@ def load_steps_from_file(file_path):
     return steps_data
 
 
-def validate_config(config):
+def validate_keygen_config(config):
     """
     Validates the configuration for the key generation and distribution.
 
