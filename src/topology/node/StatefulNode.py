@@ -58,8 +58,10 @@ class StatefulNode(Node):
         Returns: 
         """
         processed_keys = self.state.update(keys, step, self.terminal)
+        # print(processed_keys)
         if not self.terminal:
-            self.emit_keys(processed_keys)
+            processed_keys_flat = [item for sublist in processed_keys for item in sublist]
+            self.emit_keys(processed_keys_flat)
 
     def emit_keys(self, keys: list[list]) -> None:
         """Emits stage computed keys to next stage
@@ -71,8 +73,7 @@ class StatefulNode(Node):
         TODO: This currently just prints the keys to be emitted.
               When 
         """
-        keys_flat = [item for sublist in keys for item in sublist]
-        print(keys_flat)
+        print(keys)
 
     def __repr__(self) -> str:
         """

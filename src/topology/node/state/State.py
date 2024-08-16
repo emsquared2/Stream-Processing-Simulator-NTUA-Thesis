@@ -110,7 +110,7 @@ class State:
 
         self.log_default_info(f"Updating node at step {step} with keys: {keys}")
         self.current_step = max(self.current_step, step)
-        self.minimum_step = max(0, self.current_step - self.window_size)
+        self.minimum_step = max(0, self.current_step - self.window_size + 1)
         max_step = self.minimum_step + self.window_size
 
         for key in keys:
