@@ -89,13 +89,22 @@ class State:
         """
         self.node_logger.info(message, extra={"node_id": self.node_id})
 
-    def update(self, keys: list[str], step: int) -> None:
+    def update(self, keys: list[str], step: int, terminal: bool) -> list[list]:
         """
         Updates the node state with new keys and the current step.
 
         Args:
             keys (list[str]): List of keys received.
             step (int): The current step in the simulation.
+            terminal (bool): Specifies if the current node 
+                             is a terminal node.
+
+        Returns:
+            list[list]: Returns the keys that will be emitted 
+                        from the current window to the next 
+                        stage. 
+                        If the node is terminal it returns an
+                        empty list. 
         """
         self.total_keys += len(keys)
 
@@ -109,9 +118,10 @@ class State:
                 self.received_keys.append((key, step, max_step))
                 self.update_windows(key, step)
 
-        self.process_full_windows()
+        processed_keys = self.process_full_windows(terminal)
         self.remove_expired_windows()
         self.remove_expired_keys()
+        return processed_keys
 
     def update_windows(self, key: str, step: int) -> None:
         """
@@ -128,15 +138,24 @@ class State:
                     self.windows[start_step] = Window(start_step, self.window_size)
                 self.windows[start_step].add_key(key)
 
-    def process_full_windows(self) -> None:
+    def process_full_windows(self, terminal: bool) -> list[list]:
+        """Processes and clears windows that have reached their size limit.
+
+        Args:
+            terminal (bool): Specifies if the current node
+                             is a terminal node.
+
+        Returns:
+            list[list]: Returns all the keys to be emitted to
+                        the next stage from each full window.
         """
-        Processes and clears windows that have reached their size limit.
-        """
+        emitted_keys = []
         for start_step, window in list(self.windows.items()):
             if window.is_full(self.current_step):
-                self.process_window(window)
+                emitted_keys.append(self.process_window(window, terminal))
                 # TODO: Re-examine based on issue #6: https://github.com/emsquared2/Stream-Processing-Simulator-NTUA-Thesis/issues/6
                 del self.windows[start_step]
+        return emitted_keys
 
     def remove_expired_windows(self) -> None:
         """
@@ -164,22 +183,30 @@ class State:
         self.received_keys = updated_received_keys
         self.total_expired += expired_keys_count
 
-    def process_window(self, window: Window) -> None:
+    def process_window(self, window: Window, terminal: bool) -> list:
         """
         Processes a full window and updates the node's state.
 
         Args:
             window (Window): The window to process.
+            terminal (bool): Specifies if the current node
+                             is a terminal node.
+        
+        Returns: 
+            list: Returns in a list the keys to be emitted from a window.
+                  If it is a terminal node it returns an empty list. 
         """
         self.log_default_info(f"Processing window starting at step {window.start_step}")
         window_key_count: dict[str, int] = {}
         processed_keys = 0
+        processed_keys_set = set()
         cycles = 0
 
         for key in window.keys:
             if cycles >= self.throughput:
                 break
             processed_keys += 1
+            processed_keys_set.add(key)
             window_key_count[key] = window_key_count.get(key, 0) + 1
             cycles += self.complexity.calculate_cycles(len(window.keys))
 
@@ -189,6 +216,11 @@ class State:
         )
         self.total_cycles += cycles
         self.total_processed += processed_keys
+
+        if terminal:
+            return []
+        else: 
+            return list(processed_keys_set)
 
     def __repr__(self) -> str:
         """
