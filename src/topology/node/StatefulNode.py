@@ -22,6 +22,7 @@ class StatefulNode(Node):
         complexity_type: str,
         window_size: int,
         slide: int,
+        terminal: bool,
         extra_dir: str = None,
     ) -> None:
         """
@@ -29,14 +30,18 @@ class StatefulNode(Node):
 
         Args:
             node_id (int): Unique identifier for the node.
-            throughput (int): Maximum computational cycles a node can run per step.
+            throughput (int): Maximum computational cycles a node can
+                              run per step.
             complexity_type (str): Complexity type used for computational cycle calculation.
             window_size (int): The size of the processing window.
             slide (int): The slide of the processing window.
+            terminal (bool): Specifies if the current node is a
+                             terminal (final stage) node.
         """
         super().__init__(node_id, "stateful", throughput, complexity_type, extra_dir)
         self.window_size = window_size
         self.slide = slide
+        self.terminal = terminal
 
         self.state = State(
             node_id, throughput, complexity_type, window_size, slide, extra_dir
@@ -49,8 +54,25 @@ class StatefulNode(Node):
         Args:
             keys (list): List of keys to be processed.
             step (int): Current step in the simulation.
+        
+        Returns: 
         """
-        self.state.update(keys, step)
+        processed_keys = self.state.update(keys, step, self.terminal)
+        if not self.terminal:
+            self.emit_keys(processed_keys)
+
+    def emit_keys(self, keys: list[list]) -> None:
+        """Emits stage computed keys to next stage
+
+        Args:
+            keys (list): List of keys emitted from current
+                         node to the next stage.
+        
+        TODO: This currently just prints the keys to be emitted.
+              When 
+        """
+        keys_flat = [item for sublist in keys for item in sublist]
+        print(keys_flat)
 
     def __repr__(self) -> str:
         """
