@@ -13,19 +13,14 @@ def main(config_file, steps_file):
 
     # Extract simulator properties from the configuration
     num_nodes = config["simulator"]["number_of_nodes"]
+    topology = config["topology"]
     strategy_name = config["simulator"]["strategy"]["name"]
     strategy_params = {
         key: value for key, value in config["simulator"]["strategy"].items()
     }
-    window_size = config["node"]["window_size"]
-    slide = config["node"]["slide"]
-    throughput = config["node"]["throughput"]
-    complexity_type = config["node"]["complexity_type"]
 
     # Initialize the simulator with the extracted properties
-    simulator = Simulator(
-        num_nodes, strategy_name, window_size, slide, throughput, complexity_type, strategy_params
-    )
+    simulator = Simulator(num_nodes, topology, strategy_name, strategy_params)
 
     # Read steps data from file
     steps_data = load_steps_from_file(steps_file)

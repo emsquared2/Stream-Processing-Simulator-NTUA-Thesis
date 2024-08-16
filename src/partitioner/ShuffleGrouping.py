@@ -1,5 +1,5 @@
 from typing import List
-from node.Node import Node
+from topology.node.Node import Node
 from .PartitionStrategy import PartitionStrategy
 
 

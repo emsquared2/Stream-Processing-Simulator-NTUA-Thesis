@@ -1,3 +1,7 @@
+from collections import Counter
+from utils.Logging import log_default_info
+
+
 class Window:
     """
     Represents a time window for tracking keys.
@@ -29,6 +33,30 @@ class Window:
         """
         self.keys.append(key)
 
+    def process(self, throughput: int, complexity) -> tuple[int, int]:
+        """
+        Processes the keys in the window based on the throughput and complexity.
+
+        Args:
+            throughput (int): Maximum computational cycles a node can run per step.
+            complexity (Complexity): The complexity object to calculate computational cycles.
+
+        Returns:
+            tuple[int, int, dict[str, int]]: Number of keys processed, total cycles used, and key counts.
+        """
+        processed_keys = 0
+        cycles = 0
+        window_key_count: dict[str, int] = Counter()
+
+        for key in self.keys:
+            if cycles >= throughput:
+                break
+            processed_keys += 1
+            window_key_count[key] += 1
+            cycles += complexity.calculate_cycles(len(self.keys))
+
+        return processed_keys, cycles, dict(window_key_count)
+
     def is_full(self, current_step: int) -> bool:
         """
         Checks if the window is full based on the current step.
@@ -39,7 +67,7 @@ class Window:
         Returns:
             bool: True if the window is full, False otherwise.
         """
-        return current_step - self.start_step >= self.size
+        return current_step - self.start_step == self.size
 
     def is_expired(self, current_step: int) -> bool:
         """
