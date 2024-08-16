@@ -1,6 +1,13 @@
 from keygen.KeyGenerator import KeyGenerator
 from simulator.Simulator import Simulator
-from utils.utils import load_steps_from_file, load_config, update_config
+from simulator.GlobalConfig import GlobalConfig
+from utils.utils import (
+    load_steps_from_file,
+    load_config,
+    update_config,
+    validate_topology,
+)
+
 
 def run_experiment(config_file, output_file, extra_dir=None, **kwargs):
     """
@@ -23,26 +30,19 @@ def run_experiment(config_file, output_file, extra_dir=None, **kwargs):
 
     # Initialize the simulator with the modified configuration
     num_nodes = config["simulator"]["number_of_nodes"]
+    topology = config["topology"]
     strategy_name = config["simulator"]["strategy"]["name"]
     strategy_params = {
         key: value for key, value in config["simulator"]["strategy"].items()
     }
-    window_size = config["node"]["window_size"]
-    slide = config["node"]["slide"]
-    throughput = config["node"]["throughput"]
-    complexity_type = config["node"]["complexity_type"]
+
+    GlobalConfig.extra_dir = extra_dir
+
+    # Validate the topology configuration
+    validate_topology(topology)
 
     # Initialize the simulator
-    simulator = Simulator(
-        num_nodes,
-        strategy_name,
-        window_size,
-        slide,
-        throughput,
-        complexity_type,
-        strategy_params,
-        extra_dir,
-    )
+    simulator = Simulator(num_nodes, topology, strategy_name, strategy_params)
 
     # Read steps data from all generated files
     steps_data = []

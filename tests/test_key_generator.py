@@ -1,6 +1,6 @@
 import unittest
 from keygen.KeyGenerator import KeyGenerator
-from utils.utils import validate_config
+from utils.utils import validate_keygen_config
 
 
 class TestKeyGenerator(unittest.TestCase):
@@ -16,14 +16,14 @@ class TestKeyGenerator(unittest.TestCase):
             "distribution": {"type": "uniform"},
         }
 
-    def test_validate_config(self):
+    def test_validate_keygen_config(self):
         # Test valid config
         try:
-            validate_config(self.valid_config)
-            print("test_validate_config: Valid config passed")
+            validate_keygen_config(self.valid_config)
+            print("test_validate_keygen_config: Valid config passed")
         except SystemExit:
             self.fail(
-                "validate_config raised SystemExit unexpectedly for a valid config!"
+                "validate_keygen_config raised SystemExit unexpectedly for a valid config!"
             )
 
         # Test invalid config: missing keys
@@ -41,7 +41,7 @@ class TestKeyGenerator(unittest.TestCase):
             },
         }
         with self.assertRaises(SystemExit):
-            validate_config(invalid_config_missing_key)
+            validate_keygen_config(invalid_config_missing_key)
 
         # Test invalid config: incorrect value types
         invalid_config_incorrect_type = {
@@ -54,7 +54,7 @@ class TestKeyGenerator(unittest.TestCase):
             "distribution": {"type": "normal", "mean": 0, "stddev": 1},
         }
         with self.assertRaises(SystemExit):
-            validate_config(invalid_config_incorrect_type)
+            validate_keygen_config(invalid_config_incorrect_type)
 
     def test_key_generator(self):
         keygen = KeyGenerator(self.valid_config)

@@ -1,6 +1,13 @@
 import json
 import sys
-from complexities.Complexities import O1Complexity, OLogNComplexity, ONComplexity, ONLogNComplexity, ON2Complexity, Complexity
+from complexities.Complexities import (
+    O1Complexity,
+    OLogNComplexity,
+    ONComplexity,
+    ONLogNComplexity,
+    ON2Complexity,
+    Complexity,
+)
 
 
 def load_config(config_file):
@@ -19,6 +26,7 @@ def load_config(config_file):
     except (FileNotFoundError, IOError) as e:
         sys.exit(f"Error: {e}")
 
+
 def update_config(config, updates):
     """
     Update the configuration dictionary with the given updates.
@@ -29,17 +37,30 @@ def update_config(config, updates):
 
     Returns:
         dict: The updated configuration dictionary.
-    
-    Note:
-        Used in the automatic configuration updates used by the simulator experiments.
     """
     for key, value in updates.items():
-        if key in config["node"]:
-            config["node"][key] = value
-        elif key in config["simulator"]:
-            config["simulator"][key] = value
-        elif key in config["keygen"]:
-            config["keygen"][key] = value
+        if key == "topology":
+            # Update specific topology stage or nodes
+            for stage_update in value.get("stages", []):
+                stage_id = stage_update.get("id")
+                for stage in config["topology"]["stages"]:
+                    if stage["id"] == stage_id:
+                        stage.update(stage_update)
+
+        elif key == "simulator":
+            # Update simulator settings
+            config["simulator"].update(value)
+
+        elif key == "keygen":
+            # Update key generation settings
+            config["keygen"].update(value)
+
+        elif key == "throughput":
+            # Update throughput for all nodes in the topology
+            for stage in config.get("topology", {}).get("stages", []):
+                for node in stage.get("nodes", []):
+                    node["throughput"] = value
+
         else:
             print(f"Warning: Unrecognized configuration parameter '{key}'")
 
@@ -86,7 +107,7 @@ def load_steps_from_file(file_path):
     return steps_data
 
 
-def validate_config(config):
+def validate_keygen_config(config):
     """
     Validates the configuration for the key generation and distribution.
 
@@ -145,11 +166,18 @@ def validate_config(config):
         sys.exit("Invalid value for 'number of keys'. Must be a positive integer.")
     if not isinstance(config["arrival rate"], int) or config["arrival rate"] <= 0:
         sys.exit("Invalid value for 'arrival rate'. Must be a positive integer.")
-    if not isinstance(config["spike_probability"], int) or not (0 <= config["spike_probability"] <= 100):
-        sys.exit("Invalid value for 'spike_probability'. Must be an integer between 0 and 100.")
-    if not isinstance(config["spike_magnitude"], (int, float)) or not (0 <= config["spike_magnitude"]):
-        sys.exit("Invalid value for 'spike_magnitude'. Must be a number greater than 0.")
-
+    if not isinstance(config["spike_probability"], int) or not (
+        0 <= config["spike_probability"] <= 100
+    ):
+        sys.exit(
+            "Invalid value for 'spike_probability'. Must be an integer between 0 and 100."
+        )
+    if not isinstance(config["spike_magnitude"], (int, float)) or not (
+        0 <= config["spike_magnitude"]
+    ):
+        sys.exit(
+            "Invalid value for 'spike_magnitude'. Must be a number greater than 0."
+        )
 
     # Check 'distribution' dictionary
     if not isinstance(config["distribution"], dict):
@@ -178,6 +206,118 @@ def validate_config(config):
 
     # If all checks pass
     print("Config is valid.")
+
+
+def validate_topology(config):
+    """
+    Validates the topology configuration.
+
+    Args:
+        config (dict): The topology configuration dictionary.
+
+    Raises:
+        SystemExit: If any required configuration key is missing or has an invalid value.
+    """
+
+    if "stages" not in config:
+        sys.exit("Missing required key: stages")
+
+    stages = config["stages"]
+
+    if not isinstance(stages, list) or len(stages) == 0:
+        sys.exit("Invalid value for 'stages'. Must be a non-empty list.")
+
+    node_ids = set()
+
+    for i, stage in enumerate(stages):
+        if "id" not in stage:
+            sys.exit(f"Missing required key id in stage {i + 1}")
+        if stage["id"] != i + 1:
+            sys.exit(
+                f"Stage IDs must be sequential. Found {stage['id']} at position {i + 1}. Expected {i + 1}."
+            )
+
+        if "nodes" not in stage:
+            sys.exit(f"Missing required key: nodes in stage {stage['id']}")
+
+        nodes = stage["nodes"]
+
+        if not isinstance(nodes, list) or len(nodes) == 0:
+            sys.exit(
+                f"Invalid value for 'nodes' in stage {stage['id']}. Must be a non-empty list"
+            )
+
+        # Check that all nodes have the same type
+        first_node_type = nodes[0]["type"]
+
+        for node in nodes:
+            if "id" not in node:
+                sys.exit(f"Missing required key: id in a node in stage {stage['id']}")
+            if node["id"] in node_ids:
+                sys.exit(f"Node ID {node['id']} is not unique in the topology.")
+            node_ids.add(node["id"])
+
+            if "type" not in node or node["type"] not in ["stateless", "stateful"]:
+                sys.exit(
+                    f"Invalid or missing type for node {node['id']} in stage {stage['id']}. Must be 'stateless' or 'stateful'."
+                )
+
+            if node["type"] != first_node_type:
+                sys.exit(f"All nodes in stage {stage['id']} must have the same type.")
+
+            if "throughput" not in node or node["throughput"] <= 0:
+                sys.exit(
+                    f"Invalid throughput for node {node['id']} in stage {stage['id']}. Must be a positive number."
+                )
+
+            if "complexity_type" not in node or node["complexity_type"] not in [
+                "O(1)",
+                "O(logn)",
+                "O(n)",
+                "O(nlogn)",
+                "O(n^2)",
+            ]:
+                sys.exit(
+                    f"Invalid or missing complexity_type for node {node['id']} in stage {stage['id']}."
+                )
+
+            if "strategy" not in node or not isinstance(node["strategy"], dict):
+                sys.exit(
+                    f"Missing or invalid strategy for node {node['id']} in stage {stage['id']}. Must be a dictionary."
+                )
+
+            strategy = node["strategy"]
+            if "name" not in strategy or strategy["name"] not in [
+                "shuffle_grouping",
+                "hashing",
+                "key_grouping",
+            ]:
+                sys.exit(
+                    f"Invalid or missing strategy name for node {node['id']} in stage {stage['id']}."
+                )
+
+            if strategy["name"] == "key_grouping":
+                if "prefix_length" not in strategy or strategy["prefix_length"] <= 0:
+                    sys.exit(
+                        f"Invalid or missing prefix_length for key_grouping strategy in node {node['id']} in stage {stage['id']}."
+                    )
+
+            if node["type"] == "stateful":
+                if "window_size" not in node or node["window_size"] <= 0:
+                    sys.exit(
+                        f"Missing or invalid window_size for stateful node {node['id']} in stage {stage['id']}."
+                    )
+                if "slide" not in node or node["slide"] <= 0:
+                    sys.exit(
+                        f"Missing or invalid slide for stateful node {node['id']} in stage {stage['id']}."
+                    )
+
+            if node["type"] == "stateless" and (
+                "window_size" in node or "slide" in node
+            ):
+                sys.exit(
+                    f"Stateless node {node['id']} in stage {stage['id']} should not have window_size or slide."
+                )
 
 
 def create_complexity(complexity_type: str) -> Complexity:
