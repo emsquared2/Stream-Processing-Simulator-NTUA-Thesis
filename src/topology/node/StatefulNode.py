@@ -23,7 +23,7 @@ class StatefulNode(Node):
         window_size: int,
         slide: int,
         terminal: bool = False, #TODO: Update constructors calls
-        extra_dir: str = None,
+
     ) -> None:
         """
         Initializes the stateful node with the specified parameters.
@@ -38,13 +38,22 @@ class StatefulNode(Node):
             terminal (bool): Specifies if the current node is a
                              terminal (final stage) node.
         """
-        super().__init__(node_id, "stateful", throughput, complexity_type, extra_dir)
+        super().__init__(
+            node_id,
+            "stateful",
+            throughput,
+            complexity_type,
+        )
         self.window_size = window_size
         self.slide = slide
         self.terminal = terminal
 
         self.state = State(
-            node_id, throughput, complexity_type, window_size, slide, extra_dir
+            node_id,
+            throughput,
+            complexity_type,
+            window_size,
+            slide,
         )
 
     def receive_and_process(self, keys: list, step: int) -> None:

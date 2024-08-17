@@ -1,6 +1,7 @@
 from collections import Counter
 from .Window import Window
-from .Logging import initialize_logging
+from simulator.GlobalConfig import GlobalConfig
+from utils.Logging import initialize_logging, log_default_info, log_node_info
 from utils.utils import create_complexity
 
 
@@ -35,7 +36,6 @@ class State:
         complexity_type: str,
         window_size: int,
         slide: int,
-        extra_dir: str = None,
     ) -> None:
         """
         Initializes the NodeState with the given parameters.
@@ -64,30 +64,12 @@ class State:
         self.total_expired = 0
         self.total_cycles = 0
 
-        self.extra_dir = extra_dir
+        self.extra_dir = GlobalConfig.extra_dir
 
         # Initialize logging
         self.default_logger, self.node_logger = initialize_logging(
             self.node_id, self.extra_dir
         )
-
-    def log_default_info(self, message):
-        """
-        Logs an info message to the default logger.
-
-        Args:
-            message (str): The message to log.
-        """
-        self.default_logger.info(message)
-
-    def log_node_info(self, message):
-        """
-        Logs an info message with the node_id included to the per-node logger.
-
-        Args:
-            message (str): The message to log.
-        """
-        self.node_logger.info(message, extra={"node_id": self.node_id})
 
     def update(self, keys: list[str], step: int, terminal: bool) -> list[list]:
         """
@@ -108,7 +90,9 @@ class State:
         """
         self.total_keys += len(keys)
 
-        self.log_default_info(f"Updating node at step {step} with keys: {keys}")
+        log_default_info(
+            self.default_logger, f"Updating node at step {step} with keys: {keys}"
+        )
         self.current_step = max(self.current_step, step)
         self.minimum_step = max(0, self.current_step - self.window_size + 1)
         max_step = self.minimum_step + self.window_size
@@ -131,7 +115,9 @@ class State:
             key (str): The key to add.
             step (int): The step at which the key was received.
         """
-        self.log_default_info(f"Updating windows for key: {key} at step: {step}")
+        log_default_info(
+            self.default_logger, f"Updating windows for key: {key} at step: {step}"
+        )
         for start_step in range(self.minimum_step, self.current_step + 1, self.slide):
             if step - start_step <= self.window_size:
                 if start_step not in self.windows:
@@ -161,7 +147,7 @@ class State:
         """
         Removes windows that have expired based on the current step.
         """
-        self.log_default_info("Removing expired windows.")
+        log_default_info(self.default_logger, "Removing expired windows.")
         for start_step, window in list(self.windows.items()):
             if window.is_expired(self.current_step):
                 del self.windows[start_step]
@@ -170,7 +156,7 @@ class State:
         """
         Removes keys that have expired based on their max_step.
         """
-        self.log_default_info("Removing expired keys.")
+        log_default_info(self.default_logger, "Removing expired keys.")
         expired_keys_count = 0
         updated_received_keys = []
 
@@ -196,26 +182,26 @@ class State:
             list: Returns in a list the keys to be emitted from a window.
                   If it is a terminal node it returns an empty list. 
         """
-        self.log_default_info(f"Processing window starting at step {window.start_step}")
-        window_key_count: dict[str, int] = {}
-        processed_keys = 0
-        processed_keys_set = set()
-        cycles = 0
+        log_default_info(
+            self.default_logger,
+            f"Processing window starting at step {window.start_step}",
+        )
 
-        for key in window.keys:
-            if cycles >= self.throughput:
-                break
-            processed_keys += 1
-            processed_keys_set.add(key)
-            window_key_count[key] = window_key_count.get(key, 0) + 1
-            cycles += self.complexity.calculate_cycles(len(window.keys))
+        processed_keys, cycles, window_key_count = window.process(
+            self.throughput, self.complexity
+        )
 
-        self.log_default_info(f"Processed {cycles} computational cycles for window.")
-        self.log_node_info(
-            f"Step {self.current_step} - Processed {processed_keys} keys - Node load {(cycles*100)/self.throughput}%"
+        log_default_info(
+            self.default_logger, f"Processed {cycles} computational cycles for window."
+        )
+        log_node_info(
+            self.node_logger,
+            f"Step {self.current_step} - Processed {processed_keys} keys - Node load {(cycles*100)/self.throughput}%",
+            self.node_id,
         )
         self.total_cycles += cycles
         self.total_processed += processed_keys
+        # TODO: We can use window_key_count to aggregate/store the key_count for all processed keys
 
         if terminal:
             return []
@@ -244,7 +230,7 @@ class State:
             f"Number of Active Keys: {len(self.received_keys)}\n"
             f"------------------------------------------"
         )
-        self.log_default_info(report_message)
+        log_default_info(self.default_logger, report_message)
 
         return (
             f"Node ID: {self.node_id}\n"

@@ -4,6 +4,7 @@ from topology.Topology import Topology
 from partitioner.Hashing import Hashing
 from partitioner.KeyGrouping import KeyGrouping
 from partitioner.ShuffleGrouping import ShuffleGrouping
+from utils.utils import validate_topology
 
 # TODO: Refactor sim flow (_init_strategy, send_buffered_keys, etc.)
 
@@ -25,7 +26,6 @@ class Simulator:
         topology_config: dict,
         strategy_name: str,
         strategy_params: Optional[Dict[str, Any]] = None,
-        extra_dir: str = None,
     ):
         """
         Initializes a new Simulator instance with the given parameters.
@@ -36,10 +36,14 @@ class Simulator:
         - strategy_name (str): The name of the partitioning strategy to use.
         - strategy_params (dict, optional): Additional parameters for the partitioning strategy.
         """
+
+        # Validate the topology configuration
+        validate_topology(topology_config)
+
         self.num_nodes = num_nodes
 
         # Initialize the topology
-        self.topology = Topology(topology_config, extra_dir)
+        self.topology = Topology(topology_config)
 
         # Select nodes from stage with id '1'
         self.nodes = self._select_stage_1_nodes()
