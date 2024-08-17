@@ -199,14 +199,21 @@ class State:
             f"Step {self.current_step} - Processed {processed_keys} keys - Node load {(cycles*100)/self.throughput}%",
             self.node_id,
         )
+        
         self.total_cycles += cycles
         self.total_processed += processed_keys
         # TODO: We can use window_key_count to aggregate/store the key_count for all processed keys
 
         if terminal:
             return []
-        else: 
-            return list(processed_keys_set)
+        else:
+            # The window_key_count is a dictionary that holds
+            # how many times a type of key was processed in the
+            # window. We can extract all the different keys that 
+            # were processed in this window as follows. 
+            # As we previously clarified that a stateful node 
+            # will "simulate" an aggregation function.
+            return list(window_key_count.keys())
 
     def __repr__(self) -> str:
         """
