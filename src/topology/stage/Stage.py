@@ -3,7 +3,7 @@ from ..node.StatefulNode import StatefulNode
 
 
 class Stage:
-    def __init__(self, stage_data, extra_dir):
+    def __init__(self, stage_data):
         """
         Initializes the Stage with nodes based on the given stage data.
 
@@ -11,9 +11,9 @@ class Stage:
             stage_data (dict): A dictionary representing a stage in the topology.
         """
         self.id = stage_data["id"]
-        self.nodes = self._create_nodes(stage_data["nodes"], extra_dir)
+        self.nodes = self._create_nodes(stage_data["nodes"])
 
-    def _create_nodes(self, nodes_data, extra_dir):
+    def _create_nodes(self, nodes_data):
         """
         Creates instances of nodes based on their type.
 
@@ -33,10 +33,10 @@ class Stage:
                 window_size = node_data["window_size"]
                 slide = node_data["slide"]
                 node = StatefulNode(
-                    node_id, throughput, complexity_type, window_size, slide, extra_dir
+                    node_id, throughput, complexity_type, window_size, slide
                 )
             elif node_type == "stateless":
-                node = StatelessNode(node_id, throughput, complexity_type, extra_dir)
+                node = StatelessNode(node_id, throughput, complexity_type)
             nodes.append(node)
         return nodes
 
