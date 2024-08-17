@@ -22,7 +22,7 @@ class StatefulNode(Node):
         complexity_type: str,
         window_size: int,
         slide: int,
-        terminal: bool,
+        terminal: bool = False, #TODO: Update constructors calls
         extra_dir: str = None,
     ) -> None:
         """
