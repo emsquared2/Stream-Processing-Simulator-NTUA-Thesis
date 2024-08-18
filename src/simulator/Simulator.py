@@ -1,9 +1,9 @@
 from typing import Optional, Dict, Any
 
 from topology.Topology import Topology
-from partitioner.Hashing import Hashing
-from partitioner.KeyGrouping import KeyGrouping
-from partitioner.ShuffleGrouping import ShuffleGrouping
+from partitioning_stategies.Hashing import Hashing
+from partitioning_stategies.KeyGrouping import KeyGrouping
+from partitioning_stategies.ShuffleGrouping import ShuffleGrouping
 from utils.utils import validate_topology
 
 # TODO: Refactor sim flow (_init_strategy, send_buffered_keys, etc.)
