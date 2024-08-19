@@ -14,6 +14,8 @@ def main(config_file, steps_file):
     # Extract simulator properties from the configuration
     num_nodes = config["simulator"]["number_of_nodes"]
     topology = config["topology"]
+
+    # TODO: This is used for the initial key partitioning...
     strategy_name = config["simulator"]["strategy"]["name"]
     strategy_params = {
         key: value for key, value in config["simulator"]["strategy"].items()
