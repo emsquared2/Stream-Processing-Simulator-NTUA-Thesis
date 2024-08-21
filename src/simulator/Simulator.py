@@ -1,10 +1,5 @@
-from typing import Optional, Dict, Any
-
 from topology.Topology import Topology
 from utils.utils import validate_topology
-
-# TODO: Refactor sim flow (_init_strategy, send_buffered_keys, etc.)
-
 
 class Simulator:
     """
@@ -12,17 +7,16 @@ class Simulator:
 
     Attributes:
     - num_nodes (int): The number of nodes in the simulation.
-    - topology_config (dict): A dictionary representing the entire topology.
-    - strategy (PartitionStrategy): The partitioning strategy used for distributing keys.
-    - buffers (dict): A dictionary to buffer keys for each node before processing.
+    - topology (Topology): A class representing the simulator topology.
+    - input_partitioner (KeyPartitioner): A KeyPartitioner class that will 
+                                          partition the input keys to the
+                                          first stage.
     """
 
     def __init__(
         self,
         num_nodes: int,
-        topology_config: dict,
-        strategy_name: str,
-        strategy_params: Optional[Dict[str, Any]] = None,
+        topology_config: dict
     ):
         """
         Initializes a new Simulator instance with the given parameters.
@@ -30,8 +24,6 @@ class Simulator:
         Args:
         - num_nodes (int): The number of nodes in the simulation.
         - topology (dict): A dictionary representing the entire topology.
-        - strategy_name (str): The name of the partitioning strategy to use.
-        - strategy_params (dict, optional): Additional parameters for the partitioning strategy.
         """
 
         # Validate the topology configuration
@@ -42,21 +34,16 @@ class Simulator:
         # Initialize the topology
         self.topology = Topology(topology_config)
 
-        # Select nodes from stage with id '1'
-        self.input_partitioner = self._find_stage0_partioner()
+        # Select nodes from stage with id '0'
+        self.input_partitioner = self._find_stage0_partitioner()
 
-        # # Initialize a buffer for each node to temporarily store keys
-        # self.buffers = {i: [] for i in range(len(self.nodes))}
-
-        # # Initialize the partitioning strategy based on the strategy name
-        # self.strategy = self._init_strategy(strategy_name, strategy_params)
-
-    def _find_stage0_partioner(self):
+    def _find_stage0_partitioner(self):
         """
         Selects the nodes from the stage with id '1'.
 
         Returns:
-        - list: A list of nodes from the stage with id '1'.
+        - Node: Returns the first node of the stage 0. In our case 
+                its the initial input (key) partitioner.
         """
         for stage in self.topology.stages:
             if stage.id == 0:
