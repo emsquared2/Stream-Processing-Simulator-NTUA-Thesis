@@ -4,7 +4,7 @@ from ..node.StatefulNode import StatefulNode
 
 
 class Stage:
-    def __init__(self, stage_data, next_stage_len: int):
+    def __init__(self, stage_data, terminal_stage: bool):
         """
         Initializes the Stage with nodes based on the given stage data.
 
@@ -14,14 +14,7 @@ class Stage:
         self.id = stage_data["id"]
         self.stage_type = stage_data["type"]
         self.next_stage = None
-        self.terminal_stage = False
-
-        # TODO: integer instance might require only bool in the end
-        self.next_stage_len = next_stage_len
-        # TODO: Consider adding terminal_stage (terminal) node in
-        #       all nodes
-        if self.next_stage_len == 0:
-            self.terminal_stage = True
+        self.terminal_stage = terminal_stage
 
         self.nodes = self._create_nodes(stage_data["nodes"])
 
