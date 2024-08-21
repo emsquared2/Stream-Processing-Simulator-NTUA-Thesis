@@ -24,12 +24,12 @@ class Topology:
         stages = []
         for index, stage_data in enumerate(stages_data):
             if index + 1 < len(stages_data):
-                next_stage_len = len(stages_data[index + 1]["nodes"])
+                terminal_stage = False
             else:
-                next_stage_len = 0
+                terminal_stage = True
 
 
-            stage = Stage(stage_data, next_stage_len)
+            stage = Stage(stage_data, terminal_stage)
             stages.append(stage)
 
             # # Add stateless intermediate stage (that simulates
