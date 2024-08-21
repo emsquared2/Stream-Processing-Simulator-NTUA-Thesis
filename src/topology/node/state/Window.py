@@ -1,6 +1,4 @@
 from collections import Counter
-from utils.Logging import log_default_info
-
 
 class Window:
     """
