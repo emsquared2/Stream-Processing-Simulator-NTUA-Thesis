@@ -1,32 +1,33 @@
 from .Node import Node
 
-
 class StatelessNode(Node):
     """
     Represents a stateless node in the simulation.
 
     Attributes:
-        node_id (int): Unique identifier for the node.
+        uid (int): Unique identifier for the node.
+        stage_node_id: The stage local node identifier.
         type (str): The type of the node (stateless).
         throughput (int): Maximum computational cycles a node can run per step.
         complexity_type (str): Complexity type used for computational cycle calculation.
+        stage (Stage): The stage which the node is in.
     """
 
     # TODO: Add strategy params
-    def __init__(self, node_id: int, throughput: int, complexity_type: str) -> None:
+    def __init__(self, uid: int, stage_node_id: int, throughput: int, complexity_type: str, stage) -> None:
         """
         Initializes the stateless node with the specified parameters.
 
         Args:
-            node_id (int): Unique identifier for the node.
-            throughput (int): Maximum computational cycles a node can run per step.
-            complexity_type (str): Complexity type used for computational cycle calculation.
+            uid (int): Unique identifier for the node.
+            stage_node_id (int): Stage node identifier.
+            throughput (int): Maximum computational cycles a node can
+                              run per step.
+            complexity_type (str): Complexity type used for computational
+                                   cycle calculation.
+            stage (Stage): The stage which the node is in.
         """
-        super().__init__(node_id, "stateless", throughput, complexity_type)
-
-        # TODO: Initialize strategy
-        # Based on implementation of issue #9:
-        # https://github.com/emsquared2/Stream-Processing-Simulator-NTUA-Thesis/issues/9
+        super().__init__(uid, stage_node_id, "stateless", throughput, complexity_type, stage)
 
     def receive_and_process(self, keys: list, step: int) -> None:
         """
@@ -36,9 +37,6 @@ class StatelessNode(Node):
             keys (list): List of keys to be processed.
             step (int): Current step in the simulation.
         """
-        # TODO: Implementation specific to StatelessNode
-        # Based on implementation of issue #9:
-        # https://github.com/emsquared2/Stream-Processing-Simulator-NTUA-Thesis/issues/9
         pass
 
     def __repr__(self) -> str:
@@ -50,7 +48,7 @@ class StatelessNode(Node):
         """
         return (
             f"\n--------------------\n"
-            f"StatelessNode {self.node_id} with:\n"
+            f"StatelessNode {self.uid} with:\n"
             f"throughput: {self.throughput}\n"
             f"complexity type: {self.complexity_type}\n"
             f"--------------------"

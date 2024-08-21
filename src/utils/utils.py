@@ -231,10 +231,10 @@ def validate_topology(config):
 
     for i, stage in enumerate(stages):
         if "id" not in stage:
-            sys.exit(f"Missing required key id in stage {i + 1}")
-        if stage["id"] != i + 1:
+            sys.exit(f"Missing required key id in stage {i}")
+        if stage["id"] != i:
             sys.exit(
-                f"Stage IDs must be sequential. Found {stage['id']} at position {i + 1}. Expected {i + 1}."
+                f"Stage IDs must be sequential. Found {stage['id']} at position {i}. Expected {i}."
             )
 
         if "nodes" not in stage:
@@ -257,9 +257,9 @@ def validate_topology(config):
                 sys.exit(f"Node ID {node['id']} is not unique in the topology.")
             node_ids.add(node["id"])
 
-            if "type" not in node or node["type"] not in ["stateless", "stateful"]:
+            if "type" not in node or node["type"] not in ["stateless", "stateful", "key_partitioner"]:
                 sys.exit(
-                    f"Invalid or missing type for node {node['id']} in stage {stage['id']}. Must be 'stateless' or 'stateful'."
+                    f"Invalid or missing type for node {node['id']} in stage {stage['id']}. Must be 'stateless', 'stateful' or 'key_partitioner'."
                 )
 
             if node["type"] != first_node_type:
