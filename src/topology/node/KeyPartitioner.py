@@ -1,21 +1,28 @@
 from typing import Optional, Dict, Any
 
-# from ..stage.Stage import Stage
 from .StatelessNode import StatelessNode
-from partitioning_stategies.Hashing import Hashing
-from partitioning_stategies.KeyGrouping import KeyGrouping
-from partitioning_stategies.ShuffleGrouping import ShuffleGrouping
+from partitioning_strategies.Hashing import Hashing
+from partitioning_strategies.KeyGrouping import KeyGrouping
+from partitioning_strategies.ShuffleGrouping import ShuffleGrouping
 
 
 class KeyPartitioner(StatelessNode):
     """
-    Represents a stateless node in the simulation.
+    Represents a key partitioner stateless node in the simulation.
 
     Attributes:
         uid (int): Unique identifier for the node.
+        stage_node_id: The stage local node identifier.
         type (str): The type of the node (stateless).
-        throughput (int): Maximum computational cycles a node can run per step.
-        complexity_type (str): Complexity type used for computational cycle calculation.
+        throughput (int): Maximum computational cycles a node can
+                          run per step.
+        complexity_type (str): Complexity type used for computational
+                               cycle calculation.
+        stage (Stage): The stage which the node is in.
+        strategy (PartitionStrategy): The class the specifies the
+                                      key partitioning strategy.
+        buffers (dict): Buffers used to send the partitioned keys
+                        to the next stage.
     """
 
     # TODO: Add strategy params
@@ -33,10 +40,16 @@ class KeyPartitioner(StatelessNode):
         Initializes the stateless node with the specified parameters.
 
         Args:
-            uid (int): Unique identifier for the node.
-            throughput (int): Maximum computational cycles a node can run per step.
-            complexity_type (str): Complexity type used for computational cycle calculation.
-            partitioning_strategy (str): The name of the partitioning strategy.
+            uid (int): Global unique identifier for the node.
+            stage_node_id: The stage local node identifier.
+            throughput (int): Maximum computational cycles a node can
+                              run per step.
+            complexity_type (str): Complexity type used for computational
+                                   cycle calculation.
+            stage (Stage): The stage which the node is in.
+            partitioning_strategy (str): The name of the partitioning
+                                         strategy.
+            strategy_params (dict): Parameters for the partitioning strategy.
         """
         super().__init__(uid, stage_node_id, throughput, complexity_type, stage)
 
@@ -81,10 +94,10 @@ class KeyPartitioner(StatelessNode):
         Args:
             keys (list): List of keys to be processed.
             step (int): Current step in the simulation.
+
+        Note: As it a KeyPartioner class it partitions the keys and sends
+              them to the next simulator stage.
         """
-        # TODO: Implementation specific to StatelessNode
-        # Based on implementation of issue #9:
-        # https://github.com/emsquared2/Stream-Processing-Simulator-NTUA-Thesis/issues/9
         
         print(self.uid)
         if not self.stage.terminal_stage:

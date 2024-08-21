@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-# from ..stage.Stage import Stage
-
 
 class Node(ABC):
     """
@@ -8,9 +6,13 @@ class Node(ABC):
 
     Attributes:
         uid (int): Unique identifier for the node.
-        type (str): The type of the node (stateful or stateless).
-        throughput (int): Maximum computational cycles a node can run per step.
-        complexity_type (str): Complexity type used for computational cycle calculation.
+        stage_node_id: The stage local node identifier.
+        type (str): The type of the node (stateless).
+        throughput (int): Maximum computational cycles a node can
+                          run per step.
+        complexity_type (str): Complexity type used for computational
+                               cycle calculation.
+        stage (Stage): The stage which the node is in.
     """
 
     def __init__(
@@ -21,9 +23,11 @@ class Node(ABC):
 
         Args:
             uid (int): Unique identifier for the node.
+            stage_node_id: The stage local node identifier.
             type (str): The type of the node (stateful or stateless)
             throughput (int): Maximum computational cycles a node can run per step.
             complexity_type (str): Complexity type used for computational cycle calculation.
+            stage (Stage): The stage which the node is in.
         """
         self.uid = uid
         self.stage_node_id = stage_node_id
