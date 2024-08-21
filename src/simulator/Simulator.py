@@ -39,7 +39,7 @@ class Simulator:
 
     def _find_stage0_partitioner(self):
         """
-        Selects the nodes from the stage with id '1'.
+        Selects the first node from the stage with id '0' which is the initial partitioner.
 
         Returns:
         - Node: Returns the first node of the stage 0. In our case 

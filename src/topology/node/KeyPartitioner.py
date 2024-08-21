@@ -53,10 +53,7 @@ class KeyPartitioner(StatelessNode):
         """
         super().__init__(uid, stage_node_id, throughput, complexity_type, stage)
 
-        # TODO: Initialize strategy
-        # Based on implementation of issue #9:
-        # https://github.com/emsquared2/Stream-Processing-Simulator-NTUA-Thesis/issues/9
-        # Initialize the partitioning strategy based on the strategy name.
+        # Initialize partitioning strategy
         self.strategy = self._init_strategy(partitioning_strategy, strategy_params)
 
         # Initialize a buffer for each node of the next stage
