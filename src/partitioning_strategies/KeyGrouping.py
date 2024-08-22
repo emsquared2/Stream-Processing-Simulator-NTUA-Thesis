@@ -40,16 +40,3 @@ class KeyGrouping(PartitionStrategy):
             buffers[node_index].append(key)
             if group_key not in self.group_map:
                 self.group_map[group_key] = node_index
-
-    def get_node_index(self, key: str) -> int:
-        """
-        Retrieves the node index for a given key based on its prefix.
-
-        Args:
-        - key (str): The key for which to find the node index.
-
-        Returns:
-        - int: The index of the node assigned to the key group, or -1 if the group is not mapped.
-        """
-        group_key = key[: self.prefix_length]
-        return self.group_map.get(group_key, -1)
