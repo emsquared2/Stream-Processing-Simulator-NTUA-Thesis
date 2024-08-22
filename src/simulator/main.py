@@ -11,12 +11,11 @@ def main(config_file, steps_file):
     # Load the configuration file
     config = load_config(config_file)
 
-    # Extract simulator properties from the configuration
-    num_nodes = config["simulator"]["number_of_nodes"]
+    # Extract topology configuration
     topology = config["topology"]
 
-    # Initialize the simulator with the extracted properties
-    simulator = Simulator(num_nodes, topology)
+    # Initialize the simulator with the topology
+    simulator = Simulator(topology)
 
     # Read steps data from file
     steps_data = load_steps_from_file(steps_file)
