@@ -1,0 +1,8 @@
+1) Add extra empty steps so that keys generated in last steps, are also processed. (In Simulator class)
+2) Add stateless intermediate stage that simulates the key distribution between stages. (In Topology class)
+3) Decide what to do with throughput, complexity_type on stateless nodes. Also merge KeyPartitioner with StatelessNode if needed.
+4) Adjust experiments (currently not working)
+5) In window.process should we also delete processed keys for self.keys?
+6) Issue #6. We can assume that a window is full (so it is processed) 1 step after it expires (i.e, move full and expire 1 step further).
+For example, if we have a [0,5] window and keys arrive at step 5, the window will not be processed at step 5 but at step 6. So, if keys 
+from other nodes arrive with step 5 too, then the window will stil be active (not processed and not expired) and the keys will be added in the window.
