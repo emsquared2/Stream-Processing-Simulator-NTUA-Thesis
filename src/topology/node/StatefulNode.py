@@ -66,7 +66,9 @@ class StatefulNode(Node):
         print(f"Node {self.uid} received keys:\n{keys}\nat step {step}")
 
         processed_keys = self.state.update(keys, step, self.terminal)
-        print(self.uid, self.terminal, processed_keys)
+        print(
+            f"Node {self.uid}, terminal: {self.terminal}, processed_keys: {processed_keys}"
+        )
         if not self.terminal:
             processed_keys_flat = [
                 item for sublist in processed_keys for item in sublist
