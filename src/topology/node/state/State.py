@@ -17,7 +17,6 @@ class State:
         slide (int): The slide of the processing window.
 
         received_keys (list[tuple[str, int, int]]): List of keys received, with their arrival step and max_step.
-        state (dict[str, int]): Dictionary to track the state of keys.
         windows (dict[int, Window]): Dictionary to manage the time windows.
         current_step (int): The current step in the simulation.
         minimum_step (int): The minimum step to consider for processing keys.
@@ -54,7 +53,6 @@ class State:
         self.slide = slide
 
         self.received_keys: list[tuple[str, int, int]] = []
-        self.state: dict[str, int] = {}
         self.windows: dict[int, Window] = {}
         self.current_step = 0
         self.minimum_step = 0
@@ -78,15 +76,11 @@ class State:
         Args:
             keys (list[str]): List of keys received.
             step (int): The current step in the simulation.
-            terminal (bool): Specifies if the current node
-                             is a terminal node.
+            terminal (bool): Specifies if the current node is a terminal node.
 
         Returns:
-            list[list]: Returns the keys that will be emitted
-                        from the current window to the next
-                        stage.
-                        If the node is terminal it returns an
-                        empty list.
+            list[list]: Returns the keys that will be emitted from the current window to the next stage.
+                        If the node is terminal it returns an empty list.
         """
         self.total_keys += len(keys)
 

@@ -14,18 +14,13 @@ class KeyPartitioner(StatelessNode):
         uid (int): Unique identifier for the node.
         stage_node_id: The stage local node identifier.
         type (str): The type of the node (stateless).
-        throughput (int): Maximum computational cycles a node can
-                          run per step.
-        complexity_type (str): Complexity type used for computational
-                               cycle calculation.
+        throughput (int): Maximum computational cycles a node can run per step.
+        complexity_type (str): Complexity type used for computational cycle calculation.
         stage (Stage): The stage which the node is in.
-        strategy (PartitionStrategy): The class the specifies the
-                                      key partitioning strategy.
-        buffers (dict): Buffers used to send the partitioned keys
-                        to the next stage.
+        strategy (PartitionStrategy): The class that specifies the key partitioning strategy.
+        buffers (dict): Buffers used to send the partitioned keys to the next stage.
     """
 
-    # TODO: Add strategy params
     def __init__(
         self,
         uid: int,
@@ -42,13 +37,10 @@ class KeyPartitioner(StatelessNode):
         Args:
             uid (int): Global unique identifier for the node.
             stage_node_id: The stage local node identifier.
-            throughput (int): Maximum computational cycles a node can
-                              run per step.
-            complexity_type (str): Complexity type used for computational
-                                   cycle calculation.
+            throughput (int): Maximum computational cycles a node can run per step.
+            complexity_type (str): Complexity type used for computational cycle calculation.
             stage (Stage): The stage which the node is in.
-            partitioning_strategy (str): The name of the partitioning
-                                         strategy.
+            partitioning_strategy (str): The name of the partitioning strategy.
             strategy_params (dict): Parameters for the partitioning strategy.
         """
         super().__init__(uid, stage_node_id, throughput, complexity_type, stage)
@@ -56,9 +48,12 @@ class KeyPartitioner(StatelessNode):
         # Initialize partitioning strategy
         self.strategy = self._init_strategy(partitioning_strategy, strategy_params)
 
-        # Initialize a buffer for each node of the next stage
-        # to temporarily store keys
-        self.buffers = {i: [] for i in range(self.stage.next_stage_len) if self.stage.next_stage_len > 0}
+        # Initialize a buffer for each node of the next stage to temporarily store keys
+        self.buffers = {
+            i: []
+            for i in range(self.stage.next_stage_len)
+            if self.stage.next_stage_len > 0
+        }
 
     def _init_strategy(self, strategy_name, strategy_params):
         """
@@ -92,10 +87,10 @@ class KeyPartitioner(StatelessNode):
             keys (list): List of keys to be processed.
             step (int): Current step in the simulation.
 
-        Note: As it a KeyPartioner class it partitions the keys and sends
+        Note: As it a KeyPartitioner class it partitions the keys and sends
               them to the next simulator stage.
         """
-        
+
         print(f"Node {self.uid} received keys:\n{keys}\nat step {step}")
         if not self.stage.terminal_stage:
             # Partition the keys
@@ -103,7 +98,6 @@ class KeyPartitioner(StatelessNode):
 
             # Process buffered keys and send them to the nodes
             self.send_buffered_keys(step)
-
 
     def send_buffered_keys(self, step_count: int):
         """
