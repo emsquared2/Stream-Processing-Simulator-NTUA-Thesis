@@ -2,8 +2,8 @@
     "keygen": {
         "streams": 3,
         "steps": 50,
-        "number of keys": 100,
-        "arrival rate": 20,
+        "number_of_keys": 100,
+        "arrival_rate": 20,
         "spike_probability": 15,
         "spike_magnitude": 10,
         "distribution": {

@@ -19,7 +19,7 @@ class Distribution:
         self.keys = keys
 
     def generate(self, arrival_rate):
-        """Generate a distribution of keys based on the given arrival rate.
+        """Generates a distribution of keys based on the given arrival rate.
 
         Args:
             arrival_rate (int): The rate at which keys should be generated.
