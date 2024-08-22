@@ -1,6 +1,6 @@
 import unittest
 from keygen.KeyGenerator import KeyGenerator
-from utils.utils import validate_keygen_config
+from utils.ConfigValidator import validate_keygen_config
 
 
 class TestKeyGenerator(unittest.TestCase):
@@ -61,44 +61,36 @@ class TestKeyGenerator(unittest.TestCase):
 
         # Test create_key_array
         keys = keygen.create_key_array(3, key=True)
-        self.assertEqual(
-            keys, ["key0", "key1", "key2"], f"create_key_array failed: {keys}"
-        )
+        self.assertEqual(keys, ["key0", "key1", "key2"])
 
         # Test adjust_or_create_key_dist
         adjusted_keys = keygen.adjust_or_create_key_dist(keys, swap=True)
-        self.assertEqual(
-            len(adjusted_keys), 3, f"adjust_or_create_key_dist failed: {adjusted_keys}"
-        )
+        self.assertEqual(len(adjusted_keys), 3)
 
         # Test replace_step_with_keys
         step = ["0", "1", "0", "2", "0", "1"]
         replaced_step = keygen.replace_step_with_keys(step, ["key0", "key1", "key2"])
         self.assertEqual(
-            replaced_step,
-            ["key0", "key1", "key0", "key2", "key0", "key1"],
-            f"replace_step_with_keys failed: {replaced_step}",
+            replaced_step, ["key0", "key1", "key0", "key2", "key0", "key1"]
         )
 
         # Test generate_step
         generated_step = keygen.generate_step(keys)
-        self.assertEqual(
-            len(generated_step),
-            keygen.arrival_rate,
-            f"generate_step failed: {generated_step}",
-        )
+        self.assertEqual(len(generated_step), keygen.arrival_rate)
 
         # Test generate_stream
-        try:
-            keygen.generate_stream("test_output.txt")
-        except Exception as e:
-            self.fail(f"generate_stream raised Exception unexpectedly: {e}")
+        keygen.generate_stream("test_output.txt")
+        for i in range(self.valid_config["streams"]):
+            with open(f"test_output{i}.txt", "r") as f:
+                content = f.read()
+                self.assertTrue(content)
 
         # Test generate_input
-        try:
-            keygen.generate_input("test_output.txt")
-        except Exception as e:
-            self.fail(f"generate_input raised Exception unexpectedly: {e}")
+        keygen.generate_input("test_output.txt")
+        for i in range(self.valid_config["streams"]):
+            with open(f"test_output{i}.txt", "r") as f:
+                content = f.read()
+                self.assertTrue(content)
 
 
 if __name__ == "__main__":
