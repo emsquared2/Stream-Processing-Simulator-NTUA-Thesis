@@ -16,10 +16,9 @@ class Stage:
         self.next_stage = None
         self.terminal_stage = False
 
-        # TODO: integer instance might require only bool in the end
+
         self.next_stage_len = next_stage_len
-        # TODO: Consider adding terminal_stage (terminal) node in
-        #       all nodes
+        
         if self.next_stage_len == 0:
             self.terminal_stage = True
 
