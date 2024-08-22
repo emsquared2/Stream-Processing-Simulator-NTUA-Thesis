@@ -24,7 +24,7 @@
                         "throughput": 800, 
                         "complexity_type": "O(1)",
                         "strategy": {
-                            "name": "hashing",
+                            "name": "shuffle_grouping",
                             "prefix_length": 3
                         }
                     }                    
@@ -70,7 +70,7 @@
                         "throughput": 800,
                         "complexity_type": "O(logn)",
                         "strategy": {
-                            "name": "hashing",
+                            "name": "shuffle_grouping",
                             "prefix_length": 3
                         }
                     },
@@ -80,7 +80,7 @@
                         "throughput": 1200,
                         "complexity_type": "O(1)",
                         "strategy": {
-                            "name": "hashing",
+                            "name": "shuffle_grouping",
                             "prefix_length": 3
                         }
                     }

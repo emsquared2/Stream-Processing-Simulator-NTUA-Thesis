@@ -10,16 +10,14 @@ class Stage:
 
         Args:
             stage_data (dict): A dictionary representing a stage in the topology.
+            next_stage_len (int): The number of nodes in the next stage.
         """
         self.id = stage_data["id"]
         self.stage_type = stage_data["type"]
         self.next_stage = None
-        self.terminal_stage = False
 
         self.next_stage_len = next_stage_len
-
-        if self.next_stage_len == 0:
-            self.terminal_stage = True
+        self.terminal_stage = next_stage_len == 0
 
         self.nodes = self._create_nodes(stage_data["nodes"])
 
@@ -96,10 +94,10 @@ class Stage:
         return nodes
 
     def __repr__(self):
-        stage_repr = "\n".join(f"Node {node.uid}: {node}" for node in self.nodes)
+        stage_repr = "\n".join(f"{node}\n" for node in self.nodes)
         return (
-            f"\n######### Stage {self.id} #########\n"
+            f"\n---------- Stage {self.id} ----------\n"
             f"Total nodes: {len(self.nodes)}\n"
             f"{stage_repr}\n"
-            f"###################################\n"
+            f"----- END  OF  STAGE {self.id} ------\n"
         )

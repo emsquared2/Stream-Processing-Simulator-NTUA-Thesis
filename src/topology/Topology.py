@@ -28,7 +28,6 @@ class Topology:
             else:
                 next_stage_len = 0
 
-
             stage = Stage(stage_data, next_stage_len)
             stages.append(stage)
 
@@ -44,12 +43,12 @@ class Topology:
             stages[index]._set_next_stage(stages[index + 1])
 
         return stages
-    
+
     def __repr__(self):
-        stages_repr = "\n".join(f"Stage {stage.id}: {stage}" for stage in self.stages)
+        stages_repr = "\n".join(f"{stage}\n\n" for stage in self.stages)
         return (
-            f"\n######### T O P O L O G Y #########\n"
+            f"\n\n######### T O P O L O G Y #########\n\n"
             f"Total stages: {len(self.stages)}\n"
             f"{stages_repr}\n"
-            f"###################################\n"
+            f"#####  END  OF  TOPOLOGY  #####\n\n"
         )
