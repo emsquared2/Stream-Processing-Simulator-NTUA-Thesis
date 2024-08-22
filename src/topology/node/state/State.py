@@ -96,6 +96,8 @@ class State:
                 self.received_keys.append((key, step, max_step))
                 self.update_windows(key, step)
 
+        print(f"Node {self.node_id}: windows at step {step}: {self.windows}")
+
         processed_keys = self.process_full_windows(terminal)
         self.remove_expired_windows()
         self.remove_expired_keys()
@@ -120,10 +122,6 @@ class State:
             if start_step not in self.windows:
                 self.windows[start_step] = Window(start_step, self.window_size)
             self.windows[start_step].add_key(key)
-
-        print(
-            f"Node {self.node_id}: windows with slide {self.slide} at step {step}: {self.windows}"
-        )
 
     def process_full_windows(self, terminal: bool) -> list[list]:
         """Processes and clears windows that have reached their size limit.
