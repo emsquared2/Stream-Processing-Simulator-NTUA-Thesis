@@ -78,15 +78,15 @@ class State:
         Args:
             keys (list[str]): List of keys received.
             step (int): The current step in the simulation.
-            terminal (bool): Specifies if the current node 
+            terminal (bool): Specifies if the current node
                              is a terminal node.
 
         Returns:
-            list[list]: Returns the keys that will be emitted 
-                        from the current window to the next 
-                        stage. 
+            list[list]: Returns the keys that will be emitted
+                        from the current window to the next
+                        stage.
                         If the node is terminal it returns an
-                        empty list. 
+                        empty list.
         """
         self.total_keys += len(keys)
 
@@ -118,11 +118,18 @@ class State:
         log_default_info(
             self.default_logger, f"Updating windows for key: {key} at step: {step}"
         )
-        for start_step in range(self.minimum_step, self.current_step + 1, self.slide):
-            if step - start_step <= self.window_size:
-                if start_step not in self.windows:
-                    self.windows[start_step] = Window(start_step, self.window_size)
-                self.windows[start_step].add_key(key)
+
+        # Adjust start_step to align with the sliding windows
+        start_step = (self.current_step // self.slide) * self.slide
+
+        if 0 <= step - start_step < self.window_size:
+            if start_step not in self.windows:
+                self.windows[start_step] = Window(start_step, self.window_size)
+            self.windows[start_step].add_key(key)
+
+        print(
+            f"Node {self.node_id}: windows with slide {self.slide} at step {step}: {self.windows}"
+        )
 
     def process_full_windows(self, terminal: bool) -> list[list]:
         """Processes and clears windows that have reached their size limit.
@@ -177,10 +184,10 @@ class State:
             window (Window): The window to process.
             terminal (bool): Specifies if the current node
                              is a terminal node.
-        
-        Returns: 
+
+        Returns:
             list: Returns in a list the keys to be emitted from a window.
-                  If it is a terminal node it returns an empty list. 
+                  If it is a terminal node it returns an empty list.
         """
         log_default_info(
             self.default_logger,
@@ -199,7 +206,7 @@ class State:
             f"Step {self.current_step} - Processed {processed_keys} keys - Node load {(cycles*100)/self.throughput}%",
             self.node_id,
         )
-        
+
         self.total_cycles += cycles
         self.total_processed += processed_keys
         # TODO: We can use window_key_count to aggregate/store the key_count for all processed keys
@@ -209,9 +216,9 @@ class State:
         else:
             # The window_key_count is a dictionary that holds
             # how many times a type of key was processed in the
-            # window. We can extract all the different keys that 
-            # were processed in this window as follows. 
-            # As we previously clarified that a stateful node 
+            # window. We can extract all the different keys that
+            # were processed in this window as follows.
+            # As we previously clarified that a stateful node
             # will "simulate" an aggregation function.
             return list(window_key_count.keys())
 
