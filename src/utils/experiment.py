@@ -5,8 +5,8 @@ from utils.utils import (
     load_steps_from_file,
     load_config,
     update_config,
-    validate_topology,
 )
+from utils.ConfigValidator import validate_topology
 
 
 def run_experiment(config_file, output_file, extra_dir=None, **kwargs):
@@ -22,27 +22,22 @@ def run_experiment(config_file, output_file, extra_dir=None, **kwargs):
     config = load_config(config_file)
 
     # Modify the configuration based on kwargs
-    config = update_config(config, kwargs)
+    config = update_config(config, **kwargs)
 
     # Generate the key streams using the updated configuration
     keygen = KeyGenerator(config["keygen"])
     keygen.generate_input(output_file)
 
-    # Initialize the simulator with the modified configuration
-    num_nodes = config["simulator"]["number_of_nodes"]
+    # Extract topology configuration
     topology = config["topology"]
-    strategy_name = config["simulator"]["strategy"]["name"]
-    strategy_params = {
-        key: value for key, value in config["simulator"]["strategy"].items()
-    }
-
-    GlobalConfig.extra_dir = extra_dir
 
     # Validate the topology configuration
     validate_topology(topology)
 
+    GlobalConfig.extra_dir = extra_dir
+
     # Initialize the simulator
-    simulator = Simulator(num_nodes, topology, strategy_name, strategy_params)
+    simulator = Simulator(topology)
 
     # Read steps data from all generated files
     steps_data = []

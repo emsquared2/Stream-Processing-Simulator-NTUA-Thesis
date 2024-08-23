@@ -117,12 +117,5 @@
                 ]
             }
         ]
-    },
-    "simulator": {
-        "number_of_nodes": 7,
-        "strategy": {
-            "name": "hashing",
-            "prefix_length": 3
-        }
     }
 }
