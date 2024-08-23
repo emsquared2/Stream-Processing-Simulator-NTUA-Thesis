@@ -27,42 +27,36 @@ def load_config(config_file):
         sys.exit(f"Error: {e}")
 
 
-def update_config(config, updates):
+def update_config(config, **kwargs):
     """
-    Update the configuration dictionary with the given updates.
+    Update the configuration with the provided keyword arguments.
 
     Args:
         config (dict): The original configuration dictionary.
-        updates (dict): A dictionary of parameters to update.
+        **kwargs: Parameters to be modified in the configuration. Supports updating any attribute.
 
     Returns:
         dict: The updated configuration dictionary.
     """
-    for key, value in updates.items():
-        if key == "topology":
-            # Update specific topology stage or nodes
-            for stage_update in value.get("stages", []):
-                stage_id = stage_update.get("id")
-                for stage in config["topology"]["stages"]:
-                    if stage["id"] == stage_id:
-                        stage.update(stage_update)
 
-        elif key == "simulator":
-            # Update simulator settings
-            config["simulator"].update(value)
+    # Update keygen configuration if needed
+    keygen_updates = {k: v for k, v in kwargs.items() if k in config["keygen"]}
+    config["keygen"].update(keygen_updates)
 
-        elif key == "keygen":
-            # Update key generation settings
-            config["keygen"].update(value)
-
-        elif key == "throughput":
-            # Update throughput for all nodes in the topology
-            for stage in config.get("topology", {}).get("stages", []):
-                for node in stage.get("nodes", []):
-                    node["throughput"] = value
-
-        else:
-            print(f"Warning: Unrecognized configuration parameter '{key}'")
+    # Update topology configurations
+    for stage in config["topology"]["stages"]:
+        for node in stage["nodes"]:
+            # If a specific node ID is provided, update only that node
+            if "node_id" in kwargs and node["id"] == kwargs["node_id"]:
+                # Update attributes of the node
+                for attr, value in kwargs.items():
+                    if attr in node:
+                        node[attr] = value
+            else:
+                # If no specific node ID is provided, update all nodes with relevant attributes
+                for attr, value in kwargs.items():
+                    if attr in node:
+                        node[attr] = value
 
     return config
 
