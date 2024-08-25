@@ -14,11 +14,15 @@ class KeyPartitioner(StatelessNode):
         uid (int): Unique identifier for the node.
         stage_node_id: The stage local node identifier.
         type (str): The type of the node (stateless).
-        throughput (int): Maximum computational cycles a node can run per step.
-        complexity_type (str): Complexity type used for computational cycle calculation.
+        throughput (int): Maximum computational cycles a node can
+                          run per step.
+        complexity_type (str): Complexity type used for computational
+                               cycle calculation.
         stage (Stage): The stage which the node is in.
-        strategy (PartitionStrategy): The class that specifies the key partitioning strategy.
-        buffers (dict): Buffers used to send the partitioned keys to the next stage.
+        strategy (PartitionStrategy): The class the specifies the
+                                      key partitioning strategy.
+        buffers (dict): Buffers used to send the partitioned keys
+                        to the next stage.
     """
 
     def __init__(
@@ -37,10 +41,13 @@ class KeyPartitioner(StatelessNode):
         Args:
             uid (int): Global unique identifier for the node.
             stage_node_id: The stage local node identifier.
-            throughput (int): Maximum computational cycles a node can run per step.
-            complexity_type (str): Complexity type used for computational cycle calculation.
+            throughput (int): Maximum computational cycles a node can
+                              run per step.
+            complexity_type (str): Complexity type used for computational
+                                   cycle calculation.
             stage (Stage): The stage which the node is in.
-            partitioning_strategy (str): The name of the partitioning strategy.
+            partitioning_strategy (str): The name of the partitioning
+                                         strategy.
             strategy_params (dict): Parameters for the partitioning strategy.
         """
         super().__init__(uid, stage_node_id, throughput, complexity_type, stage)
