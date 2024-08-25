@@ -2,8 +2,8 @@
     "keygen": {
         "streams": 3,
         "steps": 50,
-        "number of keys": 100,
-        "arrival rate": 20,
+        "number_of_keys": 100,
+        "arrival_rate": 20,
         "spike_probability": 15,
         "spike_magnitude": 10,
         "distribution": {
@@ -24,7 +24,7 @@
                         "throughput": 800, 
                         "complexity_type": "O(1)",
                         "strategy": {
-                            "name": "hashing",
+                            "name": "shuffle_grouping",
                             "prefix_length": 3
                         }
                     }                    
@@ -44,7 +44,7 @@
                             "prefix_length": 3
                         },
                         "window_size": 5,
-                        "slide": 5
+                        "slide": 3
                     },
                     {
                         "id": 2,
@@ -56,7 +56,7 @@
                             "prefix_length": 3
                         },
                         "window_size": 5,
-                        "slide": 5
+                        "slide": 3
                     }
                 ]
             },
@@ -70,7 +70,7 @@
                         "throughput": 800,
                         "complexity_type": "O(logn)",
                         "strategy": {
-                            "name": "hashing",
+                            "name": "shuffle_grouping",
                             "prefix_length": 3
                         }
                     },
@@ -80,19 +80,42 @@
                         "throughput": 1200,
                         "complexity_type": "O(1)",
                         "strategy": {
-                            "name": "hashing",
+                            "name": "shuffle_grouping",
                             "prefix_length": 3
                         }
                     }
                 ]
+            },
+            {
+                "id": 3,
+                "type": "stateful",
+                "nodes": [
+                    {
+                        "id": 5,
+                        "type": "stateful",
+                        "throughput": 800,
+                        "complexity_type": "O(nlogn)",
+                        "strategy": {
+                            "name": "hashing",
+                            "prefix_length": 3
+                        },
+                        "window_size": 5,
+                        "slide": 3
+                    },
+                    {
+                        "id": 6,
+                        "type": "stateful",
+                        "throughput": 1200,
+                        "complexity_type": "O(n)",
+                        "strategy": {
+                            "name": "hashing",
+                            "prefix_length": 3
+                        },
+                        "window_size": 5,
+                        "slide": 3
+                    }
+                ]
             }
         ]
-    },
-    "simulator": {
-        "number_of_nodes": 4,
-        "strategy": {
-            "name": "hashing",
-            "prefix_length": 3
-        }
     }
 }

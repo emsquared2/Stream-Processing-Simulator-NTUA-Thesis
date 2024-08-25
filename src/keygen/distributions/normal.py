@@ -31,16 +31,14 @@ class NormalDistribution(Distribution):
         # For simplicity, use a normal distribution centered around the mean
         key_probabilities = np.random.normal(self.mean, self.stddev, len(self.keys))
 
-        # Normalize probabilities to sum to 1
-        key_probabilities = np.exp(
-            key_probabilities
-        )  # Use exp to ensure all probabilities are positive
-        key_probabilities /= np.sum(
-            key_probabilities
-        )  # Normalize to make probabilities sum to 1
+        # Use exp to ensure all probabilities are positive
+        key_probabilities = np.exp(key_probabilities)
+
+        # Normalize to make probabilities sum to 1
+        key_probabilities /= np.sum(key_probabilities)
 
         # Generate the keys based on these probabilities
         num_keys = int(arrival_rate)
-        chosen_keys = np.random.choice(self.keys, size=num_keys, p=key_probabilities)
+        generated_keys = np.random.choice(self.keys, size=num_keys, p=key_probabilities)
 
-        return chosen_keys.tolist()
+        return generated_keys.tolist()

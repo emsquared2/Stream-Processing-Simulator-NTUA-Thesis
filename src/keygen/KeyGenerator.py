@@ -2,7 +2,8 @@ import math
 import os
 import random
 from collections import Counter
-from utils.utils import validate_keygen_config, write_output
+from utils.utils import write_output
+from utils.ConfigValidator import validate_keygen_config
 from .distributions.normal import NormalDistribution
 from .distributions.uniform import UniformDistribution
 
@@ -19,8 +20,8 @@ class KeyGenerator:
             config (json): The json configuration of the simulation.
                 "streams" (int): Number of discrete streams to generate.
                 "steps" (int): Number of simulation steps.
-                "number of keys" (int): Number of keys to use in the distribution.
-                "arrival rate" (int): Number of keys per step.
+                "number_of_keys" (int): Number of keys to use in the distribution.
+                "arrival_rate" (int): Number of keys per step.
                 "distribution" (dict): Distribution configuration, including:
                     "type" (str): Type of distribution, either "normal" or "uniform".
                     "mean" (float): Mean for normal distribution (required if type is "normal").
@@ -36,8 +37,8 @@ class KeyGenerator:
         self.config = config
         self.streams = config["streams"]
         self.steps = config["steps"]
-        self.num_keys = config["number of keys"]
-        self.arrival_rate = config["arrival rate"]
+        self.num_keys = config["number_of_keys"]
+        self.arrival_rate = config["arrival_rate"]
         self.spike_probability = config["spike_probability"]
         self.spike_magnitude = config["spike_magnitude"]
         self.dist_type = config["distribution"]["type"]
@@ -48,10 +49,6 @@ class KeyGenerator:
     def _init_distribution(self):
         """
         Initializes the key distribution based on distribution type.
-
-        Args:
-        - num_keys (dict): The number of keys to generate.
-        - dist_type (str): The distribution type (uniform | normal).
 
         Returns:
         - Distribution: An instance of the specified distribution type.
@@ -166,8 +163,8 @@ class KeyGenerator:
               order as is specified from the adjust_or_create_key_dist function.
         """
         freq = Counter(step)
-        sorted_values = [item for item, count in freq.most_common()]
-        print(f"Sorted Value: {sorted_values}")
+        sorted_values = [item for item, _ in freq.most_common()]
+        # print(f"Sorted Value: {sorted_values}")
         value_to_key = {value: keys[i] for i, value in enumerate(sorted_values)}
         return [value_to_key[value] for value in step]
 
@@ -191,9 +188,9 @@ class KeyGenerator:
             self.arrival_rate = math.ceil(self.arrival_rate * (1 + change / 100))
 
         step = self.distribution.generate(self.arrival_rate)
-        print(step)
+        # print(step)
         keys = self.replace_step_with_keys(step, key_dist)
-        print(keys)
+        # print(keys)
         return keys
 
     def generate_stream(self, output_file):
@@ -206,13 +203,13 @@ class KeyGenerator:
         #           - Add variation in arrival rate
 
         # key_dist originally contains the keys present in this simulation (e.g. ['key0' 'key1' 'key2]).
-        key_dist = self.create_key_array(self.config["number of keys"], True)
+        key_dist = self.create_key_array(self.num_keys, True)
         for i in range(self.config["steps"]):
             # key_dist now contains the frequency order that we wish the keys to follow in this step.
             # More on how this is handled in the description of the adjust_or_create_key_dist function.
             key_dist = self.adjust_or_create_key_dist(key_dist, i)
 
-            print(f"Key dist: {key_dist}")
+            # print(f"Key dist: {key_dist}")
             step = self.generate_step(key_dist)
             stream.append(" ".join(step))
         write_output(stream, output_file)
@@ -244,7 +241,7 @@ class KeyGenerator:
             {
                 "streams": 3,
                 "steps": 10,
-                "number of keys": 3,
+                "number_of_keys": 3,
                 "arrival rate": 10,
                 "distribution": {
                     "type": "uniform"
