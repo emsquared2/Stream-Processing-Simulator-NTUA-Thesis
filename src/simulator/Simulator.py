@@ -1,40 +1,33 @@
 from topology.Topology import Topology
-from utils.utils import validate_topology
+from utils.ConfigValidator import validate_topology
+
 
 class Simulator:
     """
     A class to simulate the distribution and processing of keys across multiple nodes.
 
     Attributes:
-    - num_nodes (int): The number of nodes in the simulation.
     - topology (Topology): A class representing the simulator topology.
-    - input_partitioner (KeyPartitioner): A KeyPartitioner class that will 
+    - input_partitioner (KeyPartitioner): A KeyPartitioner class that will
                                           partition the input keys to the
                                           first stage.
     """
 
-    def __init__(
-        self,
-        num_nodes: int,
-        topology_config: dict
-    ):
+    def __init__(self, topology_config: dict):
         """
         Initializes a new Simulator instance with the given parameters.
 
         Args:
-        - num_nodes (int): The number of nodes in the simulation.
         - topology (dict): A dictionary representing the entire topology.
         """
 
         # Validate the topology configuration
         validate_topology(topology_config)
 
-        self.num_nodes = num_nodes
-
         # Initialize the topology
         self.topology = Topology(topology_config)
 
-        # Select nodes from stage with id '0'
+        # Select the first node from stage 0 which is the initial partitioner
         self.input_partitioner = self._find_stage0_partitioner()
 
     def _find_stage0_partitioner(self):
@@ -42,7 +35,7 @@ class Simulator:
         Selects the first node from the stage with id '0' which is the initial partitioner.
 
         Returns:
-        - Node: Returns the first node of the stage 0. In our case 
+        - Node: Returns the first node of the stage 0. In our case
                 its the initial input (key) partitioner.
         """
         for stage in self.topology.stages:
@@ -71,11 +64,9 @@ class Simulator:
         final_state_message = """
 ------------------------
 |                      |
-| Final state of nodes |
+|     Final State      |
 |                      |
 ------------------------
 """
         print(final_state_message)
-        for stage in self.topology.stages:
-            for node in stage.nodes:
-                print(node)  # Print the state of each node
+        print(self.topology)
