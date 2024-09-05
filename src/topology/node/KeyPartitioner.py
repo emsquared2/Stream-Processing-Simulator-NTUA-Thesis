@@ -98,7 +98,7 @@ class KeyPartitioner(StatelessNode):
               them to the next simulator stage.
         """
 
-        print(f"Node {self.uid} received keys:\n{keys}\nat step {step}")
+        print(f"Node {self.uid} received keys: {keys} at step {step}")
         if not self.stage.terminal_stage:
             # Partition the keys
             self.strategy.partition(keys, self.stage.next_stage.nodes, self.buffers)

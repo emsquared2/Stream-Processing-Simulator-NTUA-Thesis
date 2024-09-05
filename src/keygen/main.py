@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 from utils.utils import load_config
 from KeyGenerator import KeyGenerator
