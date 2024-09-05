@@ -96,7 +96,7 @@ class State:
                 self.received_keys.append((key, step, max_step))
                 self.update_windows(key, step)
 
-        print(f"Node {self.node_id}: windows at step {step}: {self.windows}")
+        print(f"Node {self.node_id} windows at step {step}: {self.windows}")
 
         processed_keys = self.process_full_windows(terminal)
         self.remove_expired_windows()
