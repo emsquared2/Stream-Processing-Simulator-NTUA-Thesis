@@ -81,7 +81,7 @@ class State:
         Returns:
             list[list]: Returns the keys that will be emitted from the current window to the next stage.
                         If the node is terminal it returns an empty list.
-        """
+        """        
         self.total_keys += len(keys)
 
         log_default_info(
@@ -91,6 +91,8 @@ class State:
         self.minimum_step = max(0, self.current_step - self.window_size + 1)
         max_step = self.minimum_step + self.window_size
 
+        processed_keys = self.process_full_windows(terminal)
+
         for key in keys:
             if key != "step_update":
                 self.received_keys.append((key, step, max_step))
@@ -98,7 +100,6 @@ class State:
 
         print(f"Node {self.node_id} windows at step {step}: {self.windows}")
 
-        processed_keys = self.process_full_windows(terminal)
         self.remove_expired_windows()
         self.remove_expired_keys()
         return processed_keys
@@ -122,6 +123,11 @@ class State:
             if start_step not in self.windows:
                 self.windows[start_step] = Window(start_step, self.window_size)
             self.windows[start_step].add_key(key)
+
+        for st_step, window in list(self.windows.items()):
+            if not window.is_expired(step):
+                if st_step != start_step:
+                    self.windows[st_step].add_key(key)
 
     def process_full_windows(self, terminal: bool) -> list[list]:
         """Processes and clears windows that have reached their size limit.
