@@ -79,7 +79,8 @@ class KeyPartitioner(StatelessNode):
         if strategy_name == "shuffle_grouping":
             return ShuffleGrouping()
         elif strategy_name == "hashing":
-            return Hashing()
+            hash_seed = strategy_params.get("hash_seed")
+            return Hashing(hash_seed)
         elif strategy_name == "key_grouping":
             prefix_length = strategy_params.get("prefix_length", 1)
             return KeyGrouping(prefix_length)

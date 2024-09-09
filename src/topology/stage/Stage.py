@@ -2,6 +2,8 @@ from ..node.StatelessNode import StatelessNode
 from ..node.KeyPartitioner import KeyPartitioner
 from ..node.StatefulNode import StatefulNode
 
+import random
+
 
 class Stage:
     def __init__(self, stage_data, next_stage_len: int):
@@ -18,6 +20,8 @@ class Stage:
 
         self.next_stage_len = next_stage_len
         self.terminal_stage = next_stage_len == 0
+
+        self.hash_seed = None
 
         self.nodes = self._create_nodes(stage_data["nodes"])
 
@@ -76,9 +80,18 @@ class Stage:
             # is that we clearly state the key paritioning use.
             elif node_type == "key_partitioner":
                 strategy_name = node_data["strategy"]["name"]
+
                 strategy_params = {
-                    key: value for key, value in node_data["strategy"].items()
+                    **{key: value for key, value in node_data["strategy"].items()}
                 }
+
+                # Add a hash seed on all stage hashing partitioners
+                # to ensure same hashing behavior across each stage
+                if strategy_name == "hashing":
+                    if self.hash_seed is None:
+                        self.hash_seed = random.randint(0, 100000)
+                    strategy_params["hash_seed"] = self.hash_seed
+
                 node = KeyPartitioner(
                     uid,
                     i,
