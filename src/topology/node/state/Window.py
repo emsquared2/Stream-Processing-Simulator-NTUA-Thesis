@@ -35,26 +35,41 @@ class Window:
     def process(self, throughput: int, complexity) -> tuple[int, int]:
         """
         Processes the keys in the window based on the throughput and complexity.
+        Removes the processed keys from the window and returns the count of the processed keys.
 
         Args:
             throughput (int): Maximum computational cycles a node can run per step.
             complexity (Complexity): The complexity object to calculate computational cycles.
 
         Returns:
-            tuple[int, int, dict[str, int]]: Number of keys processed, total cycles used, and key counts.
+            tuple[int, int, dict[str, int]]: Number of keys processed, total cycles used, and the count of the processed keys.
         """
         processed_keys = 0
         cycles = 0
-        window_key_count: dict[str, int] = Counter()
+        window_key_count: dict[str, int] = dict(sorted(Counter(self.keys).items()))
+        processed_key_count: dict[str, int] = {}
 
-        for key in self.keys:
-            if cycles >= throughput:
+        for _, occurrences in window_key_count.items():
+            # Calculate the cycles needed to process all occurrences of this key
+            key_cycles = complexity.calculate_cycles(occurrences)
+
+            if cycles + key_cycles > throughput:
+                # If adding this key's cycles exceeds throughput, stop processing
                 break
-            processed_keys += 1
-            window_key_count[key] += 1
-            cycles += complexity.calculate_cycles(len(self.keys))
 
-        return processed_keys, cycles, dict(window_key_count)
+            # Add the cycles for this key
+            cycles += key_cycles
+            processed_keys += occurrences
+
+        # Compute key - count for the processed keys
+        processed_key_count: dict[str, int] = dict(
+            sorted(Counter(self.keys[:processed_keys]).items())
+        )
+
+        # Remove all processed keys from the window
+        self.keys = self.keys[processed_keys:]
+
+        return processed_keys, cycles, processed_key_count
 
     def is_full(self, current_step: int) -> bool:
         """
