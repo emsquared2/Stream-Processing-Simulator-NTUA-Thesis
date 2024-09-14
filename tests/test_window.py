@@ -89,23 +89,17 @@ class TestWindow(unittest.TestCase):
 
         # Assertions:
 
-        # 5 key1 + 4 key2 = 9 processed keys
-        self.assertEqual(processed_keys, 9)
-        # 25 (key1) + 16 (key2) = 41 cycles should be used
-        self.assertEqual(cycles, 41)
-        # Processed key counts for first <processed_keys> = 9 keys --> ["key1", "key4", "key1", "key3", "key2", "key2", "key3", "key4", "key2"]
+        # 4 key1 + 4 key2 + 5key3 + 3 key4 = 16 processed keys
+        self.assertEqual(processed_keys, 16)
+        # 16 (key1) + 16 (key2) + 25 (key3) + 9 (key4) = 66 cycles should be used
+        # Next key is key1 so we would have 5 key1 instead of 4 so the cost would have been 66 + (25 - 16) = 75 > 73
+        self.assertEqual(cycles, 66)
+        # Processed key counts for first <processed_keys> = 16 keys --> ["key1", "key4", "key1", "key3", "key2", "key2", "key3", "key4", "key2", "key3", "key1", "key2", "key1", "key3", "key3", "key4"]
         self.assertDictEqual(
-            processed_key_count, {"key1": 2, "key2": 3, "key3": 2, "key4": 2}
+            processed_key_count, {"key1": 4, "key2": 4, "key3": 5, "key4": 3}
         )
         # Assert remaining unprocessed keys
         expected_remaining_keys = [
-            "key3",
-            "key1",
-            "key2",
-            "key1",
-            "key3",
-            "key3",
-            "key4",
             "key1",
             "key4",
             "key4",
