@@ -63,11 +63,11 @@ class StatefulNode(Node):
             keys (list): List of keys to be processed.
             step (int): Current step in the simulation.
         """
-        print(f"Node {self.uid} received keys:\n{keys}\nat step {step}")
+        print(f"Node {self.uid} received keys: {keys} at step {step}")
 
         processed_keys = self.state.update(keys, step, self.terminal)
         print(
-            f"Node {self.uid}, terminal: {self.terminal}, processed_keys: {processed_keys}"
+            f"Node {self.uid} terminal: {self.terminal}, processed_keys: {processed_keys}"
         )
         if not self.terminal:
             processed_keys_flat = [
@@ -84,7 +84,7 @@ class StatefulNode(Node):
             step (int): The current simulation step.
         """
         self.stage.next_stage.nodes[self.stage_node_id].receive_and_process(keys, step)
-        print(f"Node {self.uid} emitted keys:\n{keys}\nat step {step}")
+        print(f"Node {self.uid} emitted keys: {keys} at step {step}")
 
     def __repr__(self) -> str:
         """
