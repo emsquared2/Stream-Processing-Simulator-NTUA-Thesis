@@ -92,8 +92,8 @@ class TestState(unittest.TestCase):
         # Assertions:
 
         # 1. Check the result returned
-        # We expect the first 9 keys to be processed so the result will all the distinct keys in the first 9 keys: key1, key2, key3, key4
-        self.assertEqual(result_keys, ["key1", "key2", "key3", "key4"])
+        # We expect the first 16 keys to be processed so the result will be all the distinct keys in the first 16 keys and in the order they appeared : key1, key4, key3, key2
+        self.assertEqual(result_keys, ["key1", "key4", "key3", "key2"])
 
         # 2. Ensure overdue keys were added to window2
         expected_window2_keys = [
@@ -102,13 +102,6 @@ class TestState(unittest.TestCase):
             "key4",
             "key3",
             "key5",
-            "key3",
-            "key1",
-            "key2",
-            "key1",
-            "key3",
-            "key3",
-            "key4",
             "key1",
             "key4",
             "key4",
@@ -131,7 +124,7 @@ class TestState(unittest.TestCase):
 
         # Assertions:
         # 1. All keys should be processed
-        self.assertEqual(result_keys, ["key1", "key2", "key3", "key4"])
+        self.assertEqual(result_keys, ["key1", "key4", "key3", "key2"])
 
         # 2. The first window should now be empty
         self.assertEqual(self.window1.keys, [])
