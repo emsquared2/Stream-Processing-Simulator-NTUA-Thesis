@@ -119,15 +119,15 @@ class State:
         # Adjust start_step to align with the sliding windows
         start_step = (self.current_step // self.slide) * self.slide
 
+        # Create any new windows needed based on side and start_step
         if 0 <= step - start_step < self.window_size:
             if start_step not in self.windows:
                 self.windows[start_step] = Window(start_step, self.window_size)
-            self.windows[start_step].add_key(key)
 
+        # Add the step keys to all the non expired windows
         for st_step, window in list(self.windows.items()):
             if not window.is_expired(step):
-                if st_step != start_step:
-                    self.windows[st_step].add_key(key)
+                self.windows[st_step].add_key(key)
 
     def process_full_windows(self, terminal: bool) -> list[list]:
         """Processes and clears windows that have reached their size limit.
