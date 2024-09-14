@@ -35,26 +35,57 @@ class Window:
     def process(self, throughput: int, complexity) -> tuple[int, int]:
         """
         Processes the keys in the window based on the throughput and complexity.
+        Removes the processed keys from the window and returns the count of the processed keys.
 
         Args:
             throughput (int): Maximum computational cycles a node can run per step.
             complexity (Complexity): The complexity object to calculate computational cycles.
 
         Returns:
-            tuple[int, int, dict[str, int]]: Number of keys processed, total cycles used, and key counts.
+            tuple[int, int, dict[str, int]]: Number of keys processed, total cycles used, and the count of the processed keys.
         """
-        processed_keys = 0
         cycles = 0
-        window_key_count: dict[str, int] = Counter()
+        processed_key_count: dict[str, int] = {}
 
         for key in self.keys:
-            if cycles >= throughput:
-                break
-            processed_keys += 1
-            window_key_count[key] += 1
-            cycles += complexity.calculate_cycles(len(self.keys))
+            # Update processed_key_count
+            processed_key_count[key] = processed_key_count.get(key, 0) + 1
 
-        return processed_keys, cycles, dict(window_key_count)
+            # Calculate the cycles required to process current keys
+            cycles = self.compute_cost(processed_key_count, complexity)
+            if cycles > throughput:
+                # Stop processing if adding this key's cycles exceeds the throughput
+                # Revert the increment made to processed_key_count for this key
+                processed_key_count[key] -= 1
+                if processed_key_count[key] == 0:
+                    del processed_key_count[key]  # Remove key if occurrences is 0
+                break
+
+        # Final cost after processing
+        cycles = self.compute_cost(processed_key_count, complexity)
+
+        # Remove all processed keys from the window
+        processed_keys = sum(processed_key_count.values())
+        self.keys = self.keys[processed_keys:]
+
+        return processed_keys, cycles, processed_key_count
+
+    def compute_cost(self, processed_key_count: dict[str, int], complexity) -> int:
+        """
+        Computes the total cycles required for the current processed_key_count.
+
+        Args:
+            processed_key_count (dict[str, int]): Dictionary of keys and their occurrences.
+            complexity (Complexity): Complexity object to calculate computational cycles.
+
+        Returns:
+            int: The total cycles required to process the current keys.
+        """
+        total_cycles = 0
+        for occurrences in processed_key_count.values():
+            total_cycles += complexity.calculate_cycles(occurrences)
+
+        return total_cycles
 
     def is_full(self, current_step: int) -> bool:
         """
