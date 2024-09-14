@@ -44,32 +44,48 @@ class Window:
         Returns:
             tuple[int, int, dict[str, int]]: Number of keys processed, total cycles used, and the count of the processed keys.
         """
-        processed_keys = 0
         cycles = 0
-        window_key_count: dict[str, int] = dict(sorted(Counter(self.keys).items()))
         processed_key_count: dict[str, int] = {}
 
-        for _, occurrences in window_key_count.items():
-            # Calculate the cycles needed to process all occurrences of this key
-            key_cycles = complexity.calculate_cycles(occurrences)
+        for key in self.keys:
+            # Update processed_key_count
+            processed_key_count[key] = processed_key_count.get(key, 0) + 1
 
-            if cycles + key_cycles > throughput:
-                # If adding this key's cycles exceeds throughput, stop processing
+            # Calculate the cycles required to process current keys
+            cycles = self.compute_cost(processed_key_count, complexity)
+            if cycles > throughput:
+                # Stop processing if adding this key's cycles exceeds the throughput
+                # Revert the increment made to processed_key_count for this key
+                processed_key_count[key] -= 1
+                if processed_key_count[key] == 0:
+                    del processed_key_count[key]  # Remove key if occurrences is 0
                 break
 
-            # Add the cycles for this key
-            cycles += key_cycles
-            processed_keys += occurrences
-
-        # Compute key - count for the processed keys
-        processed_key_count: dict[str, int] = dict(
-            sorted(Counter(self.keys[:processed_keys]).items())
-        )
+        # Final cost after processing
+        cycles = self.compute_cost(processed_key_count, complexity)
 
         # Remove all processed keys from the window
+        processed_keys = sum(processed_key_count.values())
         self.keys = self.keys[processed_keys:]
 
         return processed_keys, cycles, processed_key_count
+
+    def compute_cost(self, processed_key_count: dict[str, int], complexity) -> int:
+        """
+        Computes the total cycles required for the current processed_key_count.
+
+        Args:
+            processed_key_count (dict[str, int]): Dictionary of keys and their occurrences.
+            complexity (Complexity): Complexity object to calculate computational cycles.
+
+        Returns:
+            int: The total cycles required to process the current keys.
+        """
+        total_cycles = 0
+        for occurrences in processed_key_count.values():
+            total_cycles += complexity.calculate_cycles(occurrences)
+
+        return total_cycles
 
     def is_full(self, current_step: int) -> bool:
         """
