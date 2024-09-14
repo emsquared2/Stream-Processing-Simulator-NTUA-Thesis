@@ -79,7 +79,8 @@ class KeyPartitioner(StatelessNode):
         if strategy_name == "shuffle_grouping":
             return ShuffleGrouping()
         elif strategy_name == "hashing":
-            return Hashing()
+            hash_seed = strategy_params.get("hash_seed")
+            return Hashing(hash_seed)
         elif strategy_name == "key_grouping":
             prefix_length = strategy_params.get("prefix_length", 1)
             return KeyGrouping(prefix_length)
@@ -98,7 +99,7 @@ class KeyPartitioner(StatelessNode):
               them to the next simulator stage.
         """
 
-        print(f"Node {self.uid} received keys:\n{keys}\nat step {step}")
+        print(f"Node {self.uid} received keys: {keys} at step {step}")
         if not self.stage.terminal_stage:
             # Partition the keys
             self.strategy.partition(keys, self.stage.next_stage.nodes, self.buffers)
