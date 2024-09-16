@@ -19,7 +19,7 @@ class ONComplexity(Complexity):
 
 class ONLogNComplexity(Complexity):
     def calculate_cycles(self, n: int) -> int:
-        return math.ceil(n * math.log(n + 1, 2))
+        return math.ceil(n * math.log(n + 1, 10))
 
 
 class ON2Complexity(Complexity):

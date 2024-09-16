@@ -211,7 +211,7 @@ class State:
         )
         log_node_info(
             self.node_logger,
-            f"Step {self.current_step} - Processed {processed_keys} keys - Node load {(cycles*100)/self.throughput}%",
+            f"Step {self.current_step} - Processed {processed_keys} keys and {cycles} cycles - Node load {(cycles*100)/self.throughput}%",
             self.node_id,
         )
 
