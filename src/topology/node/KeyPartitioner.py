@@ -63,7 +63,7 @@ class KeyPartitioner(StatelessNode):
         self.extra_dir = GlobalConfig.extra_dir
 
         # Initialize logging
-        self.default_logger, self.node_logger = initialize_logging(
+        self.default_logger, self.node_logger, _ = initialize_logging(
             self.uid, self.extra_dir
         )
 
