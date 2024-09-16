@@ -20,7 +20,7 @@ def initialize_logging(node_id: int, extra_dir: str = None):
     # Define log directory and create a subdirectory for the current timestamp
     log_dir = os.path.join(base_dir, "../../logs")
     if extra_dir:
-        log_dir = os.path.join(log_dir, extra_dir, timestamp)
+        log_dir = os.path.join(log_dir, extra_dir, f"log_{timestamp}")
     else:
         log_dir = os.path.join(log_dir, f"log_{timestamp}")
     os.makedirs(log_dir, exist_ok=True)
