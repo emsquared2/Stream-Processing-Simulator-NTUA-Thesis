@@ -6,7 +6,7 @@ import argparse
 import os
 
 
-def main(config_file, output_file, extra_dir=None):
+def main(config_file, key_gen_file=None, stream_file=None, extra_dir=None):
     """
     Main function to configure and run the simulation.
     """
@@ -14,24 +14,28 @@ def main(config_file, output_file, extra_dir=None):
     # Load the configuration file
     config = load_config(config_file)
 
-    # Generate the key streams using the updated configuration
-    keygen = KeyGenerator(config["keygen"])
-    keygen.generate_input(output_file)
+    GlobalConfig.extra_dir = extra_dir
+
+    # If the key_gen_file argument is defined, generate the key streams
+    if key_gen_file:
+        keygen = KeyGenerator(config["keygen"])
+        keygen.generate_input(key_gen_file)
+
+        # Prepare stream files to load
+        steps_data = []
+        for i in range(config["keygen"]["streams"]):
+            name, extension = os.path.splitext(key_gen_file)
+            stream_file = f"{name}{i}{extension}"
+            steps_data.extend(load_steps_from_file(stream_file))
+    # If stream_file is defined, use the provided key stream file
+    elif stream_file:
+        steps_data = load_steps_from_file(stream_file)
 
     # Extract topology configuration
     topology = config["topology"]
 
-    GlobalConfig.extra_dir = extra_dir
-
     # Initialize the simulator with the topology
     simulator = Simulator(topology)
-    
-    # Read steps data from all generated files
-    steps_data = []
-    for i in range(config["keygen"]["streams"]):
-        name, extension = os.path.splitext(output_file)
-        stream_file = f"{name}{i}{extension}"
-        steps_data.extend(load_steps_from_file(stream_file))
 
     # Run the simulation with the provided data
     simulator.sim(steps_data)
@@ -46,24 +50,30 @@ if __name__ == "__main__":
         help="Path of the configuration file",
     )
     parser.add_argument(
-        "--output",
+        "--key_gen",
         type=str,
-        required=True,
         help="Path of the generated key stream file",
+    )
+    parser.add_argument(
+        "--stream",
+        type=str,
+        help="Path of the pre-existing key stream file",
     )
     parser.add_argument(
         "--logs",
         type=str,
         default=None,
-        help="Path of the directory generated logs",
+        help="Path of the directory for generated logs",
     )
 
     args = parser.parse_args()
 
     config_file = args.config
-    output_file = args.output
+    key_gen_file = args.key_gen
+    stream_file = args.stream
     extra_dir = args.logs
 
-    main(config_file, output_file, extra_dir)
+    if not key_gen_file and not stream_file:
+        raise ValueError("Either --key_gen or --stream must be specified.")
 
-
+    main(config_file, key_gen_file, stream_file, extra_dir)
