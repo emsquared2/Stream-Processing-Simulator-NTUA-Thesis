@@ -24,7 +24,6 @@ class State:
         TODO: Re-evaluate metrics and how they are computed
         total_keys (int): Total keys received.
         total_processed (int): Total keys processed.
-        total_expired (int): Total keys expired.
         total_cycles (int): Total number of processing cycles used.
     """
 
@@ -57,9 +56,9 @@ class State:
         self.current_step = 0
         self.minimum_step = 0
 
+        # Metrics
         self.total_keys = 0
         self.total_processed = 0
-        self.total_expired = 0
         self.total_cycles = 0
 
         self.extra_dir = GlobalConfig.extra_dir
@@ -81,12 +80,13 @@ class State:
         Returns:
             list[list]: Returns the keys that will be emitted from the current window to the next stage.
                         If the node is terminal it returns an empty list.
-        """        
+        """
         self.total_keys += len(keys)
 
         log_default_info(
             self.default_logger, f"Updating node at step {step} with keys: {keys}"
         )
+
         self.current_step = max(self.current_step, step)
         self.minimum_step = max(0, self.current_step - self.window_size + 1)
         max_step = self.minimum_step + self.window_size
@@ -130,7 +130,8 @@ class State:
                 self.windows[st_step].add_key(key)
 
     def process_full_windows(self, terminal: bool) -> list[list]:
-        """Processes and clears windows that have reached their size limit.
+        """
+        Processes and clears windows that have reached their size limit.
 
         Args:
             terminal (bool): Specifies if the current node
@@ -144,7 +145,6 @@ class State:
         for start_step, window in list(self.windows.items()):
             if window.is_full(self.current_step):
                 emitted_keys.append(self.process_window(window, terminal))
-                # TODO: Re-examine based on issue #6: https://github.com/emsquared2/Stream-Processing-Simulator-NTUA-Thesis/issues/6
                 del self.windows[start_step]
         return emitted_keys
 
@@ -162,17 +162,13 @@ class State:
         Removes keys that have expired based on their max_step.
         """
         log_default_info(self.default_logger, "Removing expired keys.")
-        expired_keys_count = 0
         updated_received_keys = []
 
         for key, step, max_step in self.received_keys:
             if self.current_step <= max_step:
                 updated_received_keys.append((key, step, max_step))
-            else:
-                expired_keys_count += 1
 
         self.received_keys = updated_received_keys
-        self.total_expired += expired_keys_count
 
     def process_window(self, window: Window, terminal: bool) -> list:
         """
@@ -209,6 +205,37 @@ class State:
         self.total_processed += processed_keys
         # TODO: We can use window_key_count to aggregate/store the key_count for all processed keys
 
+        # If there are overdue keys (i.e., keys left in the window), pass them to the next closest window
+        overdue_keys = window.keys  # Remaining unprocessed keys in this window
+
+        if overdue_keys:
+            # Find the next closest window
+            next_window_start_step = None
+            for st_step in sorted(self.windows):
+                if st_step > window.start_step:
+                    next_window_start_step = st_step
+                    break
+
+            # If no window is found, default to the next window in the slide
+            if next_window_start_step is None:
+                next_window_start_step = window.start_step + self.slide
+
+            # Create the next window if it doesn't exist
+            if next_window_start_step not in self.windows:
+                self.windows[next_window_start_step] = Window(
+                    next_window_start_step, self.window_size
+                )
+
+            log_node_info(
+                self.node_logger,
+                f"Passing overdue keys {overdue_keys} to window with start_step {next_window_start_step}",
+                self.node_id,
+            )
+
+            # Add the overdue keys to the next window
+            for key in overdue_keys:
+                self.windows[next_window_start_step].add_key(key)
+
         if terminal:
             return []
         else:
@@ -234,7 +261,6 @@ class State:
             f"Node Report for Node ID: {self.node_id}\n"
             f"Total Keys Received: {self.total_keys}\n"
             f"Total Keys Processed: {self.total_processed}\n"
-            f"Total Keys Expired: {self.total_expired}\n"
             f"Total Processing Cycles: {self.total_cycles}\n"
             f"Current Step: {self.current_step}\n"
             f"Minimum Step: {self.minimum_step}\n"
@@ -253,6 +279,5 @@ class State:
             f"Current Windows: {self.windows}\n"
             f"Total Keys Received: {self.total_keys}\n"
             f"Total Keys Processed: {self.total_processed}\n"
-            f"Total Keys Expired: {self.total_expired}\n"
             f"Total Processing Cycles: {self.total_cycles}"
         )
