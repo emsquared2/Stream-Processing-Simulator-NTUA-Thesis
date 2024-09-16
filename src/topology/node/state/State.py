@@ -64,7 +64,7 @@ class State:
         self.extra_dir = GlobalConfig.extra_dir
 
         # Initialize logging
-        self.default_logger, self.node_logger = initialize_logging(
+        self.default_logger, self.node_logger, _ = initialize_logging(
             self.node_id, self.extra_dir
         )
 
@@ -84,7 +84,8 @@ class State:
         self.total_keys += len(keys)
 
         log_default_info(
-            self.default_logger, f"Updating node at step {step} with keys: {keys}"
+            self.default_logger,
+            f"Updating node {self.node_id} at step {step} with keys: {keys}",
         )
 
         self.current_step = max(self.current_step, step)
@@ -93,15 +94,23 @@ class State:
 
         processed_keys = self.process_full_windows(terminal)
 
+        log_default_info(
+            self.default_logger,
+            f"Node {self.node_id} Updating windows for keys: {keys} at step: {step}",
+        )
+
         for key in keys:
             if key != "step_update":
                 self.received_keys.append((key, step, max_step))
                 self.update_windows(key, step)
 
-        print(f"Node {self.node_id} windows at step {step}: {self.windows}")
-
         self.remove_expired_windows()
         self.remove_expired_keys()
+
+        log_default_info(
+            self.default_logger,
+            f"Node {self.node_id} windows at step {step}: {self.windows}\n",
+        )
         return processed_keys
 
     def update_windows(self, key: str, step: int) -> None:
@@ -112,9 +121,6 @@ class State:
             key (str): The key to add.
             step (int): The step at which the key was received.
         """
-        log_default_info(
-            self.default_logger, f"Updating windows for key: {key} at step: {step}"
-        )
 
         # Adjust start_step to align with the sliding windows
         start_step = (self.current_step // self.slide) * self.slide
@@ -152,10 +158,17 @@ class State:
         """
         Removes windows that have expired based on the current step.
         """
-        log_default_info(self.default_logger, "Removing expired windows.")
+        expired_windows = []
         for start_step, window in list(self.windows.items()):
             if window.is_expired(self.current_step):
+                expired_windows.append(window)
                 del self.windows[start_step]
+
+        if expired_windows:
+            log_default_info(
+                self.default_logger,
+                f"Node {self.node_id} removed expired windows: {expired_windows} at step {self.current_step}",
+            )
 
     def remove_expired_keys(self) -> None:
         """
@@ -185,7 +198,7 @@ class State:
         """
         log_default_info(
             self.default_logger,
-            f"Processing window starting at step {window.start_step}",
+            f"Node {self.node_id} processing window starting at step {window.start_step}",
         )
 
         processed_keys, cycles, window_key_count = window.process(
@@ -193,7 +206,8 @@ class State:
         )
 
         log_default_info(
-            self.default_logger, f"Processed {cycles} computational cycles for window."
+            self.default_logger,
+            f"Node {self.node_id} processed {cycles} computational cycles for window.",
         )
         log_node_info(
             self.node_logger,
@@ -226,10 +240,9 @@ class State:
                     next_window_start_step, self.window_size
                 )
 
-            log_node_info(
-                self.node_logger,
-                f"Passing overdue keys {overdue_keys} to window with start_step {next_window_start_step}",
-                self.node_id,
+            log_default_info(
+                self.default_logger,
+                f"Node {self.node_id} passing overdue keys: {overdue_keys} to window with start_step {next_window_start_step}",
             )
 
             # Add the overdue keys to the next window

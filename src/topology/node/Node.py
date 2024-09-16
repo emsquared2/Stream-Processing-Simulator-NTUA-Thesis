@@ -11,8 +11,6 @@ class Node(ABC):
         type (str): The type of the node.
         throughput (int): Maximum computational cycles a node can
                           run per step.
-        complexity_type (str): Complexity type used for computational
-                               cycle calculation.
         stage (Stage): The stage which the node is in.
     """
 
@@ -22,7 +20,6 @@ class Node(ABC):
         stage_node_id: int,
         type: str,
         throughput: int,
-        complexity_type: str,
         stage,
     ) -> None:
         """
@@ -33,14 +30,12 @@ class Node(ABC):
             stage_node_id: The stage local node identifier.
             type (str): The type of the node.
             throughput (int): Maximum computational cycles a node can run per step.
-            complexity_type (str): Complexity type used for computational cycle calculation.
             stage (Stage): The stage which the node is in.
         """
         self.uid = uid
         self.stage_node_id = stage_node_id
         self.type = type
         self.throughput = throughput
-        self.complexity_type = complexity_type
         self.stage = stage
 
     @abstractmethod

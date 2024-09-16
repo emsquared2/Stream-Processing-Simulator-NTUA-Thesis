@@ -99,7 +99,7 @@ def validate_keygen_config(config):
             )
 
     # If all checks pass
-    print("Config is valid.")
+    print("Valid KeyGenerator.")
 
 
 def validate_topology(config):
@@ -168,37 +168,47 @@ def validate_topology(config):
                     f"Invalid throughput for node {node['id']} in stage {stage['id']}. Must be a positive number."
                 )
 
-            if "complexity_type" not in node or node["complexity_type"] not in [
-                "O(1)",
-                "O(logn)",
-                "O(n)",
-                "O(nlogn)",
-                "O(n^2)",
-            ]:
+            if node["type"] == "stateful" and (
+                "complexity_type" not in node
+                or node["complexity_type"]
+                not in [
+                    "O(1)",
+                    "O(logn)",
+                    "O(n)",
+                    "O(nlogn)",
+                    "O(n^2)",
+                ]
+            ):
                 sys.exit(
                     f"Invalid or missing complexity_type for node {node['id']} in stage {stage['id']}."
                 )
 
-            if "strategy" not in node or not isinstance(node["strategy"], dict):
+            if node["type"] == "key_partitioner" and (
+                "strategy" not in node or not isinstance(node["strategy"], dict)
+            ):
                 sys.exit(
                     f"Missing or invalid strategy for node {node['id']} in stage {stage['id']}. Must be a dictionary."
                 )
 
-            strategy = node["strategy"]
-            if "name" not in strategy or strategy["name"] not in [
-                "shuffle_grouping",
-                "hashing",
-                "key_grouping",
-            ]:
-                sys.exit(
-                    f"Invalid or missing strategy name for node {node['id']} in stage {stage['id']}."
-                )
-
-            if strategy["name"] == "key_grouping":
-                if "prefix_length" not in strategy or strategy["prefix_length"] <= 0:
+            if node["type"] == "key_partitioner":
+                strategy = node["strategy"]
+                if "name" not in strategy or strategy["name"] not in [
+                    "shuffle_grouping",
+                    "hashing",
+                    "key_grouping",
+                ]:
                     sys.exit(
-                        f"Invalid or missing prefix_length for key_grouping strategy in node {node['id']} in stage {stage['id']}."
+                        f"Invalid or missing strategy name for node {node['id']} in stage {stage['id']}."
                     )
+
+                if strategy["name"] == "key_grouping":
+                    if (
+                        "prefix_length" not in strategy
+                        or strategy["prefix_length"] <= 0
+                    ):
+                        sys.exit(
+                            f"Invalid or missing prefix_length for key_grouping strategy in node {node['id']} in stage {stage['id']}."
+                        )
 
             if node["type"] == "stateful":
                 if "window_size" not in node or node["window_size"] <= 0:
@@ -216,3 +226,5 @@ def validate_topology(config):
                 sys.exit(
                     f"Stateless node {node['id']} in stage {stage['id']} should not have window_size or slide."
                 )
+
+    print("Valid topology.")

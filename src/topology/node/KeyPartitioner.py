@@ -1,5 +1,8 @@
 from typing import Optional, Dict, Any
 
+from simulator.GlobalConfig import GlobalConfig
+from utils.Logging import initialize_logging, log_default_info
+
 from .StatelessNode import StatelessNode
 from partitioning_strategies.Hashing import Hashing
 from partitioning_strategies.KeyGrouping import KeyGrouping
@@ -16,8 +19,6 @@ class KeyPartitioner(StatelessNode):
         type (str): The type of the node (stateless).
         throughput (int): Maximum computational cycles a node can
                           run per step.
-        complexity_type (str): Complexity type used for computational
-                               cycle calculation.
         stage (Stage): The stage which the node is in.
         strategy (PartitionStrategy): The class the specifies the
                                       key partitioning strategy.
@@ -30,7 +31,6 @@ class KeyPartitioner(StatelessNode):
         uid: int,
         stage_node_id: int,
         throughput: int,
-        complexity_type: str,
         stage,
         partitioning_strategy: str,
         strategy_params: Optional[Dict[str, Any]] = None,
@@ -43,14 +43,12 @@ class KeyPartitioner(StatelessNode):
             stage_node_id: The stage local node identifier.
             throughput (int): Maximum computational cycles a node can
                               run per step.
-            complexity_type (str): Complexity type used for computational
-                                   cycle calculation.
             stage (Stage): The stage which the node is in.
             partitioning_strategy (str): The name of the partitioning
                                          strategy.
             strategy_params (dict): Parameters for the partitioning strategy.
         """
-        super().__init__(uid, stage_node_id, throughput, complexity_type, stage)
+        super().__init__(uid, stage_node_id, throughput, stage)
 
         # Initialize partitioning strategy
         self.strategy = self._init_strategy(partitioning_strategy, strategy_params)
@@ -61,6 +59,13 @@ class KeyPartitioner(StatelessNode):
             for i in range(self.stage.next_stage_len)
             if self.stage.next_stage_len > 0
         }
+
+        self.extra_dir = GlobalConfig.extra_dir
+
+        # Initialize logging
+        self.default_logger, self.node_logger, _ = initialize_logging(
+            self.uid, self.extra_dir
+        )
 
     def _init_strategy(self, strategy_name, strategy_params):
         """
@@ -99,7 +104,10 @@ class KeyPartitioner(StatelessNode):
               them to the next simulator stage.
         """
 
-        print(f"Node {self.uid} received keys: {keys} at step {step}")
+        log_default_info(
+            self.default_logger,
+            f"Node {self.uid} received keys: {keys} at step {step}\n",
+        )
         if not self.stage.terminal_stage:
             # Partition the keys
             self.strategy.partition(keys, self.stage.next_stage.nodes, self.buffers)
@@ -132,6 +140,5 @@ class KeyPartitioner(StatelessNode):
             f"\n--------------------\n"
             f"StatelessNode {self.uid} with:\n"
             f"throughput: {self.throughput}\n"
-            f"complexity type: {self.complexity_type}\n"
             f"--------------------"
         )
