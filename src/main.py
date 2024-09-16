@@ -1,7 +1,7 @@
-from src.keygen.KeyGenerator import KeyGenerator
-from src.simulator.Simulator import Simulator
-from src.simulator.GlobalConfig import GlobalConfig
-from src.utils.utils import load_config, load_steps_from_file
+from keygen.KeyGenerator import KeyGenerator
+from simulator.Simulator import Simulator
+from simulator.GlobalConfig import GlobalConfig
+from utils.utils import load_config, load_steps_from_file
 import argparse
 import os
 
