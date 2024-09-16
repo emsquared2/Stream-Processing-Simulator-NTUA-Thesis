@@ -41,6 +41,7 @@ class KeyGenerator:
         self.steps = config["steps"]
         self.num_keys = config["number_of_keys"]
         self.arrival_rate = config["arrival_rate"]
+        self.arrival_rate_ot = config.get("arrival_rate_ot", None)
         self.spike_probability = config["spike_probability"]
         self.spike_magnitude = config["spike_magnitude"]
         self.dist_type = config["distribution"]["type"]
@@ -198,6 +199,9 @@ class KeyGenerator:
         # print(step)
         keys = self.replace_step_with_keys(step, key_dist)
         # print(keys)
+
+        if self.arrival_rate_ot:
+            self.arrival_rate += math.ceil(self.arrival_rate * (1 + self.arrival_rate_ot) / 100)
 
         return keys
 
