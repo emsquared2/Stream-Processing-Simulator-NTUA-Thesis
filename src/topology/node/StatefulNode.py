@@ -1,5 +1,7 @@
+from simulator.GlobalConfig import GlobalConfig
 from .Node import Node
 from .state.State import State
+from utils.Logging import initialize_logging, log_default_info, log_node_info
 
 
 class StatefulNode(Node):
@@ -55,6 +57,13 @@ class StatefulNode(Node):
 
         self.state = State(uid, throughput, complexity_type, window_size, slide)
 
+        self.extra_dir = GlobalConfig.extra_dir
+
+        # Initialize logging
+        self.default_logger, self.node_logger = initialize_logging(
+            self.uid, self.extra_dir
+        )
+
     def receive_and_process(self, keys: list, step: int) -> None:
         """
         Processes a list of keys and updates the node's internal state.
@@ -63,12 +72,17 @@ class StatefulNode(Node):
             keys (list): List of keys to be processed.
             step (int): Current step in the simulation.
         """
-        print(f"Node {self.uid} received keys: {keys} at step {step}")
+        log_default_info(
+            self.default_logger, f"Node {self.uid} received keys: {keys} at step {step}"
+        )
 
         processed_keys = self.state.update(keys, step, self.terminal)
-        print(
-            f"Node {self.uid} terminal: {self.terminal}, processed_keys: {processed_keys}"
+
+        log_default_info(
+            self.default_logger,
+            f"Node {self.uid} terminal: {self.terminal}, processed_keys: {processed_keys}\n",
         )
+
         if not self.terminal:
             processed_keys_flat = [
                 item for sublist in processed_keys for item in sublist
@@ -84,7 +98,9 @@ class StatefulNode(Node):
             step (int): The current simulation step.
         """
         self.stage.next_stage.nodes[self.stage_node_id].receive_and_process(keys, step)
-        print(f"Node {self.uid} emitted keys: {keys} at step {step}")
+        log_default_info(
+            self.default_logger, f"Node {self.uid} emitted keys: {keys} at step {step}"
+        )
 
     def __repr__(self) -> str:
         """
