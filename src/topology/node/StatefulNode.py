@@ -49,11 +49,12 @@ class StatefulNode(Node):
                              terminal (final stage) node.
         """
         super().__init__(
-            uid, stage_node_id, "stateful", throughput, complexity_type, stage
+            uid, stage_node_id, "stateful", throughput, stage
         )
         self.window_size = window_size
         self.slide = slide
         self.terminal = terminal
+        self.complexity_type = complexity_type
 
         self.state = State(uid, throughput, complexity_type, window_size, slide)
 

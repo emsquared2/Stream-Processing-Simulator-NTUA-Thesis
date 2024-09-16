@@ -9,12 +9,11 @@ class StatelessNode(Node):
         stage_node_id: The stage local node identifier.
         type (str): The type of the node (stateless).
         throughput (int): Maximum computational cycles a node can run per step.
-        complexity_type (str): Complexity type used for computational cycle calculation.
         stage (Stage): The stage which the node is in.
     """
 
     # TODO: Add strategy params
-    def __init__(self, uid: int, stage_node_id: int, throughput: int, complexity_type: str, stage) -> None:
+    def __init__(self, uid: int, stage_node_id: int, throughput: int, stage) -> None:
         """
         Initializes the stateless node with the specified parameters.
 
@@ -23,11 +22,9 @@ class StatelessNode(Node):
             stage_node_id (int): Stage node identifier.
             throughput (int): Maximum computational cycles a node can
                               run per step.
-            complexity_type (str): Complexity type used for computational
-                                   cycle calculation.
             stage (Stage): The stage which the node is in.
         """
-        super().__init__(uid, stage_node_id, "stateless", throughput, complexity_type, stage)
+        super().__init__(uid, stage_node_id, "stateless", throughput, stage)
 
     def receive_and_process(self, keys: list, step: int) -> None:
         """
@@ -50,6 +47,5 @@ class StatelessNode(Node):
             f"\n--------------------\n"
             f"StatelessNode {self.uid} with:\n"
             f"throughput: {self.throughput}\n"
-            f"complexity type: {self.complexity_type}\n"
             f"--------------------"
         )

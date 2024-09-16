@@ -55,9 +55,9 @@ class Stage:
             # Question: Use of throughput / complexity_type on
             #           stateless nodes
             throughput = node_data["throughput"]
-            complexity_type = node_data["complexity_type"]
 
             if node_type == "stateful":
+                complexity_type = node_data["complexity_type"]
                 window_size = node_data["window_size"]
                 slide = node_data["slide"]
                 node = StatefulNode(
@@ -72,7 +72,7 @@ class Stage:
                 )
 
             elif node_type == "stateless":
-                node = StatelessNode(uid, i, throughput, complexity_type, self)
+                node = StatelessNode(uid, i, throughput, self)
 
             # Atm key_partitioner is a StatelessNode but we made
             # it an inherited class so we might have multiple
@@ -96,7 +96,6 @@ class Stage:
                     uid,
                     i,
                     throughput,
-                    complexity_type,
                     self,
                     strategy_name,
                     strategy_params,
