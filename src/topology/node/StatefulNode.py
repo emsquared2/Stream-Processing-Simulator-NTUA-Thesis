@@ -1,7 +1,7 @@
 from simulator.GlobalConfig import GlobalConfig
 from .Node import Node
 from .state.State import State
-from utils.Logging import initialize_logging, log_default_info, log_node_info
+from utils.Logging import initialize_logging, log_default_info
 
 
 class StatefulNode(Node):

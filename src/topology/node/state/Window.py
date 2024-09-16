@@ -1,6 +1,3 @@
-from collections import Counter
-
-
 class Window:
     """
     Represents a time window for tracking keys.
