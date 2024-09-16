@@ -19,8 +19,6 @@ class KeyPartitioner(StatelessNode):
         type (str): The type of the node (stateless).
         throughput (int): Maximum computational cycles a node can
                           run per step.
-        complexity_type (str): Complexity type used for computational
-                               cycle calculation.
         stage (Stage): The stage which the node is in.
         strategy (PartitionStrategy): The class the specifies the
                                       key partitioning strategy.
@@ -33,7 +31,6 @@ class KeyPartitioner(StatelessNode):
         uid: int,
         stage_node_id: int,
         throughput: int,
-        complexity_type: str,
         stage,
         partitioning_strategy: str,
         strategy_params: Optional[Dict[str, Any]] = None,
@@ -46,14 +43,12 @@ class KeyPartitioner(StatelessNode):
             stage_node_id: The stage local node identifier.
             throughput (int): Maximum computational cycles a node can
                               run per step.
-            complexity_type (str): Complexity type used for computational
-                                   cycle calculation.
             stage (Stage): The stage which the node is in.
             partitioning_strategy (str): The name of the partitioning
                                          strategy.
             strategy_params (dict): Parameters for the partitioning strategy.
         """
-        super().__init__(uid, stage_node_id, throughput, complexity_type, stage)
+        super().__init__(uid, stage_node_id, throughput, stage)
 
         # Initialize partitioning strategy
         self.strategy = self._init_strategy(partitioning_strategy, strategy_params)
@@ -145,6 +140,5 @@ class KeyPartitioner(StatelessNode):
             f"\n--------------------\n"
             f"StatelessNode {self.uid} with:\n"
             f"throughput: {self.throughput}\n"
-            f"complexity type: {self.complexity_type}\n"
             f"--------------------"
         )
