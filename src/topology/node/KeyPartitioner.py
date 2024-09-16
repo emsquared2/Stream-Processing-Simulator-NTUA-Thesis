@@ -1,5 +1,8 @@
 from typing import Optional, Dict, Any
 
+from simulator.GlobalConfig import GlobalConfig
+from utils.Logging import initialize_logging, log_default_info, log_node_info
+
 from .StatelessNode import StatelessNode
 from partitioning_strategies.Hashing import Hashing
 from partitioning_strategies.KeyGrouping import KeyGrouping
@@ -62,6 +65,13 @@ class KeyPartitioner(StatelessNode):
             if self.stage.next_stage_len > 0
         }
 
+        self.extra_dir = GlobalConfig.extra_dir
+
+        # Initialize logging
+        self.default_logger, self.node_logger = initialize_logging(
+            self.uid, self.extra_dir
+        )
+
     def _init_strategy(self, strategy_name, strategy_params):
         """
         Initializes the partitioning strategy based on the provided name and parameters.
@@ -99,7 +109,10 @@ class KeyPartitioner(StatelessNode):
               them to the next simulator stage.
         """
 
-        print(f"Node {self.uid} received keys: {keys} at step {step}")
+        log_default_info(
+            self.default_logger,
+            f"Node {self.uid} received keys: {keys} at step {step}\n",
+        )
         if not self.stage.terminal_stage:
             # Partition the keys
             self.strategy.partition(keys, self.stage.next_stage.nodes, self.buffers)
