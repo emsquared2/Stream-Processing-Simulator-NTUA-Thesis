@@ -1,4 +1,3 @@
-# logging_setup.py
 import logging
 import os
 import time
@@ -6,7 +5,7 @@ import time
 
 def initialize_logging(node_id: int, extra_dir: str = None):
     """
-    Initializes both the default and per-node logging setup.
+    Initializes the default, per-node, and key-specific logging setup.
 
     Args:
         node_id (int): Unique identifier for the node.
@@ -26,40 +25,43 @@ def initialize_logging(node_id: int, extra_dir: str = None):
         log_dir = os.path.join(log_dir, f"log_{timestamp}")
     os.makedirs(log_dir, exist_ok=True)
 
-    # Create a default log file within the timestamped directory
-    default_log_file = os.path.join(log_dir, "log_default.log")
-
     # Set up the default logger
-    logging.basicConfig(
-        filename=default_log_file,
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+    default_logger = _setup_logger(
+        "default_logger", os.path.join(log_dir, "log_default.log"), logging.INFO
     )
-    default_logger = logging.getLogger("default_logger")
 
-    # Create a log file specific to this node within the timestamped directory
-    node_log_file = os.path.join(log_dir, f"log_node{node_id}.log")
+    node_logger = None
+    if node_id >= 0:
+        # Set up the node-specific logger
+        node_logger = _setup_logger(
+            f"Node_{node_id}",
+            os.path.join(log_dir, f"log_node{node_id}.log"),
+            logging.DEBUG,
+        )
 
-    # Set up the per-node logger
-    node_logger = logging.getLogger(f"Node_{node_id}")
-    node_logger.setLevel(logging.DEBUG)  # Set to the desired logging level
+    # Set up the key-specific logger
+    key_logger = _setup_logger(
+        f"Key_{node_id}", os.path.join(log_dir, "log_key_stats.log"), logging.DEBUG
+    )
 
-    # Create a file handler for the node-specific logger
-    node_handler = logging.FileHandler(node_log_file)
-    node_handler.setLevel(logging.DEBUG)  # Set to the desired logging level
+    return default_logger, node_logger, key_logger
 
-    # Create a common formatter
+
+def _setup_logger(logger_name, log_file, level):
+    """Helper function to set up individual loggers."""
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(level)
+
+    file_handler = logging.FileHandler(log_file)
+    file_handler.setLevel(level)
+
     formatter = logging.Formatter(
-        "%(asctime)s - Node %(node_id)d - %(levelname)s - %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+        "%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
     )
-    node_handler.setFormatter(formatter)
+    file_handler.setFormatter(formatter)
 
-    # Add the handler to the per-node logger
-    node_logger.addHandler(node_handler)
-
-    return default_logger, node_logger
+    logger.addHandler(file_handler)
+    return logger
 
 
 def log_default_info(default_logger, message):
@@ -78,5 +80,18 @@ def log_node_info(node_logger, message, node_id):
 
     Args:
         message (str): The message to log.
+        node_id (int): The node identifier for logging.
     """
     node_logger.info(message, extra={"node_id": node_id})
+
+
+def log_key_statistics(key_logger, key_stats, step):
+    """
+    Logs key statistics with the node_id included to the key-specific logger.
+
+    Args:
+        key_logger (Logger): The key-specific logger.
+        key_stats (dict): A dictionary with key statistics (key occurrence counts).
+        node_id (int): The node identifier for logging.
+    """
+    key_logger.info(f"Key statistics for step {step}: {key_stats}")

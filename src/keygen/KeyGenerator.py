@@ -2,7 +2,9 @@ import math
 import os
 import random
 from collections import Counter
+from simulator.GlobalConfig import GlobalConfig
 from utils.utils import write_output
+from utils.Logging import initialize_logging, log_key_statistics
 from utils.ConfigValidator import validate_keygen_config
 from .distributions.normal import NormalDistribution
 from .distributions.uniform import UniformDistribution
@@ -45,6 +47,11 @@ class KeyGenerator:
 
         # Initialize the key distribution
         self.distribution = self._init_distribution()
+
+        self.extra_dir = GlobalConfig.extra_dir
+
+        # Initialize logging
+        _, _, self.key_logger = initialize_logging(-1, self.extra_dir)
 
     def _init_distribution(self):
         """
@@ -191,6 +198,7 @@ class KeyGenerator:
         # print(step)
         keys = self.replace_step_with_keys(step, key_dist)
         # print(keys)
+
         return keys
 
     def generate_stream(self, output_file):
@@ -211,6 +219,8 @@ class KeyGenerator:
 
             # print(f"Key dist: {key_dist}")
             step = self.generate_step(key_dist)
+            sorted_key_count = dict(sorted(Counter(step).items()))
+            log_key_statistics(self.key_logger, sorted_key_count, i)
             stream.append(" ".join(step))
         write_output(stream, output_file)
 
