@@ -1,7 +1,7 @@
 from typing import Optional, Dict, Any
 
 from simulator.GlobalConfig import GlobalConfig
-from utils.Logging import initialize_logging, log_default_info, log_node_info
+from utils.Logging import initialize_logging, log_default_info
 
 from .StatelessNode import StatelessNode
 from partitioning_strategies.Hashing import Hashing
