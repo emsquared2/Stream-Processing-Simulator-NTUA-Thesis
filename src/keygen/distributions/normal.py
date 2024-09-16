@@ -26,19 +26,10 @@ class NormalDistribution(Distribution):
         Returns:
             list: A list of keys chosen uniformly at random.
         """
-
-        # Calculate the frequency probabilities for each key
-        # For simplicity, use a normal distribution centered around the mean
-        key_probabilities = np.random.normal(self.mean, self.stddev, len(self.keys))
-
-        # Use exp to ensure all probabilities are positive
-        key_probabilities = np.exp(key_probabilities)
-
-        # Normalize to make probabilities sum to 1
-        key_probabilities /= np.sum(key_probabilities)
-
-        # Generate the keys based on these probabilities
         num_keys = int(arrival_rate)
-        generated_keys = np.random.choice(self.keys, size=num_keys, p=key_probabilities)
 
-        return generated_keys.tolist()
+        # Generate a normal distribution of indices (rounded and wrapped to valid indices)
+        indices = np.random.normal(loc=self.mean, scale=self.stddev, size=num_keys).round().astype(int)
+        wrapped_indices = indices % len(self.keys)       
+
+        return wrapped_indices
