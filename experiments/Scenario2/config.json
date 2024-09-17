@@ -4,7 +4,7 @@
         "steps": 50,
         "number_of_keys": 10,
         "arrival_rate": 50,
-        "arrival_rate_ot": -10,
+        "arrival_rate_ot": 10,
         "spike_probability": 0,
         "spike_magnitude": 0,
         "distribution": {
