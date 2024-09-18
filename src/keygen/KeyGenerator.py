@@ -8,6 +8,8 @@ from utils.Logging import initialize_logging, log_key_statistics
 from utils.ConfigValidator import validate_keygen_config
 from .distributions.normal import NormalDistribution
 from .distributions.uniform import UniformDistribution
+from .distributions.poisson import PoissonDistribution
+from .distributions.zipf import ZipfDistribution
 
 
 class KeyGenerator:
@@ -73,6 +75,12 @@ class KeyGenerator:
             )
         elif self.dist_type == "uniform":
             return UniformDistribution(self.create_key_array(self.num_keys))
+        elif self.dist_type == "poisson":
+            lam = self.config["distribution"]["lambda"]
+            return PoissonDistribution(self.create_key_array(self.num_keys), lam)
+        elif self.dist_type == "zipf":
+            alpha = self.config["distribution"]["alpha"]
+            return ZipfDistribution(self.create_key_array(self.num_keys), alpha)
         else:
             raise ValueError("Unsupported distribution type")
 
@@ -194,7 +202,10 @@ class KeyGenerator:
         # Adjust arrival rate based on spike probability and magnitude
         if random.uniform(0, 100) < self.spike_probability:
             change = random.uniform(-self.spike_magnitude, self.spike_magnitude)
-            self.arrival_rate = max(math.ceil(self.arrival_rate * (1 + change / 100)), self.initial_arrival_rate)
+            self.arrival_rate = max(
+                math.ceil(self.arrival_rate * (1 + change / 100)),
+                self.initial_arrival_rate,
+            )
 
         step = self.distribution.generate(self.arrival_rate)
         # print(step)
@@ -202,7 +213,9 @@ class KeyGenerator:
         # print(keys)
 
         if self.arrival_rate_ot:
-            self.arrival_rate += math.ceil(self.arrival_rate * (1 + self.arrival_rate_ot) / 100)
+            self.arrival_rate += math.ceil(
+                self.arrival_rate * (1 + self.arrival_rate_ot) / 100
+            )
 
         return keys
 
