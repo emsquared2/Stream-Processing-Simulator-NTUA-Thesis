@@ -6,6 +6,22 @@ import random
 
 
 class Stage:
+    """
+    A simulation topology stage that consists a number of identical nodes.
+
+    Attributes:
+    - id (int): Unique stage identifier.
+    - stage_type (str): String that describes the type of the stage.  
+                        It is equivalent to the node type.
+    - next_stage (Stage): Object that specifies the next topology stage.
+    - next_stage_len (int): The length of the next stage.
+    - terminal_stage (bool): Specifies if the current stage is the last 
+                             stage of the simulation.
+    - hash_seed (int): Seed used in case of hashing partitioning to 
+                       sync the nodes of the stages.
+    - nodes (list): The nodes of this stage.                                       
+    """
+
     def __init__(self, stage_data, next_stage_len: int):
         """
         Initializes the Stage with nodes based on the given stage data.
