@@ -3,10 +3,10 @@ from .stage.Stage import Stage
 
 class Topology:
     """
-    A class that implements the Topology of our simulator based on a  specific configuration.
+    A class that implements the Topology of the simulator based on a  specific configuration.
 
     Attributes:
-    - stages (list): A list that holds the classed of all the simulated stages.
+    - stages (list): A list that holds the classes of all the simulated stages.
 
 
     """

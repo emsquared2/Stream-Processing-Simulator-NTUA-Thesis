@@ -25,7 +25,7 @@ class KeyGenerator:
                 "number_of_keys" (int): Number of keys to use in the distribution.
                 "arrival_rate" (int): Number of keys per step.
                 "arrivale_rate_ot" (int): The percentage increase / decrease of arrival_rate 
-                                          with each simulation step.
+                                          within each simulation step.
                 "spike_probability" (int): The probability of encountering a spike on a 
                                            key generation step.
                 "spike_magnitude (int): The maximum spike magnitude. The spike gets a value 
