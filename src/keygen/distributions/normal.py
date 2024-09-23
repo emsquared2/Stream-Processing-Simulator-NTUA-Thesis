@@ -3,7 +3,13 @@ from .base import Distribution
 
 
 class NormalDistribution(Distribution):
-    """Normal distribution class for generating keys."""
+    """
+    Normal distribution class for generating keys.
+
+    Attributes:
+        mean (float): The mean of the normal distribution.
+        stddev (float): The standard deviation of the normal distribution.
+    """
 
     def __init__(self, keys, mean, stddev):
         """Constructor for the NormalDistribution class.
