@@ -2,6 +2,14 @@ from .stage.Stage import Stage
 
 
 class Topology:
+    """
+    A class that implements the Topology of our simulator based on a  specific configuration.
+
+    Attributes:
+    - stages (list): A list that holds the classed of all the simulated stages.
+
+
+    """
     def __init__(self, topology_config):
         """
         Initializes the Topology with stages based on the given topology configuration.
