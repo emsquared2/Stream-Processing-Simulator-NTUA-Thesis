@@ -293,6 +293,10 @@ class TestState(unittest.TestCase):
                 self.assertEqual(len(state.windows[10].keys), 5)
 
         # Check Final Metrics
+        self.assertEqual(state.total_keys, 80)
+        self.assertEqual(state.total_processed, 120)
+        self.assertEqual(state.total_expired, 0)
+        self.assertEqual(state.total_cycles, 320)
 
 
 if __name__ == "__main__":
