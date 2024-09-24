@@ -155,15 +155,9 @@ class State:
 
         for start_step, window in list(self.windows.items()):
             if window.is_processable(self.current_step):
-                print(
-                    f"Step {self.current_step}, window: {window.start_step}, step_cycles: {step_cycles}"
-                )
-                window_cycles, window_keys = self.process_window(
+
+                step_cycles, window_keys = self.process_window(
                     window, terminal, step_cycles
-                )
-                step_cycles += window_cycles
-                print(
-                    f"Step {self.current_step}, step_cycles {step_cycles}, window_cycles: {window_cycles}, window_keys: {len(window_keys)}\n"
                 )
                 emitted_keys.append(window_keys)
                 if len(window.keys) == 0:
