@@ -45,7 +45,7 @@ class TestWindow(unittest.TestCase):
         """
         Create a test window and complexity object for use in tests.
         """
-        self.window = Window(start_step=0, window_size=10)
+        self.window = Window(start_step=0, window_size=10, slide=5)
         self.complexity = MockComplexity()
 
     def test_process_within_throughput(self):
@@ -58,7 +58,7 @@ class TestWindow(unittest.TestCase):
 
         # Call the process method
         processed_keys, cycles, processed_key_count = self.window.process(
-            throughput, self.complexity
+            throughput, self.complexity, step_cycles=0
         )
 
         # Assertions:
@@ -84,7 +84,7 @@ class TestWindow(unittest.TestCase):
 
         # Call the process method
         processed_keys, cycles, processed_key_count = self.window.process(
-            throughput, self.complexity
+            throughput, self.complexity, step_cycles=0
         )
 
         # Assertions:
@@ -116,7 +116,7 @@ class TestWindow(unittest.TestCase):
 
         # Call the process method on an empty window
         processed_keys, cycles, processed_key_count = self.window.process(
-            throughput, self.complexity
+            throughput, self.complexity, step_cycles=0
         )
 
         # Assertions
@@ -135,7 +135,7 @@ class TestWindow(unittest.TestCase):
 
         # Call the process method
         processed_keys, cycles, processed_key_count = self.window.process(
-            throughput, self.complexity
+            throughput, self.complexity, step_cycles=0
         )
 
         # Assertions
@@ -146,6 +146,42 @@ class TestWindow(unittest.TestCase):
         )  # Check key counts
         # Window should be empty
         self.assertEqual(self.window.keys, [])
+
+    def test_process_with_step_cycles(self):
+        """
+        Test processing when some cycles have already been used.
+        """
+        self.window.keys = load_keys()
+
+        throughput = 150  # High throughput
+        step_cycles = 77  # Already used cycles
+
+        # 77 cycles have already been used, so actual throughput is 150 - 77 = 73, so we expect same results as test_process_with_throughput_limit
+
+        # Call the process method
+        processed_keys, cycles, processed_key_count = self.window.process(
+            throughput, self.complexity, step_cycles
+        )
+
+        # Assertions:
+
+        # 4 key1 + 4 key2 + 5key3 + 3 key4 = 16 processed keys
+        self.assertEqual(processed_keys, 16)
+        # 16 (key1) + 16 (key2) + 25 (key3) + 9 (key4) = 66 cycles should be used
+        # Next key is key1 so we would have 5 key1 instead of 4 so the cost would have been 66 + (25 - 16) = 75 > 73
+        self.assertEqual(cycles, 66)
+        # Processed key counts for first <processed_keys> = 16 keys --> ["key1", "key4", "key1", "key3", "key2", "key2", "key3", "key4", "key2", "key3", "key1", "key2", "key1", "key3", "key3", "key4"]
+        self.assertDictEqual(
+            processed_key_count, {"key1": 4, "key2": 4, "key3": 5, "key4": 3}
+        )
+        # Assert remaining unprocessed keys
+        expected_remaining_keys = [
+            "key1",
+            "key4",
+            "key4",
+            "key3",
+        ]
+        self.assertEqual(self.window.keys, expected_remaining_keys)
 
 
 if __name__ == "__main__":
