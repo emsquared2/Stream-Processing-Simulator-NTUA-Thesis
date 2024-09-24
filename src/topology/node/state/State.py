@@ -21,9 +21,9 @@ class State:
         current_step (int): The current step in the simulation.
         minimum_step (int): The minimum step to consider for processing keys.
 
-        TODO: Re-evaluate metrics and how they are computed
         total_keys (int): Total keys received.
         total_processed (int): Total keys processed.
+        total_expired (int): Total expired_keys.
         total_cycles (int): Total number of processing cycles used.
     """
 
@@ -59,6 +59,7 @@ class State:
         # Metrics
         self.total_keys = 0
         self.total_processed = 0
+        self.total_expired = 0
         self.total_cycles = 0
 
         self.extra_dir = GlobalConfig.extra_dir
@@ -90,7 +91,7 @@ class State:
 
         self.current_step = max(self.current_step, step)
         self.minimum_step = max(0, self.current_step - self.window_size + 1)
-        max_step = self.minimum_step + self.window_size
+        max_step = step + self.window_size + 3 * self.slide
 
         processed_keys = self.process_full_windows(terminal)
 
@@ -100,7 +101,7 @@ class State:
         )
 
         for key in keys:
-            if key != "step_update":
+            if key != "step_update" and step >= self.minimum_step:
                 self.received_keys.append((key, step, max_step))
                 self.update_windows(key, step)
 
@@ -128,11 +129,13 @@ class State:
         # Create any new windows needed based on side and start_step
         if 0 <= step - start_step < self.window_size:
             if start_step not in self.windows:
-                self.windows[start_step] = Window(start_step, self.window_size)
+                self.windows[start_step] = Window(
+                    start_step, self.window_size, self.slide
+                )
 
-        # Add the step keys to all the non expired windows
+        # Add the step keys to all non expired and non processable windows
         for st_step, window in list(self.windows.items()):
-            if not window.is_expired(step):
+            if not window.is_expired(step) and not window.is_processable(step):
                 self.windows[st_step].add_key(key)
 
     def process_full_windows(self, terminal: bool) -> list[list]:
@@ -148,10 +151,23 @@ class State:
                         the next stage from each full window.
         """
         emitted_keys = []
+        step_cycles = 0
+
         for start_step, window in list(self.windows.items()):
-            if window.is_full(self.current_step):
-                emitted_keys.append(self.process_window(window, terminal))
-                del self.windows[start_step]
+            if window.is_processable(self.current_step):
+                print(
+                    f"Step {self.current_step}, window: {window.start_step}, step_cycles: {step_cycles}"
+                )
+                window_cycles, window_keys = self.process_window(
+                    window, terminal, step_cycles
+                )
+                step_cycles += window_cycles
+                print(
+                    f"Step {self.current_step}, step_cycles {step_cycles}, window_cycles: {window_cycles}, window_keys: {len(window_keys)}\n"
+                )
+                emitted_keys.append(window_keys)
+                if len(window.keys) == 0:
+                    del self.windows[start_step]
         return emitted_keys
 
     def remove_expired_windows(self) -> None:
@@ -174,16 +190,24 @@ class State:
         """
         Removes keys that have expired based on their max_step.
         """
-        log_default_info(self.default_logger, "Removing expired keys.")
         updated_received_keys = []
+        expired_keys = []
 
-        for key, step, max_step in self.received_keys:
-            if self.current_step <= max_step:
-                updated_received_keys.append((key, step, max_step))
+        for key, start_step, max_step in self.received_keys:
+            if self.current_step > max_step:
+                expired_keys.append(key)
+            else:
+                updated_received_keys.append((key, start_step, max_step))
 
         self.received_keys = updated_received_keys
 
-    def process_window(self, window: Window, terminal: bool) -> list:
+        log_default_info(
+            self.default_logger,
+            f"Node {self.node_id} removed {len(expired_keys)} expired keys: {expired_keys}",
+        )
+        self.total_expired += len(expired_keys)
+
+    def process_window(self, window: Window, terminal: bool, step_cycles: int) -> list:
         """
         Processes a full window and updates the node's state.
 
@@ -191,9 +215,11 @@ class State:
             window (Window): The window to process.
             terminal (bool): Specifies if the current node
                              is a terminal node.
+            step_cycles (int): Computational cycles used so far in the current step.
 
         Returns:
-            list: Returns in a list the keys to be emitted from a window.
+            int: The computational cycles used so far in the current step.
+            list: The keys to be emitted from a window.
                   If it is a terminal node it returns an empty list.
         """
         log_default_info(
@@ -202,12 +228,14 @@ class State:
         )
 
         processed_keys, cycles, window_key_count = window.process(
-            self.throughput, self.complexity
+            self.throughput, self.complexity, step_cycles
         )
+
+        step_cycles += cycles
 
         log_default_info(
             self.default_logger,
-            f"Node {self.node_id} processed {cycles} computational cycles for window.",
+            f"Node {self.node_id} processed {cycles} computational cycles for window and has used {step_cycles} cycles so far at step {self.current_step}.",
         )
         message = (
             f"Step {self.current_step} - Processed {processed_keys} keys using {cycles} cycles - Overdue keys: {len(window.keys)} - Node load {(cycles*100)/self.throughput}%"
@@ -222,40 +250,16 @@ class State:
 
         self.total_cycles += cycles
         self.total_processed += processed_keys
-        # TODO: We can use window_key_count to aggregate/store the key_count for all processed keys
 
-        # If there are overdue keys (i.e., keys left in the window), pass them to the next closest window
         overdue_keys = window.keys  # Remaining unprocessed keys in this window
 
-        if overdue_keys:
-            # Find the next closest window
-            next_window_start_step = None
-            for st_step in sorted(self.windows):
-                if st_step > window.start_step:
-                    next_window_start_step = st_step
-                    break
-
-            # If no window is found, default to the next window in the slide
-            if next_window_start_step is None:
-                next_window_start_step = window.start_step + self.slide
-
-            # Create the next window if it doesn't exist
-            if next_window_start_step not in self.windows:
-                self.windows[next_window_start_step] = Window(
-                    next_window_start_step, self.window_size
-                )
-
-            log_default_info(
-                self.default_logger,
-                f"Node {self.node_id} passing overdue keys: {overdue_keys} to window with start_step {next_window_start_step}",
-            )
-
-            # Add the overdue keys to the next window
-            for key in overdue_keys:
-                self.windows[next_window_start_step].add_key(key)
+        log_default_info(
+            self.default_logger,
+            f"Node {self.node_id} overdue keys: {overdue_keys} from window with start_step {window.start_step}",
+        )
 
         if terminal:
-            return []
+            return step_cycles, []
         else:
             # The window_key_count is a dictionary that holds
             # how many times a type of key was processed in the
@@ -263,14 +267,14 @@ class State:
             # were processed in this window as follows.
             # As we previously clarified that a stateful node
             # will "simulate" an aggregation function.
-            return list(window_key_count.keys())
+            return step_cycles, list(window_key_count.keys())
 
     def __repr__(self) -> str:
         """
         A string representation of the node's state.
 
         Returns:
-            str: A formatted string showing the node's ID, received keys, key counts, current step, minimum step, and windows.
+            str: A formatted string showing the node's final state.
         """
         key_counts = Counter(key for key, _, _ in self.received_keys)
 
@@ -279,6 +283,7 @@ class State:
             f"Node Report for Node ID: {self.node_id}\n"
             f"Total Keys Received: {self.total_keys}\n"
             f"Total Keys Processed: {self.total_processed}\n"
+            f"Total Keys Expired: {self.total_expired}\n"
             f"Total Processing Cycles: {self.total_cycles}\n"
             f"Current Step: {self.current_step}\n"
             f"Minimum Step: {self.minimum_step}\n"
@@ -297,5 +302,6 @@ class State:
             f"Current Windows: {self.windows}\n"
             f"Total Keys Received: {self.total_keys}\n"
             f"Total Keys Processed: {self.total_processed}\n"
+            f"Total Keys Expired: {self.total_expired}\n"
             f"Total Processing Cycles: {self.total_cycles}"
         )
