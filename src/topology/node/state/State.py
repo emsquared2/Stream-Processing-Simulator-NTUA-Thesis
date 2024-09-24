@@ -172,6 +172,11 @@ class State:
         for start_step, window in list(self.windows.items()):
             if window.is_expired(self.current_step):
                 expired_windows.append(window)
+                self.total_expired += len(window.keys)
+                log_default_info(
+                    self.default_logger,
+                    f"Node {self.node_id} removed {len(window.keys)} expired keys: {window.keys}",
+                )
                 del self.windows[start_step]
 
         if expired_windows:
@@ -185,21 +190,12 @@ class State:
         Removes keys that have expired based on their max_step.
         """
         updated_received_keys = []
-        expired_keys = []
 
         for key, start_step, max_step in self.received_keys:
-            if self.current_step > max_step:
-                expired_keys.append(key)
-            else:
+            if self.current_step <= max_step:
                 updated_received_keys.append((key, start_step, max_step))
 
         self.received_keys = updated_received_keys
-
-        log_default_info(
-            self.default_logger,
-            f"Node {self.node_id} removed {len(expired_keys)} expired keys: {expired_keys}",
-        )
-        self.total_expired += len(expired_keys)
 
     def process_window(self, window: Window, terminal: bool, step_cycles: int) -> list:
         """
