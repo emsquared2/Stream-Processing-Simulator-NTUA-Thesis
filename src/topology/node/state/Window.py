@@ -5,19 +5,22 @@ class Window:
     Attributes:
         start_step (int): The starting step of the window.
         size (int): The size of the window in steps.
+        slide (int): The slide of the window in steps.
         keys (list): List of keys received within this window.
     """
 
-    def __init__(self, start_step: int, window_size: int) -> None:
+    def __init__(self, start_step: int, window_size: int, slide: int) -> None:
         """
         Initializes a Window instance with the given parameters.
 
         Args:
             start_step (int): The starting step of the window.
             window_size (int): The size of the window in steps.
+            slide (int): The slide of the window in steps.
         """
         self.start_step = start_step
         self.size = window_size
+        self.slide = slide
         self.keys = []
 
     def add_key(self, key: str) -> None:
@@ -29,7 +32,7 @@ class Window:
         """
         self.keys.append(key)
 
-    def process(self, throughput: int, complexity) -> tuple[int, int]:
+    def process(self, throughput: int, complexity, step_cycles: int) -> tuple[int, int]:
         """
         Processes the keys in the window based on the throughput and complexity.
         Removes the processed keys from the window and returns the count of the processed keys.
@@ -37,6 +40,7 @@ class Window:
         Args:
             throughput (int): Maximum computational cycles a node can run per step.
             complexity (Complexity): The complexity object to calculate computational cycles.
+            step_cycles (int): Computational cycles used so far in the current step.
 
         Returns:
             tuple[int, int, dict[str, int]]: Number of keys processed, total cycles used, and the count of the processed keys.
@@ -50,7 +54,7 @@ class Window:
 
             # Calculate the cycles required to process current keys
             cycles = self.compute_cost(processed_key_count, complexity)
-            if cycles > throughput:
+            if cycles + step_cycles > throughput:
                 # Stop processing if adding this key's cycles exceeds the throughput
                 # Revert the increment made to processed_key_count for this key
                 processed_key_count[key] -= 1
@@ -94,7 +98,7 @@ class Window:
         Returns:
             bool: True if the window is full, False otherwise.
         """
-        return current_step - self.start_step == self.size
+        return current_step == self.start_step + self.size
 
     def is_expired(self, current_step: int) -> bool:
         """
@@ -106,7 +110,23 @@ class Window:
         Returns:
             bool: True if the window has expired, False otherwise.
         """
-        return current_step - self.start_step > self.size
+        return current_step >= self.start_step + self.size + 3 * self.slide
+
+    def is_processable(self, current_step: int) -> bool:
+        """
+        Checks if the window is processable, meaning it is full but not yet expired.
+
+        Args:
+            current_step (int): The current step in the simulation.
+
+        Returns:
+            bool: True if the window is full but not expired, and should be processed, False otherwise.
+        """
+        return (
+            self.start_step + self.size
+            <= current_step
+            < self.start_step + self.size + 3 * self.slide
+        )
 
     def __repr__(self) -> str:
         """
@@ -115,6 +135,4 @@ class Window:
         Returns:
             str: A formatted string showing the window's size, start step, and keys.
         """
-        return (
-            f"Window(size={self.size}, start_step={self.start_step}, keys={self.keys})"
-        )
+        return f"Window(size={self.size}, slide={self.slide}, start_step={self.start_step}, keys={self.keys})"
