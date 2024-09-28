@@ -228,11 +228,12 @@ class State:
             self.default_logger,
             f"Node {self.node_id} processed {cycles} computational cycles for window and has used {step_cycles} cycles so far at step {self.current_step}.",
         )
-        message = (
-            f"Step {self.current_step} - Processed {processed_keys} keys using {cycles} cycles - Overdue keys: {len(window.keys)} - Node load {(cycles*100)/self.throughput}%"
-            if window.keys
-            else f"Step {self.current_step} - Processed {processed_keys} keys using {cycles} cycles - Node load {(cycles*100)/self.throughput}%"
-        )
+        message = f"Step {self.current_step} - Processed {processed_keys} keys using {cycles} cycles - Node load {(cycles*100)/self.throughput}%"
+        if window.keys:
+            message += f" - Overdue keys: {len(window.keys)}"
+
+        message += f" - Current step load: {(step_cycles * 100) / self.throughput:.2f}%"
+
         log_node_info(
             self.node_logger,
             message,
