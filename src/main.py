@@ -1,7 +1,7 @@
-from src.keygen.KeyGenerator import KeyGenerator
-from src.simulator.Simulator import Simulator
-from src.simulator.GlobalConfig import GlobalConfig
-from src.utils.utils import load_config, load_steps_from_file
+from keygen.KeyGenerator import KeyGenerator
+from simulator.Simulator import Simulator
+from simulator.GlobalConfig import GlobalConfig
+from utils.utils import load_config, load_steps_from_file
 import argparse
 import os
 
@@ -9,6 +9,14 @@ import os
 def main(config_file, key_gen_file=None, stream_file=None, extra_dir=None):
     """
     Main function to configure and run the simulation.
+
+    Args:
+        config_file (str): The path to the simulation configuration file.
+        key_gen_file (str): If provided it generates new key data to the
+                            path specified by the parameter.
+        stream_file (str): If provided it reads key data from the path specified
+                           by the parameter
+        extra_dir (str): Specifies the logging directory.
     """
 
     # Load the configuration file

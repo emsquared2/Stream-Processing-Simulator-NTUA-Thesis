@@ -20,7 +20,7 @@ def initialize_logging(node_id: int, extra_dir: str = None):
     # Define log directory and create a subdirectory for the current timestamp
     log_dir = os.path.join(base_dir, "../../logs")
     if extra_dir:
-        log_dir = os.path.join(log_dir, extra_dir, timestamp)
+        log_dir = os.path.join(log_dir, extra_dir, f"log_{timestamp}")
     else:
         log_dir = os.path.join(log_dir, f"log_{timestamp}")
     os.makedirs(log_dir, exist_ok=True)
@@ -52,15 +52,18 @@ def _setup_logger(logger_name, log_file, level):
     logger = logging.getLogger(logger_name)
     logger.setLevel(level)
 
-    file_handler = logging.FileHandler(log_file)
-    file_handler.setLevel(level)
+    # Check if the logger already has handlers, and if so, avoid adding new ones
+    if not logger.hasHandlers():
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setLevel(level)
 
-    formatter = logging.Formatter(
-        "%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
-    )
-    file_handler.setFormatter(formatter)
+        formatter = logging.Formatter(
+            "%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+        )
+        file_handler.setFormatter(formatter)
 
-    logger.addHandler(file_handler)
+        logger.addHandler(file_handler)
+
     return logger
 
 

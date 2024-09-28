@@ -8,6 +8,8 @@ from utils.Logging import initialize_logging, log_key_statistics
 from utils.ConfigValidator import validate_keygen_config
 from .distributions.normal import NormalDistribution
 from .distributions.uniform import UniformDistribution
+from .distributions.poisson import PoissonDistribution
+from .distributions.zipf import ZipfDistribution
 
 
 class KeyGenerator:
@@ -24,6 +26,12 @@ class KeyGenerator:
                 "steps" (int): Number of simulation steps.
                 "number_of_keys" (int): Number of keys to use in the distribution.
                 "arrival_rate" (int): Number of keys per step.
+                "arrivale_rate_ot" (int): The percentage increase / decrease of arrival_rate 
+                                          within each simulation step.
+                "spike_probability" (int): The probability of encountering a spike on a 
+                                           key generation step.
+                "spike_magnitude (int): The maximum spike magnitude. The spike gets a value 
+                                        based on a uniform distribution of (-spike_magnitude, spike_magnitude)
                 "distribution" (dict): Distribution configuration, including:
                     "type" (str): Type of distribution, either "normal" or "uniform".
                     "mean" (float): Mean for normal distribution (required if type is "normal").
@@ -31,6 +39,8 @@ class KeyGenerator:
             output_file (str): Path to the output file where the stream will be written
             distribution (class): The distribution class oject which generates keys based on
                                   the distribution the keys are following in this step.
+            extra_dir (str): Path to the logs dir
+            key_logger (class): The logger that logs information regarding key generation.
         """
 
         # Validate the keygen configuration before proceeding
@@ -41,6 +51,8 @@ class KeyGenerator:
         self.steps = config["steps"]
         self.num_keys = config["number_of_keys"]
         self.arrival_rate = config["arrival_rate"]
+        self.initial_arrival_rate = self.arrival_rate
+        self.arrival_rate_ot = config.get("arrival_rate_ot", None)
         self.spike_probability = config["spike_probability"]
         self.spike_magnitude = config["spike_magnitude"]
         self.dist_type = config["distribution"]["type"]
@@ -71,6 +83,12 @@ class KeyGenerator:
             )
         elif self.dist_type == "uniform":
             return UniformDistribution(self.create_key_array(self.num_keys))
+        elif self.dist_type == "poisson":
+            lam = self.config["distribution"]["lambda"]
+            return PoissonDistribution(self.create_key_array(self.num_keys), lam)
+        elif self.dist_type == "zipf":
+            alpha = self.config["distribution"]["alpha"]
+            return ZipfDistribution(self.create_key_array(self.num_keys), alpha)
         else:
             raise ValueError("Unsupported distribution type")
 
@@ -179,9 +197,6 @@ class KeyGenerator:
         """Generates a step in the key distribution in the stream simulation
 
         Args:
-            arrival_rate (int): The arrival rate of keys in this step of the simulation
-            distribution (class): The distribution class oject which generates keys based on
-                                  the distribution the keys are following in this step.
             key_dist (list): The list represents the frequency order of the keys in this step
                              that we want to simulate.
 
@@ -192,12 +207,20 @@ class KeyGenerator:
         # Adjust arrival rate based on spike probability and magnitude
         if random.uniform(0, 100) < self.spike_probability:
             change = random.uniform(-self.spike_magnitude, self.spike_magnitude)
-            self.arrival_rate = math.ceil(self.arrival_rate * (1 + change / 100))
+            self.arrival_rate = max(
+                math.ceil(self.arrival_rate * (1 + change / 100)),
+                self.initial_arrival_rate,
+            )
 
         step = self.distribution.generate(self.arrival_rate)
         # print(step)
         keys = self.replace_step_with_keys(step, key_dist)
         # print(keys)
+
+        if self.arrival_rate_ot:
+            self.arrival_rate += math.ceil(
+                self.arrival_rate * (1 + self.arrival_rate_ot) / 100
+            )
 
         return keys
 
@@ -230,15 +253,6 @@ class KeyGenerator:
            each discrete stream simulation.
 
         Args:
-            config (json): The json configuration of the simulation.
-                "streams" (int): Number of discrete streams to generate.
-                "steps" (int): Number of simulation steps.
-                "number of keys" (int): Number of keys to use in the distribution.
-                "arrival rate" (int): Number of keys per step.
-                "distribution" (dict): Distribution configuration, including:
-                    "type" (str): Type of distribution, either "normal" or "uniform".
-                    "mean" (float): Mean for normal distribution (required if type is "normal").
-                    "stddev" (float): Standard deviation for normal distribution (required if type is "normal").
             output_file (str): Path to the output file where the stream will be written
 
         Raises:
