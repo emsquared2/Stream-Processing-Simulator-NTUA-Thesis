@@ -20,9 +20,11 @@ def validate_keygen_config(config):
             "spike_magnitude": (int),
             "distribution":
             {
-                "type": "normal | uniform",
+                "type": "normal | uniform | poisson | zipf",
                 "mean": (float)    # Required if type is 'normal'
                 "stddev": (float)  # Required if type is 'normal'
+                "lambda": (float)  # Required if type is 'poisson'
+                "alpha": (float)   # Required if type is 'zipf'
             }
         }
 
@@ -44,6 +46,8 @@ def validate_keygen_config(config):
     distribution_required_keys = {
         "normal": ["mean", "stddev"],
         "uniform": [],
+        "poisson": ["lambda"],
+        "zipf": ["alpha"],
     }
 
     # Check for missing top-level keys
@@ -85,7 +89,7 @@ def validate_keygen_config(config):
     dist_type = distribution["type"]
     if dist_type not in distribution_required_keys:
         sys.exit(
-            f"Invalid distribution type: {dist_type}. Must be 'uniform' or 'normal'."
+            f"Invalid distribution type: {dist_type}. Must be 'uniform', 'normal', 'poisson' or 'zipf'."
         )
 
     # Check required keys for specific distribution types
