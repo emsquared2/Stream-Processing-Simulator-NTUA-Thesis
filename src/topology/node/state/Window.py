@@ -9,6 +9,8 @@ class Window:
         keys (list): List of keys received within this window.
     """
 
+    # TODO: Remove slide if it's not included in expiration periods or similar considerations
+
     def __init__(self, start_step: int, window_size: int, slide: int) -> None:
         """
         Initializes a Window instance with the given parameters.
@@ -87,18 +89,6 @@ class Window:
             total_cycles += complexity.calculate_cycles(occurrences)
 
         return total_cycles
-
-    def is_full(self, current_step: int) -> bool:
-        """
-        Checks if the window is full based on the current step.
-
-        Args:
-            current_step (int): The current step in the simulation.
-
-        Returns:
-            bool: True if the window is full, False otherwise.
-        """
-        return current_step == self.start_step + self.size
 
     def is_expired(self, current_step: int) -> bool:
         """

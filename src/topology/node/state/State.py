@@ -91,6 +91,7 @@ class State:
 
         self.current_step = max(self.current_step, step)
         self.minimum_step = max(0, self.current_step - self.window_size + 1)
+        # TODO: Refactor max_step definition
         max_step = step + self.window_size + 3 * self.slide
 
         processed_keys = self.process_full_windows(terminal)

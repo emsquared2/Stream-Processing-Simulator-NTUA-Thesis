@@ -1,3 +1,9 @@
+import os
+import sys
+
+# Get the absolute path to the 'src' directory
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
+
 import unittest
 from unittest.mock import MagicMock
 from topology.node.state.State import State
