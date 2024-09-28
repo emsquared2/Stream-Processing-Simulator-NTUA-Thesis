@@ -153,16 +153,29 @@ class State:
         """
         emitted_keys = []
         step_cycles = 0
+        processed_keys = 0
+        overdue_keys = 0
 
         for start_step, window in list(self.windows.items()):
             if window.is_processable(self.current_step):
 
-                step_cycles, window_keys = self.process_window(
+                step_cycles, win_processed_keys, win_overdue_keys, window_keys = self.process_window(
                     window, terminal, step_cycles
                 )
+                processed_keys += win_processed_keys
+                overdue_keys += win_overdue_keys
                 emitted_keys.append(window_keys)
                 if len(window.keys) == 0:
                     del self.windows[start_step]
+
+        message = f"Step {self.current_step} - Processed {processed_keys} keys using {step_cycles} cycles - Node load {(step_cycles*100)/self.throughput}%"
+        if overdue_keys:
+            message += f" - Overdue keys: {overdue_keys}"
+        log_node_info(
+            self.node_logger,
+            message,
+            self.node_id,
+        )
         return emitted_keys
 
     def remove_expired_windows(self) -> None:
@@ -224,34 +237,22 @@ class State:
 
         step_cycles += cycles
 
+        overdue_keys = window.keys  # Remaining unprocessed keys in this window
+
+        message = f"Node {self.node_id} Processed {processed_keys} keys from window {window.start_step} using {cycles} cycles"
+        if window.keys:
+            message += f" - Overdue keys: {len(overdue_keys)}"
+
         log_default_info(
             self.default_logger,
-            f"Node {self.node_id} processed {cycles} computational cycles for window and has used {step_cycles} cycles so far at step {self.current_step}.",
-        )
-        message = f"Step {self.current_step} - Processed {processed_keys} keys using {cycles} cycles - Node load {(cycles*100)/self.throughput}%"
-        if window.keys:
-            message += f" - Overdue keys: {len(window.keys)}"
-
-        message += f" - Current step load: {(step_cycles * 100) / self.throughput:.2f}%"
-
-        log_node_info(
-            self.node_logger,
             message,
-            self.node_id,
         )
 
         self.total_cycles += cycles
         self.total_processed += processed_keys
 
-        overdue_keys = window.keys  # Remaining unprocessed keys in this window
-
-        log_default_info(
-            self.default_logger,
-            f"Node {self.node_id} overdue keys: {overdue_keys} from window with start_step {window.start_step}",
-        )
-
         if terminal:
-            return step_cycles, []
+            return step_cycles, processed_keys, len(overdue_keys), []
         else:
             # The window_key_count is a dictionary that holds
             # how many times a type of key was processed in the
@@ -259,7 +260,7 @@ class State:
             # were processed in this window as follows.
             # As we previously clarified that a stateful node
             # will "simulate" an aggregation function.
-            return step_cycles, list(window_key_count.keys())
+            return step_cycles, processed_keys, len(overdue_keys), list(window_key_count.keys())
 
     def __repr__(self) -> str:
         """
