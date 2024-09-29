@@ -8,11 +8,17 @@ class AggregationNode(Node):
     """
     Represents a node for aggregation tasks in the simulation.
 
-    Inherits from the abstract Node class and sets the uid in the format '1_aggr'.
+    Inherits from the abstract Node class and sets the uid in the format 'stage_node_id_aggr'.
     """
 
     def __init__(
-        self, stage_node_id: int, complexity_type: str, stage, window_size: int, slide: int, terminal: bool = False
+        self,
+        stage_node_id: int,
+        complexity_type: str,
+        stage,
+        window_size: int,
+        slide: int,
+        terminal: bool = False,
     ) -> None:
         """
         Initializes an AggregationNode with a custom uid and specified parameters.
@@ -23,13 +29,14 @@ class AggregationNode(Node):
             stage (Stage): The stage which the node is in.
         """
         # Construct the uid in the desired format
-        uid = f"{stage_node_id}_aggr"
+        self.uid = f"{stage_node_id}_aggr"
 
         # Initialize the base class with the custom uid
-        # Note: ATM for the AggregationNode we consider that throughput to be equal to 0.
-        super().__init__(uid, stage_node_id, "Aggregation", -1, stage)
+        # Note: ATM for the AggregationNode we consider that throughput is equal to -1.
+        super().__init__(self.uid, stage_node_id, "Aggregation", -1, stage)
 
         self.state: dict[int, dict[str, int]] = {}
+        self.complexity_type = complexity_type
         self.complexity = create_complexity(complexity_type)
         self.window_size = window_size
         self.slide = slide
@@ -59,7 +66,7 @@ class AggregationNode(Node):
         log_node_info(
             self.node_logger,
             f"Received keys: {keys} at step {step} from node {sender_stage_node_id}",
-            self.uid
+            self.uid,
         )
 
         if keys:
@@ -94,7 +101,7 @@ class AggregationNode(Node):
         self.stage.next_stage.nodes[0].receive_and_process(keys, step)
 
     def is_expired(self, window_step: int, step: int):
-        return step > window_step + 3 * self.slide + self.window_size
+        return step >= window_step + self.window_size + 3 * self.slide
 
     def process(self, key_count_list: list[tuple[str, int]]):
         print(key_count_list)
@@ -109,8 +116,28 @@ class AggregationNode(Node):
 
         for key_count_dict in key_count_list:
             for key, count in key_count_dict.items():
-                if key != "finished": 
+                if key != "finished":
                     cycles += self.complexity.calculate_cycles(count)
                     emitting_keys.append(key)
 
         return cycles, emitting_keys
+
+    def __repr__(self) -> str:
+        """
+        A string representation of the aggregation node.
+
+        Returns:
+            str: Description of the node.
+        """
+        return (
+            f"\n--------------------\n"
+            f"AggregationNode {self.uid} with:\n"
+            f"throughput: {self.throughput}\n"
+            f"complexity type: {self.complexity_type}\n"
+            f"window size: {self.window_size}\n"
+            f"slide: {self.slide}\n"
+            f"finished: {self.finished}\n"
+            f"state:\n"
+            f"{self.state}\n"
+            f"--------------------"
+        )

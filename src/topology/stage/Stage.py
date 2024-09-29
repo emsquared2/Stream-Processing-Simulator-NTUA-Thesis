@@ -12,15 +12,15 @@ class Stage:
 
     Attributes:
     - id (int): Unique stage identifier.
-    - stage_type (str): String that describes the type of the stage.  
+    - stage_type (str): String that describes the type of the stage.
                         It is equivalent to the node type.
     - next_stage (Stage): Object that specifies the next topology stage.
     - next_stage_len (int): The length of the next stage.
-    - terminal_stage (bool): Specifies if the current stage is the last 
+    - terminal_stage (bool): Specifies if the current stage is the last
                              stage of the simulation.
-    - hash_seed (int): Seed used in case of hashing partitioning to 
+    - hash_seed (int): Seed used in case of hashing partitioning to
                        sync the nodes of the stages.
-    - nodes (list): The nodes of this stage.                                       
+    - nodes (list): The nodes of this stage.
     """
 
     def __init__(self, stage_data, next_stage_len: int):
@@ -33,7 +33,7 @@ class Stage:
         """
         self.id = stage_data["id"]
         self.stage_type = stage_data["type"]
-        self.key_spliting = stage_data.get("key_spliting", None)
+        self.key_splitting = stage_data.get("key_splitting", None)
         self.next_stage = None
 
         self.next_stage_len = next_stage_len
@@ -42,7 +42,9 @@ class Stage:
         self.hash_seed = None
 
         self.nodes = self._create_nodes(stage_data["nodes"])
-        if self.key_spliting: 
+
+        # Initialize Aggregator
+        if self.key_splitting:
             self.aggregator = AggregationNode(
                 self.id,
                 stage_data["nodes"][0]["complexity_type"],
@@ -95,7 +97,7 @@ class Stage:
                     window_size,
                     slide,
                     self.terminal_stage,
-                    self.key_spliting
+                    self.key_splitting,
                 )
 
             elif node_type == "stateless":
@@ -134,6 +136,8 @@ class Stage:
 
     def __repr__(self):
         stage_repr = "\n".join(f"{node}\n" for node in self.nodes)
+        if self.key_splitting:
+            stage_repr += f"\n {self.aggregator}"
         return (
             f"\n---------- Stage {self.id} ----------\n"
             f"Total nodes: {len(self.nodes)}\n"
