@@ -159,8 +159,8 @@ class State:
         for start_step, window in list(self.windows.items()):
             if window.is_processable(self.current_step):
 
-                step_cycles, win_processed_keys, win_overdue_keys, window_keys = self.process_window(
-                    window, terminal, step_cycles
+                step_cycles, win_processed_keys, win_overdue_keys, window_keys = (
+                    self.process_window(window, terminal, step_cycles)
                 )
                 processed_keys += win_processed_keys
                 overdue_keys += win_overdue_keys
@@ -260,7 +260,25 @@ class State:
             # were processed in this window as follows.
             # As we previously clarified that a stateful node
             # will "simulate" an aggregation function.
-            return step_cycles, processed_keys, len(overdue_keys), list(window_key_count.keys())
+            return (
+                step_cycles,
+                processed_keys,
+                len(overdue_keys),
+                list(window_key_count.keys()),
+            )
+
+    def load(self) -> int:
+        """
+        Computes the total load in terms of keys.
+
+        Returns:
+            int: The total number of keys in all active windows.
+        """
+        load = 0
+        for window in self.windows.values():
+            load += len(window.keys)
+
+        return load
 
     def __repr__(self) -> str:
         """

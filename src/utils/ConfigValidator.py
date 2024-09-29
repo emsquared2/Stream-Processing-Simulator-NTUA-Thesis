@@ -200,6 +200,8 @@ def validate_topology(config):
                     "shuffle_grouping",
                     "hashing",
                     "key_grouping",
+                    "potc",
+                    "pkg",
                 ]:
                     sys.exit(
                         f"Invalid or missing strategy name for node {node['id']} in stage {stage['id']}."
