@@ -31,6 +31,7 @@
             {
                 "id": 1,
                 "type": "stateful",
+                "key_spliting": true,
                 "nodes": [
                     {
                         "id": 1,
@@ -56,15 +57,6 @@
                 "nodes": [
                     {
                         "id": 3,
-                        "type": "key_partitioner",
-                        "throughput": 1000,
-                        "strategy": {
-                            "name": "hashing",
-                            "prefix_length": 3
-                        }
-                    },
-                    {
-                        "id": 4,
                         "type": "key_partitioner",
                         "throughput": 1000,
                         "strategy": {
