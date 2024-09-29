@@ -1,3 +1,4 @@
+from collections import Counter
 from simulator.GlobalConfig import GlobalConfig
 from .Node import Node
 from .state.State import State
@@ -32,6 +33,7 @@ class StatefulNode(Node):
         window_size: int,
         slide: int,
         terminal: bool = False,
+        key_spliting: bool = False,
     ) -> None:
         """
         Initializes the stateful node with the specified parameters.
@@ -55,6 +57,7 @@ class StatefulNode(Node):
         self.slide = slide
         self.terminal = terminal
         self.complexity_type = complexity_type
+        self.key_spliting = key_spliting
 
         self.state = State(uid, throughput, complexity_type, window_size, slide)
 
@@ -85,10 +88,23 @@ class StatefulNode(Node):
         )
 
         if not self.terminal:
-            processed_keys_flat = [
-                item for sublist in processed_keys for item in sublist
-            ]
-            self.emit_keys(processed_keys_flat, step)
+            if self.key_spliting:
+                # Initialize a dictionary to hold the count of keys for each window_step
+                keys_dict = {}
+
+                # Iterate over each window_step and the corresponding window_keys
+                for window_step, window_keys in processed_keys:
+                    # Use Counter to count occurrences of each key in window_keys
+                    key_counts = Counter(window_keys)
+
+                    # Convert the key counts into the required list of dicts format
+                    keys_dict[window_step] = [{key: count} for key, count in key_counts.items()]
+
+                # Emit the transformed dictionary based on key splitting logic
+                self.emit_keys(keys_dict, step)
+            else:
+                processed_keys_flat = [key for _, window_keys in processed_keys for key in window_keys]
+                self.emit_keys(processed_keys_flat, step)
 
     def emit_keys(self, keys: list, step: int) -> None:
         """Emits stage computed keys to next stage
@@ -98,7 +114,11 @@ class StatefulNode(Node):
                          node to the next stage.
             step (int): The current simulation step.
         """
-        self.stage.next_stage.nodes[self.stage_node_id].receive_and_process(keys, step)
+        if self.key_spliting:
+            self.stage.aggregator.receive_and_process(keys, step, self.stage_node_id)
+        else:
+            self.stage.next_stage.nodes[self.stage_node_id].receive_and_process(keys, step)
+        
         log_default_info(
             self.default_logger, f"Node {self.uid} emitted keys: {keys} at step {step}"
         )
