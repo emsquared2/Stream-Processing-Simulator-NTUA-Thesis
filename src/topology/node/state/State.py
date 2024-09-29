@@ -164,9 +164,10 @@ class State:
                 )
                 processed_keys += win_processed_keys
                 overdue_keys += win_overdue_keys
-                emitted_keys.append(window_keys)
                 if len(window.keys) == 0:
+                    window_keys.append("finished")
                     del self.windows[start_step]
+                emitted_keys.append((start_step, window_keys))
 
         message = f"Step {self.current_step} - Processed {processed_keys} keys using {step_cycles} cycles - Node load {(step_cycles*100)/self.throughput}%"
         if overdue_keys:

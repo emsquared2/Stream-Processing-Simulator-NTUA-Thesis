@@ -1,6 +1,7 @@
 from ..node.StatelessNode import StatelessNode
 from ..node.KeyPartitioner import KeyPartitioner
 from ..node.StatefulNode import StatefulNode
+from ..node.AggregationNode import AggregationNode
 
 import random
 
@@ -32,6 +33,7 @@ class Stage:
         """
         self.id = stage_data["id"]
         self.stage_type = stage_data["type"]
+        self.key_spliting = stage_data.get("key_spliting", None)
         self.next_stage = None
 
         self.next_stage_len = next_stage_len
@@ -40,6 +42,14 @@ class Stage:
         self.hash_seed = None
 
         self.nodes = self._create_nodes(stage_data["nodes"])
+        if self.key_spliting: 
+            self.aggregator = AggregationNode(
+                self.id,
+                stage_data["nodes"][0]["complexity_type"],
+                self,
+                stage_data["nodes"][0]["window_size"],
+                stage_data["nodes"][0]["slide"],
+            )
 
     def _set_next_stage(self, stage):
         """
@@ -85,6 +95,7 @@ class Stage:
                     window_size,
                     slide,
                     self.terminal_stage,
+                    self.key_spliting
                 )
 
             elif node_type == "stateless":
