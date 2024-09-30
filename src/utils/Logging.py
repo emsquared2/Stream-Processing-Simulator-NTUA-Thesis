@@ -31,11 +31,9 @@ def initialize_logging(node_id: int, extra_dir: str = None):
     )
 
     node_logger = None
-    print(node_id)
     uid = int(str(node_id).split("_")[0])
     if uid >= 0:
         # Set up the node-specific logger
-        print(f"log_node{node_id}.log")
         node_logger = _setup_logger(
             f"Node_{node_id}",
             os.path.join(log_dir, f"log_node{node_id}.log"),

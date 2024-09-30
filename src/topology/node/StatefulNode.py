@@ -1,7 +1,7 @@
 from collections import Counter
 from simulator.GlobalConfig import GlobalConfig
 from .Node import Node
-from .state.State import State
+from .state.StatefulNodeState import StatefulNodeState
 from utils.Logging import initialize_logging, log_default_info
 
 
@@ -57,7 +57,7 @@ class StatefulNode(Node):
         self.complexity_type = complexity_type
         self.key_splitting = key_splitting
 
-        self.state = State(uid, throughput, complexity_type, window_size, slide)
+        self.state = StatefulNodeState(uid, throughput, complexity_type, window_size, slide)
 
         self.extra_dir = GlobalConfig.extra_dir
 
@@ -117,6 +117,7 @@ class StatefulNode(Node):
             step (int): The current simulation step.
         """
         if self.key_splitting:
+            print("Emitting", step, keys)
             self.stage.aggregator.receive_and_process(keys, step, self.stage_node_id)
         else:
             self.stage.next_stage.nodes[self.stage_node_id].receive_and_process(
