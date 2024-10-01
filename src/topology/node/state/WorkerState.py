@@ -1,8 +1,7 @@
 from collections import Counter
-from .BaseState import BaseState 
+from .BaseState import BaseState
 from .Window import Window
 from utils.Logging import log_default_info, log_node_info
-
 
 
 class WorkerState(BaseState):
@@ -12,7 +11,7 @@ class WorkerState(BaseState):
     Attributes:
         node_id (int): Unique identifier for the node.
         throughput (int): Maximum computational cycles a node can run per step.
-        complexity_type (str): Complexity type used for computational cycle calculation.
+        operation_type (str): Operation type used for computational cycle calculation.
         window_size (int): The size of the processing window.
         slide (int): The slide of the processing window.
 
@@ -31,7 +30,7 @@ class WorkerState(BaseState):
         self,
         node_id: int,
         throughput: int,
-        complexity_type: str,
+        operation_type: str,
         window_size: int,
         slide: int,
     ) -> None:
@@ -41,12 +40,12 @@ class WorkerState(BaseState):
         Args:
             node_id (int): Unique identifier for the node.
             throughput (int): Maximum computational cycles a node can run per step.
-            complexity_type (str): Complexity type used for computational cycle calculation.
+            operation_type (str): Operation type used for computational cycle calculation.
             window_size (int): The size of the processing window.
             slide (int): The slide of the processing window.
         """
-        super().__init__(node_id, throughput, complexity_type, window_size, slide)
-                         
+        super().__init__(node_id, throughput, operation_type, window_size, slide)
+
         self.received_keys: list[tuple[str, int, int]] = []
         self.windows: dict[int, Window] = {}
         self.current_step = 0
@@ -147,9 +146,8 @@ class WorkerState(BaseState):
 
         for start_step, window in list(self.windows.items()):
             if window.is_processable(self.current_step):
-
-                step_cycles, win_processed_keys, win_overdue_keys, window_keys = self.process_window(
-                    window, terminal, step_cycles
+                step_cycles, win_processed_keys, win_overdue_keys, window_keys = (
+                    self.process_window(window, terminal, step_cycles)
                 )
                 processed_keys += win_processed_keys
                 overdue_keys += win_overdue_keys
@@ -222,7 +220,7 @@ class WorkerState(BaseState):
         )
 
         processed_keys, cycles, window_key_count = window.process(
-            self.throughput, self.complexity, step_cycles
+            self.throughput, self.operation, step_cycles
         )
 
         step_cycles += cycles
@@ -250,7 +248,7 @@ class WorkerState(BaseState):
             # were processed in this window as follows.
             # As we previously clarified that a stateful node
             # will "simulate" an aggregation function.
-            if self.complexity_type == "O(nlogn)":
+            if (self.operation.to_str() == "Sorting" or self.operation.to_str() == "NestedLoop"):
                 return step_cycles, processed_keys, len(overdue_keys), [key for key, count in window_key_count.items() for _ in range(count)]
             else :
                 return step_cycles, processed_keys, len(overdue_keys), list(window_key_count.keys())

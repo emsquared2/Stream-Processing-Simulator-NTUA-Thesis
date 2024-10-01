@@ -13,7 +13,7 @@ class AggregatorNode(StatefulNode):
     def __init__(
         self,
         stage_node_id: int,
-        complexity_type: str,
+        operation_type: str,
         stage,
         window_size: int,
         slide: int,
@@ -27,8 +27,8 @@ class AggregatorNode(StatefulNode):
             stage_node_id: The stage local node identifier.
             throughput (int): Maximum computational cycles a node can run per step.
             stage (Stage): The stage which the node is in.
-            stage_operation (str): The operation simulated by the stage where this node is 
-                                   located in. 
+            stage_operation (str): The operation simulated by the stage where this node is
+                                   located in.
         """
         # Construct the uid in the desired format
         self.uid = f"{stage_node_id}_aggr"
@@ -36,8 +36,15 @@ class AggregatorNode(StatefulNode):
         # Initialize the base class with the custom uid
         super().__init__(self.uid, stage_node_id, "Aggregator", 1000, stage, terminal)
 
-        self.state = AggregatorState(self.uid, self.throughput, complexity_type, window_size, slide, stage_operation, len(self.stage.nodes))
-
+        self.state = AggregatorState(
+            self.uid,
+            self.throughput,
+            operation_type,
+            window_size,
+            slide,
+            stage_operation,
+            len(self.stage.nodes),
+        )
 
     def receive_and_process(
         self, keys: dict[int, list[dict[str, int]]], step: int, sender_stage_node_id
@@ -57,14 +64,15 @@ class AggregatorNode(StatefulNode):
             f"Node {self.uid} received keys: {keys} at step {step} from node {sender_stage_node_id}",
         )
 
-        processed_keys = self.state.update(keys, step, self.terminal, sender_stage_node_id)
+        processed_keys = self.state.update(
+            keys, step, self.terminal, sender_stage_node_id
+        )
 
         if not self.terminal:
             processed_keys_flat = [
-                    key for _, window_keys in processed_keys for key in window_keys
+                key for _, window_keys in processed_keys for key in window_keys
             ]
             self.emit_keys(processed_keys_flat, step)
-
 
     def emit_keys(self, keys: list, step: int) -> None:
         print(keys)
@@ -89,7 +97,7 @@ class AggregatorNode(StatefulNode):
 
         for key, count in key_count_list.items():
             if key != "finished":
-                cycles += self.complexity.calculate_cycles(count)
+                cycles += self.operation.calculate_cycles(count)
                 emitting_keys.append(key)
 
         return cycles, emitting_keys
@@ -104,7 +112,7 @@ class AggregatorNode(StatefulNode):
         return (
             f"\n--------------------\n"
             f"AggregatorNode {self.uid} with:\n"
-            f"complexity type: {self.complexity_type}\n"
+            f"operation type: {self.operation_type}\n"
             f"state:\n"
             f"{self.state}\n"
             f"--------------------"

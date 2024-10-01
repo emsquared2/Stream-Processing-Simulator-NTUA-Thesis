@@ -1,4 +1,4 @@
-from utils.utils import create_complexity
+from utils.utils import create_operation
 from simulator.GlobalConfig import GlobalConfig
 from utils.Logging import initialize_logging
 
@@ -9,7 +9,7 @@ class BaseState:
     Attributes:
         node_id (int): Unique identifier for the node.
         throughput (int): Maximum computational cycles a node can run per step.
-        complexity_type (str): Complexity type used for computational cycle calculation.
+        operation_type (str): Operation type used for computational cycle calculation.
         window_size (int): The size of the processing window.
         slide (int): The slide of the processing window.
     """
@@ -18,7 +18,7 @@ class BaseState:
         self,
         node_id: int,
         throughput: int,
-        complexity_type: str,
+        operation_type: str,
         window_size: int,
         slide: int,
     ) -> None:
@@ -28,14 +28,14 @@ class BaseState:
         Args:
             node_id (int): Unique identifier for the node.
             throughput (int): Maximum computational cycles a node can run per step.
-            complexity_type (str): Complexity type used for computational cycle calculation.
+            operation_type (str): Operation type used for computational cycle calculation.
             window_size (int): The size of the processing window.
             slide (int): The slide of the processing window.
         """
         self.node_id = node_id
         self.throughput = throughput
-        self.complexity_type = complexity_type
-        self.complexity = create_complexity(complexity_type)
+        self.operation_type = operation_type
+        self.operation = create_operation(operation_type)
         self.window_size = window_size
         self.slide = slide
         self.extra_dir = GlobalConfig.extra_dir

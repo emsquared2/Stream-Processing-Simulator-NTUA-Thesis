@@ -12,7 +12,7 @@ class StatefulNode(Node):
         stage_node_id: The stage local node identifier.
         type (str): The type of the node (stateful).
         throughput (int): Maximum computational cycles a node can run per step.
-        complexity_type (str): Complexity type used for computational cycle calculation.
+        operation_type (str): Operation type used for computational cycle calculation.
         stage (Stage): The stage which the node is in.
         window_size (int): The size of the processing window.
         slide (int): The slide of the processing window.
@@ -28,7 +28,7 @@ class StatefulNode(Node):
         node_type: str,
         throughput: int,
         stage,
-        terminal: bool = False
+        terminal: bool = False,
     ) -> None:
         """
         Initializes the stateful node with the specified parameters.
@@ -38,7 +38,7 @@ class StatefulNode(Node):
             stage_node_id (int): Stage node identifier.
             throughput (int): Maximum computational cycles a node can
                               run per step.
-            complexity_type (str): Complexity type used for computational cycle calculation.
+            operation_type (str): Operation type used for computational cycle calculation.
             stage (Stage): The stage which the node is in.
             window_size (int): The size of the processing window.
             slide (int): The slide of the processing window.
@@ -46,8 +46,8 @@ class StatefulNode(Node):
                              terminal (final stage) node.
         """
         super().__init__(uid, stage_node_id, node_type, throughput, stage)
-        
-        self.terminal = terminal    
+
+        self.terminal = terminal
 
         self.extra_dir = GlobalConfig.extra_dir
 

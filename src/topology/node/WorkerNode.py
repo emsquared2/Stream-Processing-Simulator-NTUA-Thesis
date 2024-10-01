@@ -13,7 +13,7 @@ class WorkerNode(StatefulNode):
         stage_node_id: The stage local node identifier.
         type (str): The type of the node (stateful).
         throughput (int): Maximum computational cycles a node can run per step.
-        complexity_type (str): Complexity type used for computational cycle calculation.
+        operation_type (str): Operation type used for computational cycle calculation.
         stage (Stage): The stage which the node is in.
         window_size (int): The size of the processing window.
         slide (int): The slide of the processing window.
@@ -27,7 +27,7 @@ class WorkerNode(StatefulNode):
         uid: int,
         stage_node_id: int,
         throughput: int,
-        complexity_type: str,
+        operation_type: str,
         stage,
         window_size: int,
         slide: int,
@@ -42,7 +42,7 @@ class WorkerNode(StatefulNode):
             stage_node_id (int): Stage node identifier.
             throughput (int): Maximum computational cycles a node can
                               run per step.
-            complexity_type (str): Complexity type used for computational cycle calculation.
+            operation_type (str): Operation type used for computational cycle calculation.
             stage (Stage): The stage which the node is in.
             window_size (int): The size of the processing window.
             slide (int): The slide of the processing window.
@@ -50,16 +50,9 @@ class WorkerNode(StatefulNode):
                              terminal (final stage) node.
         """
         super().__init__(uid, stage_node_id, "Worker", throughput, stage, terminal)
-        # self.window_size = window_size
-        # self.slide = slide
-        # self.terminal = terminal
-        # self.complexity_type = complexity_type
         self.key_splitting = key_splitting
 
-        self.state = WorkerState(
-            uid, throughput, complexity_type, window_size, slide
-        )
-
+        self.state = WorkerState(uid, throughput, operation_type, window_size, slide)
 
     def receive_and_process(self, keys: list, step: int) -> None:
         """
@@ -134,9 +127,6 @@ class WorkerNode(StatefulNode):
             f"\n--------------------\n"
             f"StatefulNode {self.uid} with:\n"
             f"throughput: {self.throughput}\n"
-            # f"complexity type: {self.complexity_type}\n"
-            # f"window size: {self.window_size}\n"
-            # f"slide: {self.slide}\n"
             f"state:\n"
             f"{self.state}\n"
             f"--------------------"

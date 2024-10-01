@@ -47,11 +47,11 @@ class Stage:
         if self.key_splitting:
             self.aggregator = AggregatorNode(
                 self.id,
-                "O(n)",
+                "Aggregation",
                 self,
                 stage_data["nodes"][0]["window_size"],
                 stage_data["nodes"][0]["slide"],
-                stage_data["nodes"][0]["complexity_type"],
+                stage_data["nodes"][0]["operation_type"],
             )
 
     def _set_next_stage(self, stage):
@@ -81,19 +81,19 @@ class Stage:
             # Here node_type should always be equal to stage_type
             node_type = node_data["type"]
 
-            # Question: Use of throughput / complexity_type on
+            # Question: Use of throughput / operation_type on
             #           stateless nodes
             throughput = node_data["throughput"]
 
             if node_type == "stateful":
-                complexity_type = node_data["complexity_type"]
+                operation_type = node_data["operation_type"]
                 window_size = node_data["window_size"]
                 slide = node_data["slide"]
                 node = WorkerNode(
                     uid,
                     i,
                     throughput,
-                    complexity_type,
+                    operation_type,
                     self,
                     window_size,
                     slide,

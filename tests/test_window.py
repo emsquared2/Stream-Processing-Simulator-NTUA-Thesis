@@ -3,13 +3,13 @@ import unittest
 from topology.node.state.Window import Window
 
 
-class MockComplexity:
+class MockOperation:
     """
-    Mock class for Complexity to simulate cycle calculation based on occurrences.
+    Mock class for Operation to simulate cycle calculation based on occurrences.
     """
 
     def calculate_cycles(self, occurrences: int) -> int:
-        # Simulate a complexity calculation based on occurrences O(n^2)
+        # Simulate a operation calculation based on occurrences NestedLoop
         return occurrences * occurrences
 
 
@@ -40,13 +40,12 @@ def load_keys():
 
 
 class TestWindow(unittest.TestCase):
-
     def setUp(self):
         """
-        Create a test window and complexity object for use in tests.
+        Create a test window and operation object for use in tests.
         """
         self.window = Window(start_step=0, window_size=10, slide=5)
-        self.complexity = MockComplexity()
+        self.operation = MockOperation()
 
     def test_process_within_throughput(self):
         """
@@ -58,7 +57,7 @@ class TestWindow(unittest.TestCase):
 
         # Call the process method
         processed_keys, cycles, processed_key_count = self.window.process(
-            throughput, self.complexity, step_cycles=0
+            throughput, self.operation, step_cycles=0
         )
 
         # Assertions:
@@ -84,7 +83,7 @@ class TestWindow(unittest.TestCase):
 
         # Call the process method
         processed_keys, cycles, processed_key_count = self.window.process(
-            throughput, self.complexity, step_cycles=0
+            throughput, self.operation, step_cycles=0
         )
 
         # Assertions:
@@ -116,7 +115,7 @@ class TestWindow(unittest.TestCase):
 
         # Call the process method on an empty window
         processed_keys, cycles, processed_key_count = self.window.process(
-            throughput, self.complexity, step_cycles=0
+            throughput, self.operation, step_cycles=0
         )
 
         # Assertions
@@ -135,7 +134,7 @@ class TestWindow(unittest.TestCase):
 
         # Call the process method
         processed_keys, cycles, processed_key_count = self.window.process(
-            throughput, self.complexity, step_cycles=0
+            throughput, self.operation, step_cycles=0
         )
 
         # Assertions
@@ -160,7 +159,7 @@ class TestWindow(unittest.TestCase):
 
         # Call the process method
         processed_keys, cycles, processed_key_count = self.window.process(
-            throughput, self.complexity, step_cycles
+            throughput, self.operation, step_cycles
         )
 
         # Assertions:
