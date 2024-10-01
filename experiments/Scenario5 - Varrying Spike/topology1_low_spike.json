@@ -1,15 +1,13 @@
 {
     "keygen": {
         "streams": 1,
-        "steps": 50,
-        "number_of_keys": 15,
+        "steps": 200,
+        "number_of_keys": 10,
         "arrival_rate": 100,
-        "spike_probability": 0,
-        "spike_magnitude": 0,
+        "spike_probability": 25,
+        "spike_magnitude": 25,
         "distribution": {
-            "type": "normal",
-            "mean": 8,
-            "stddev": 3 
+            "type": "uniform"
         }
     },
     "topology": {
@@ -24,8 +22,7 @@
                         "throughput": 1000, 
                         "operation_type": "StatelessOperation",
                         "strategy": {
-                            "name": "hashing",
-                            "prefix_length": 3
+                            "name": "hashing"
                         }
                     }                    
                 ]
@@ -38,7 +35,7 @@
                         "id": 1,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Aggregation",
+                        "operation_type": "Sorting",
                         "window_size": 5,
                         "slide": 2
                     },
@@ -46,7 +43,7 @@
                         "id": 2,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Aggregation",
+                        "operation_type": "Sorting",
                         "window_size": 5,
                         "slide": 2
                     }
@@ -60,18 +57,18 @@
                         "id": 3,
                         "type": "key_partitioner",
                         "throughput": 1000,
+                        "operation_type": "StatelessOperation",
                         "strategy": {
-                            "name": "hashing",
-                            "prefix_length": 3
+                            "name": "hashing"
                         }
                     },
                     {
                         "id": 4,
                         "type": "key_partitioner",
                         "throughput": 1000,
+                        "operation_type": "StatelessOperation",
                         "strategy": {
-                            "name": "hashing",
-                            "prefix_length": 3
+                            "name": "hashing"
                         }
                     }
                 ]
@@ -84,7 +81,7 @@
                         "id": 5,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Sorting",
+                        "operation_type": "Aggregation",
                         "window_size": 5,
                         "slide": 2
                     },
@@ -92,7 +89,7 @@
                         "id": 6,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Sorting",
+                        "operation_type": "Aggregation",
                         "window_size": 5,
                         "slide": 2
                     }

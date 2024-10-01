@@ -5,7 +5,7 @@
         "number_of_keys": 10,
         "arrival_rate": 100,
         "spike_probability": 25,
-        "spike_magnitude": 100,
+        "spike_magnitude": 50,
         "distribution": {
             "type": "uniform"
         }
@@ -22,8 +22,7 @@
                         "throughput": 1000, 
                         "operation_type": "StatelessOperation",
                         "strategy": {
-                            "name": "hashing",
-                            "prefix_length": 3
+                            "name": "hashing"
                         }
                     }                    
                 ]
@@ -36,7 +35,7 @@
                         "id": 1,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Aggregation",
+                        "operation_type": "Sorting",
                         "window_size": 5,
                         "slide": 2
                     },
@@ -44,7 +43,7 @@
                         "id": 2,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Aggregation",
+                        "operation_type": "Sorting",
                         "window_size": 5,
                         "slide": 2
                     }
@@ -58,18 +57,18 @@
                         "id": 3,
                         "type": "key_partitioner",
                         "throughput": 1000,
+                        "operation_type": "StatelessOperation",
                         "strategy": {
-                            "name": "hashing",
-                            "prefix_length": 3
+                            "name": "hashing"
                         }
                     },
                     {
                         "id": 4,
                         "type": "key_partitioner",
                         "throughput": 1000,
+                        "operation_type": "StatelessOperation",
                         "strategy": {
-                            "name": "hashing",
-                            "prefix_length": 3
+                            "name": "hashing"
                         }
                     }
                 ]
@@ -82,7 +81,7 @@
                         "id": 5,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Sorting",
+                        "operation_type": "Aggregation",
                         "window_size": 5,
                         "slide": 2
                     },
@@ -90,7 +89,7 @@
                         "id": 6,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Sorting",
+                        "operation_type": "Aggregation",
                         "window_size": 5,
                         "slide": 2
                     }
