@@ -1,10 +1,9 @@
-from simulator.GlobalConfig import GlobalConfig
-from .Node import Node
-from .state.AggregationNodeState import AggregationNodeState
-from utils.Logging import initialize_logging, log_default_info
+from .StatefulNode import StatefulNode
+from .state.AggregatorState import AggregatorState
+from utils.Logging import log_default_info
 
 
-class AggregationNode(Node):
+class AggregatorNode(StatefulNode):
     """
     Represents a node for aggregation tasks in the simulation.
 
@@ -22,7 +21,7 @@ class AggregationNode(Node):
         terminal: bool = False,
     ) -> None:
         """
-        Initializes an AggregationNode with a custom uid and specified parameters.
+        Initializes an AggregatorNode with a custom uid and specified parameters.
 
         Args:
             stage_node_id: The stage local node identifier.
@@ -35,25 +34,16 @@ class AggregationNode(Node):
         self.uid = f"{stage_node_id}_aggr"
 
         # Initialize the base class with the custom uid
-        super().__init__(self.uid, stage_node_id, "Aggregation", 1000, stage)
+        super().__init__(self.uid, stage_node_id, "Aggregator", 1000, stage, terminal)
 
-        self.state = AggregationNodeState(self.uid, self.throughput, complexity_type, window_size, slide, stage_operation, len(self.stage.nodes))
+        self.state = AggregatorState(self.uid, self.throughput, complexity_type, window_size, slide, stage_operation, len(self.stage.nodes))
 
-
-        self.terminal = terminal
-
-        self.extra_dir = GlobalConfig.extra_dir
-
-        # Initialize logging
-        self.default_logger, self.node_logger, _ = initialize_logging(
-            self.uid, self.extra_dir
-        )
 
     def receive_and_process(
         self, keys: dict[int, list[dict[str, int]]], step: int, sender_stage_node_id
     ) -> None:
         """
-        Process the keys for this aggregation node.
+        Process the keys for this aggregator node.
 
         Args:
             keys (dict): Dict of keys to be processed.
@@ -106,14 +96,14 @@ class AggregationNode(Node):
 
     def __repr__(self) -> str:
         """
-        A string representation of the aggregation node.
+        A string representation of the aggregator node.
 
         Returns:
             str: Description of the node.
         """
         return (
             f"\n--------------------\n"
-            f"AggregationNode {self.uid} with:\n"
+            f"AggregatorNode {self.uid} with:\n"
             f"complexity type: {self.complexity_type}\n"
             f"state:\n"
             f"{self.state}\n"

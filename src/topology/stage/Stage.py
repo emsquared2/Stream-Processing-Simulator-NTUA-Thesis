@@ -1,7 +1,7 @@
 from ..node.StatelessNode import StatelessNode
 from ..node.KeyPartitioner import KeyPartitioner
-from ..node.StatefulNode import StatefulNode
-from ..node.AggregationNode import AggregationNode
+from ..node.WorkerNode import WorkerNode
+from ..node.AggregatorNode import AggregatorNode
 
 import random
 
@@ -45,7 +45,7 @@ class Stage:
 
         # Initialize Aggregator
         if self.key_splitting:
-            self.aggregator = AggregationNode(
+            self.aggregator = AggregatorNode(
                 self.id,
                 "O(n)",
                 self,
@@ -71,7 +71,7 @@ class Stage:
             nodes_data (list): List of dictionaries representing node configurations.
 
         Returns:
-            list: A list of Node instances (StatefulNode or StatelessNode).
+            list: A list of Node instances (WorkerNode or StatelessNode).
         """
         nodes = []
 
@@ -89,7 +89,7 @@ class Stage:
                 complexity_type = node_data["complexity_type"]
                 window_size = node_data["window_size"]
                 slide = node_data["slide"]
-                node = StatefulNode(
+                node = WorkerNode(
                     uid,
                     i,
                     throughput,

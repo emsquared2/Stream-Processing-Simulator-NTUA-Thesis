@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from topology.node.StatefulNode import StatefulNode
+from topology.node.WorkerNode import StatefulNode
 
 
 class TestStatefulNode(unittest.TestCase):
