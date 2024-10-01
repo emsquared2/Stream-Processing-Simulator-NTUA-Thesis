@@ -34,6 +34,7 @@ class BaseState:
         """
         self.node_id = node_id
         self.throughput = throughput
+        self.complexity_type = complexity_type
         self.complexity = create_complexity(complexity_type)
         self.window_size = window_size
         self.slide = slide

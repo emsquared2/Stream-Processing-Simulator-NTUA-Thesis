@@ -1,4 +1,3 @@
-from collections import Counter
 from typing import Dict, List, Tuple
 from .BaseState import BaseState
 from .Window import Window
@@ -30,6 +29,7 @@ class AggregationNodeState(BaseState):
         complexity_type: str,
         window_size: int,
         slide: int,
+        stage_operation: str,
         stage_nodes_count: int,
     ) -> None:
         """
@@ -43,6 +43,8 @@ class AggregationNodeState(BaseState):
         """
         super().__init__(node_id, throughput, complexity_type, window_size, slide)
         self.stage_nodes_count = stage_nodes_count
+
+        self.stage_operation = stage_operation
 
         self.windows: Dict[int, Tuple[Window, List[bool]]] = {}
         self.current_step = 0
@@ -221,12 +223,11 @@ class AggregationNodeState(BaseState):
         if terminal:
             return step_cycles, processed_keys, len(overdue_keys), []
         else:
-            return (
-                step_cycles,
-                processed_keys,
-                len(overdue_keys),
-                list(window_key_count.keys()),
-            )
+            if self.stage_operation == "O(nlogn)":
+                return step_cycles, processed_keys, len(overdue_keys), [key for key, count in window_key_count.items() for _ in range(count)]
+            else:
+                return step_cycles, processed_keys, len(overdue_keys), list(window_key_count.keys())
+
 
     def remove_expired_windows(self) -> None:
         """

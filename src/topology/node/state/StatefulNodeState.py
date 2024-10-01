@@ -250,7 +250,10 @@ class StatefulNodeState(BaseState):
             # were processed in this window as follows.
             # As we previously clarified that a stateful node
             # will "simulate" an aggregation function.
-            return step_cycles, processed_keys, len(overdue_keys), list(window_key_count.keys())
+            if self.complexity_type == "O(nlogn)":
+                return step_cycles, processed_keys, len(overdue_keys), [key for key, count in window_key_count.items() for _ in range(count)]
+            else :
+                return step_cycles, processed_keys, len(overdue_keys), list(window_key_count.keys())
 
     def __repr__(self) -> str:
         """

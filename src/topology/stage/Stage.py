@@ -47,10 +47,11 @@ class Stage:
         if self.key_splitting:
             self.aggregator = AggregationNode(
                 self.id,
-                stage_data["nodes"][0]["complexity_type"],
+                "O(n)",
                 self,
                 stage_data["nodes"][0]["window_size"],
-                stage_data["nodes"][0]["slide"]
+                stage_data["nodes"][0]["slide"],
+                stage_data["nodes"][0]["complexity_type"],
             )
 
     def _set_next_stage(self, stage):
