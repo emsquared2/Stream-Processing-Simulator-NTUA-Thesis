@@ -1,7 +1,7 @@
 from simulator.GlobalConfig import GlobalConfig
 from .Node import Node
 from .state.AggregationNodeState import AggregationNodeState
-from utils.Logging import initialize_logging, log_default_info, log_node_info
+from utils.Logging import initialize_logging, log_default_info
 
 
 class AggregationNode(Node):
@@ -18,6 +18,7 @@ class AggregationNode(Node):
         stage,
         window_size: int,
         slide: int,
+        stage_operation: str,
         terminal: bool = False,
     ) -> None:
         """
@@ -27,6 +28,8 @@ class AggregationNode(Node):
             stage_node_id: The stage local node identifier.
             throughput (int): Maximum computational cycles a node can run per step.
             stage (Stage): The stage which the node is in.
+            stage_operation (str): The operation simulated by the stage where this node is 
+                                   located in. 
         """
         # Construct the uid in the desired format
         self.uid = f"{stage_node_id}_aggr"
@@ -34,7 +37,7 @@ class AggregationNode(Node):
         # Initialize the base class with the custom uid
         super().__init__(self.uid, stage_node_id, "Aggregation", 1000, stage)
 
-        self.state = AggregationNodeState(self.uid, self.throughput, complexity_type, window_size, slide, len(self.stage.nodes))
+        self.state = AggregationNodeState(self.uid, self.throughput, complexity_type, window_size, slide, stage_operation, len(self.stage.nodes))
 
 
         self.terminal = terminal
@@ -61,7 +64,7 @@ class AggregationNode(Node):
 
         log_default_info(
             self.default_logger,
-            f"Received keys: {keys} at step {step} from node {sender_stage_node_id}",
+            f"Node {self.uid} received keys: {keys} at step {step} from node {sender_stage_node_id}",
         )
 
         processed_keys = self.state.update(keys, step, self.terminal, sender_stage_node_id)
@@ -77,7 +80,7 @@ class AggregationNode(Node):
         print(keys)
         log_default_info(
             self.default_logger,
-            f"Emitting {keys} in step {step}",
+            f"Node {self.uid} emitting {keys} in step {step}",
         )
         self.stage.next_stage.nodes[0].receive_and_process(keys, step)
 
@@ -91,7 +94,7 @@ class AggregationNode(Node):
 
         log_default_info(
             self.default_logger,
-            f"Processing {key_count_list}",
+            f"Node {self.uid} processing {key_count_list}",
         )
 
         for key, count in key_count_list.items():
