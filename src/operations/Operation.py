@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class Complexity(ABC):
+class Operation(ABC):
     @abstractmethod
     def calculate_cycles(self, n: int) -> int:
         """
@@ -12,5 +12,14 @@ class Complexity(ABC):
 
         Returns:
             int: The computational cycles required.
+        """
+        pass
+
+    def to_str(self) -> str:
+        """
+        Returns the operation type as a string.
+
+        Returns:
+            str: The operation type string.
         """
         pass

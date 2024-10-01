@@ -10,7 +10,7 @@ class AggregatorState(BaseState):
     Attributes:
         node_id (int): Unique identifier for the node.
         throughput (int): Maximum computational cycles a node can run per step.
-        complexity_type (str): Complexity type used for computational cycle calculation.
+        operation_type (str): Operation type used for computational cycle calculation.
         window_size (int): The size of the processing window.
         slide (int): The slide of the processing window.
         stage_nodes_count (int): Total number of nodes in the stage.
@@ -26,7 +26,7 @@ class AggregatorState(BaseState):
         self,
         node_id: int,
         throughput: int,
-        complexity_type: str,
+        operation_type: str,
         window_size: int,
         slide: int,
         stage_operation: str,
@@ -37,11 +37,11 @@ class AggregatorState(BaseState):
         Args:
             node_id (int): Unique identifier for the node.
             throughput (int): Maximum computational cycles a node can run per step.
-            complexity_type (str): Complexity type used for computational cycle calculation.
+            operation_type (str): Operation type used for computational cycle calculation.
             window_size (int): The size of the processing window.
             slide (int): The slide of the processing window.
         """
-        super().__init__(node_id, throughput, complexity_type, window_size, slide)
+        super().__init__(node_id, throughput, operation_type, window_size, slide)
         self.stage_nodes_count = stage_nodes_count
 
         self.stage_operation = stage_operation
@@ -202,7 +202,7 @@ class AggregatorState(BaseState):
         )
 
         processed_keys, cycles, window_key_count = window.process(
-            self.throughput, self.complexity, step_cycles
+            self.throughput, self.operation, step_cycles
         )
 
         step_cycles += cycles
@@ -223,7 +223,7 @@ class AggregatorState(BaseState):
         if terminal:
             return step_cycles, processed_keys, len(overdue_keys), []
         else:
-            if self.stage_operation == "O(nlogn)":
+            if self.operation.to_str() == "Sorting" or self.operation.to_str() == "NestedLoop":
                 return step_cycles, processed_keys, len(overdue_keys), [key for key, count in window_key_count.items() for _ in range(count)]
             else:
                 return step_cycles, processed_keys, len(overdue_keys), list(window_key_count.keys())
