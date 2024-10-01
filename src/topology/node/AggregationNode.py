@@ -1,6 +1,6 @@
 from simulator.GlobalConfig import GlobalConfig
 from .Node import Node
-from utils.utils import create_complexity
+from .state.AggregationNodeState import AggregationNodeState
 from utils.Logging import initialize_logging, log_default_info, log_node_info
 
 
@@ -32,16 +32,12 @@ class AggregationNode(Node):
         self.uid = f"{stage_node_id}_aggr"
 
         # Initialize the base class with the custom uid
-        # Note: ATM for the AggregationNode we consider that throughput is equal to -1.
-        super().__init__(self.uid, stage_node_id, "Aggregation", -1, stage)
+        super().__init__(self.uid, stage_node_id, "Aggregation", 1000, stage)
 
-        self.state: dict[int, dict[str, int]] = {}
-        self.complexity_type = complexity_type
-        self.complexity = create_complexity(complexity_type)
-        self.window_size = window_size
-        self.slide = slide
+        self.state = AggregationNodeState(self.uid, self.throughput, complexity_type, window_size, slide, len(self.stage.nodes))
+
+
         self.terminal = terminal
-        self.finished: list[bool] = [False] * len(stage.nodes)
 
         self.extra_dir = GlobalConfig.extra_dir
 
@@ -63,40 +59,25 @@ class AggregationNode(Node):
         """
         print(keys, step, sender_stage_node_id)
 
-        log_node_info(
-            self.node_logger,
+        log_default_info(
+            self.default_logger,
             f"Received keys: {keys} at step {step} from node {sender_stage_node_id}",
-            self.uid,
         )
 
-        if keys:
-            for window_step, key_count_list in keys.items():
-                # Initialize the state for window_step if it doesn't exist
-                if window_step not in self.state:
-                    self.state[window_step] = {}
+        processed_keys = self.state.update(keys, step, self.terminal, sender_stage_node_id)
 
-                # Loop through the list of dictionaries and update the count in the dictionary
-                for key_count_dict in key_count_list:
-                    for key, count in key_count_dict.items():
-                        if key == "finished":
-                            self.finished[sender_stage_node_id] = True
-                            if all(self.finished) or self.is_expired(window_step, step):
-                                cycles, emitting_keys = self.process(key_count_list)
-                                if not self.terminal:
-                                    self.emit_keys(emitting_keys, step)
-                        else:
-                            # Add the count to the existing key or initialize it if not present
-                            if key in self.state[window_step]:
-                                self.state[window_step][key] += count
-                            else:
-                                self.state[window_step][key] = count
+        if not self.terminal:
+            processed_keys_flat = [
+                    key for _, window_keys in processed_keys for key in window_keys
+            ]
+            self.emit_keys(processed_keys_flat, step)
+
 
     def emit_keys(self, keys: list, step: int) -> None:
         print(keys)
-        log_node_info(
-            self.node_logger,
+        log_default_info(
+            self.default_logger,
             f"Emitting {keys} in step {step}",
-            self.uid,
         )
         self.stage.next_stage.nodes[0].receive_and_process(keys, step)
 
@@ -108,17 +89,15 @@ class AggregationNode(Node):
         cycles = 0
         emitting_keys = []
 
-        log_node_info(
-            self.node_logger,
+        log_default_info(
+            self.default_logger,
             f"Processing {key_count_list}",
-            self.uid,
         )
 
-        for key_count_dict in key_count_list:
-            for key, count in key_count_dict.items():
-                if key != "finished":
-                    cycles += self.complexity.calculate_cycles(count)
-                    emitting_keys.append(key)
+        for key, count in key_count_list.items():
+            if key != "finished":
+                cycles += self.complexity.calculate_cycles(count)
+                emitting_keys.append(key)
 
         return cycles, emitting_keys
 
@@ -132,11 +111,7 @@ class AggregationNode(Node):
         return (
             f"\n--------------------\n"
             f"AggregationNode {self.uid} with:\n"
-            f"throughput: {self.throughput}\n"
             f"complexity type: {self.complexity_type}\n"
-            f"window size: {self.window_size}\n"
-            f"slide: {self.slide}\n"
-            f"finished: {self.finished}\n"
             f"state:\n"
             f"{self.state}\n"
             f"--------------------"
