@@ -50,7 +50,7 @@ class Stage:
                 stage_data["nodes"][0]["complexity_type"],
                 self,
                 stage_data["nodes"][0]["window_size"],
-                stage_data["nodes"][0]["slide"],
+                stage_data["nodes"][0]["slide"]
             )
 
     def _set_next_stage(self, stage):

@@ -1,8 +1,7 @@
 from collections import Counter
-from typing import Dict, List
+from typing import Dict, List, Tuple
 from .BaseState import BaseState
 from .Window import Window
-from simulator.GlobalConfig import GlobalConfig
 from utils.Logging import log_default_info, log_node_info
 
 
@@ -16,7 +15,7 @@ class AggregationNodeState(BaseState):
         window_size (int): The size of the processing window.
         slide (int): The slide of the processing window.
         stage_nodes_count (int): Total number of nodes in the stage.
-        windows (dict[int, Window, List[bool]]): Dictionary to manage windows.
+        windows (Dict[int, Tuple[Window, List[bool]]]): Dictionary to manage windows.
         current_step (int): The current step in the simulation.
         minimum_step (int): The minimum step to consider for processing keys.
         total_processed (int): Total keys processed.
@@ -45,7 +44,7 @@ class AggregationNodeState(BaseState):
         super().__init__(node_id, throughput, complexity_type, window_size, slide)
         self.stage_nodes_count = stage_nodes_count
 
-        self.windows: dict[int, Window, List[bool]] = {}
+        self.windows: Dict[int, Tuple[Window, List[bool]]] = {}
         self.current_step = 0
         self.minimum_step = 0
 
@@ -56,15 +55,15 @@ class AggregationNodeState(BaseState):
 
     def update(
         self,
-        keys: Dict[int, List[str, int]],
+        keys: Dict[int, List[Dict[str, int]]],
         step: int,
         terminal: bool,
-        sender_stage_id,
+        sender_stage_id: int,
     ) -> list[list]:
         """
         Updates the node state with new keys and the current step.
         Args:
-            keys (Dict[int, List[str, int]]): List of keys received along with their count and their window start_step.
+            keys (Dict[int, List[Dict[str, int]]]): List of keys received along with their count and their window start_step.
             step (int): The current step in the simulation.
             terminal (bool): Specifies if the current node is a terminal node.
             sender_stage_id (int): The sender's id in the stage.
@@ -83,13 +82,14 @@ class AggregationNodeState(BaseState):
 
         if step >= self.minimum_step:
             for window_start_step, key_count_list in keys.items():
-                for key, count in key_count_list:
-                    if key == "finished":
-                        self.update_boolean_for_window(
-                            window_start_step, sender_stage_id
-                        )
-                    else:
-                        self.update_windows(key, count, step, window_start_step)
+                for key_count_dict in key_count_list:
+                    for key, count in key_count_dict.items():
+                        if key == "finished":
+                            self.update_boolean_for_window(
+                                window_start_step, sender_stage_id
+                            )
+                        else:
+                            self.update_windows(key, count, step, window_start_step)
 
         log_default_info(
             self.default_logger,
@@ -98,6 +98,7 @@ class AggregationNodeState(BaseState):
         processed_keys = self.process_full_windows(terminal)
 
         self.remove_expired_windows()
+
         log_default_info(
             self.default_logger,
             f"Node {self.node_id} windows at step {step}: {self.windows}\n",
@@ -122,43 +123,43 @@ class AggregationNodeState(BaseState):
         self, key: str, count: int, step: int, window_start_step: int
     ) -> None:
         """
-        Adds a key to all relevant windows.
+        Adds a key to window state.
+
         Args:
             key (str): The key to add.
-            count (int): The number of key's occurences.
+            count (int): The number of key's occurrences.
             step (int): The step at which the key was received.
-            window_start_step (int): The step at which the window started
+            window_start_step (int): The step at which the window started.
         """
 
-        # Create any new windows needed based on side and start_step
-        if step < window_start_step + self.window_size:
-            if window_start_step not in self.windows:
-                window = Window(window_start_step, self.window_size, self.slide)
-                self.windows[window_start_step] = (
-                    window,
-                    [False] * self.stage_nodes_count,
-                )
+        if window_start_step not in self.windows:
+            window = Window(window_start_step, self.window_size, self.slide)
+            self.windows[window_start_step] = (
+                window,
+                [False] * self.stage_nodes_count,
+            )
 
-        # Add the key count times to the window
-        for _ in range(count):
-            if not window.is_expired(step):
-                self.windows[window_start_step].add_key(key)
+        window, _ = self.windows[window_start_step]
+        if not window.is_expired(step):
+            for _ in range(count):
+                window.add_key(key)
 
     def process_full_windows(self, terminal: bool) -> list[list]:
         """
         Processes and clears windows that have reached their size limit or finished their processing.
         Args:
-            terminal (bool): Specifies if the current node
-                             is a terminal node.
+            terminal (bool): Specifies if the current node is a terminal node.
         Returns:
-            list[list]: Returns all the keys to be emitted to
-                        the next stage from each full window.
+            list[list]: Returns all the keys to be emitted to the next stage from each full window.
         """
         emitted_keys = []
         step_cycles = 0
         processed_keys = 0
         overdue_keys = 0
-        for start_step, window, finished in list(self.windows.items()):
+
+        print(self.windows)
+
+        for start_step, (window, finished) in list(self.windows.items()):
             if window.is_processable(self.current_step) and all(finished):
                 step_cycles, win_processed_keys, win_overdue_keys, window_keys = (
                     self.process_window(window, terminal, step_cycles)
@@ -168,22 +169,71 @@ class AggregationNodeState(BaseState):
                 if len(window.keys) == 0:
                     del self.windows[start_step]
                 emitted_keys.append((start_step, window_keys))
+
         message = f"Step {self.current_step} - Processed {processed_keys} keys using {step_cycles} cycles - Node load {(step_cycles*100)/self.throughput}%"
+
         if overdue_keys:
             message += f" - Overdue keys: {overdue_keys}"
+
         log_node_info(
             self.node_logger,
             message,
             self.node_id,
         )
+
         return emitted_keys
+
+    def process_window(self, window: Window, terminal: bool, step_cycles: int) -> list:
+        """
+        Processes a full window and updates the node's state.
+        Args:
+            window (Window): The window to process.
+            terminal (bool): Specifies if the current node is a terminal node.
+            step_cycles (int): Computational cycles used so far in the current step.
+        Returns:
+            int: The computational cycles used so far in the current step.
+            list: The keys to be emitted from a window. If it is a terminal node it returns an empty list.
+        """
+        log_default_info(
+            self.default_logger,
+            f"Node {self.node_id} processing window starting at step {window.start_step}",
+        )
+
+        processed_keys, cycles, window_key_count = window.process(
+            self.throughput, self.complexity, step_cycles
+        )
+
+        step_cycles += cycles
+        overdue_keys = window.keys
+        message = f"Node {self.node_id} Processed {processed_keys} keys from window {window.start_step} using {cycles} cycles"
+
+        if window.keys:
+            message += f" - Overdue keys: {len(overdue_keys)}"
+
+        log_default_info(
+            self.default_logger,
+            message,
+        )
+
+        self.total_cycles += cycles
+        self.total_processed += processed_keys
+
+        if terminal:
+            return step_cycles, processed_keys, len(overdue_keys), []
+        else:
+            return (
+                step_cycles,
+                processed_keys,
+                len(overdue_keys),
+                list(window_key_count.keys()),
+            )
 
     def remove_expired_windows(self) -> None:
         """
         Removes windows that have expired based on the current step.
         """
         expired_windows = []
-        for start_step, window, _ in list(self.windows.items()):
+        for start_step, (window, _) in list(self.windows.items()):
             if window.is_expired(self.current_step):
                 expired_windows.append(window)
                 self.total_expired += len(window.keys)
@@ -192,57 +242,11 @@ class AggregationNodeState(BaseState):
                     f"Node {self.node_id} removed {len(window.keys)} expired keys: {window.keys}",
                 )
                 del self.windows[start_step]
+
         if expired_windows:
             log_default_info(
                 self.default_logger,
                 f"Node {self.node_id} removed expired windows: {expired_windows} at step {self.current_step}",
-            )
-
-    def process_window(self, window: Window, terminal: bool, step_cycles: int) -> list:
-        """
-        Processes a full window and updates the node's state.
-        Args:
-            window (Window): The window to process.
-            terminal (bool): Specifies if the current node
-                             is a terminal node.
-            step_cycles (int): Computational cycles used so far in the current step.
-        Returns:
-            int: The computational cycles used so far in the current step.
-            list: The keys to be emitted from a window.
-                  If it is a terminal node it returns an empty list.
-        """
-        log_default_info(
-            self.default_logger,
-            f"Node {self.node_id} processing window starting at step {window.start_step}",
-        )
-        processed_keys, cycles, window_key_count = window.process(
-            self.throughput, self.complexity, step_cycles
-        )
-        step_cycles += cycles
-        overdue_keys = window.keys  # Remaining unprocessed keys in this window
-        message = f"Node {self.node_id} Processed {processed_keys} keys from window {window.start_step} using {cycles} cycles"
-        if window.keys:
-            message += f" - Overdue keys: {len(overdue_keys)}"
-        log_default_info(
-            self.default_logger,
-            message,
-        )
-        self.total_cycles += cycles
-        self.total_processed += processed_keys
-        if terminal:
-            return step_cycles, processed_keys, len(overdue_keys), []
-        else:
-            # The window_key_count is a dictionary that holds
-            # how many times a type of key was processed in the
-            # window. We can extract all the different keys that
-            # were processed in this window as follows.
-            # As we previously clarified that a stateful node
-            # will "simulate" an aggregation function.
-            return (
-                step_cycles,
-                processed_keys,
-                len(overdue_keys),
-                list(window_key_count.keys()),
             )
 
     def __repr__(self) -> str:
@@ -265,7 +269,6 @@ class AggregationNodeState(BaseState):
         log_default_info(self.default_logger, report_message)
         return (
             f"Node ID: {self.node_id}\n"
-            f"Received Keys: {self.received_keys}\n"
             f"Minimum Step: {self.minimum_step}\n"
             f"Current Step: {self.current_step}\n"
             f"Current Windows: {self.windows}\n"
