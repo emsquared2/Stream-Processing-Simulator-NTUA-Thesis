@@ -31,7 +31,8 @@ def initialize_logging(node_id: int, extra_dir: str = None):
     )
 
     node_logger = None
-    if node_id >= 0:
+    uid = int(str(node_id).split("_")[0])
+    if uid >= 0:
         # Set up the node-specific logger
         node_logger = _setup_logger(
             f"Node_{node_id}",
