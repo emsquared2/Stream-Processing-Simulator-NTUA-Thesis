@@ -82,7 +82,12 @@ class WorkerState(BaseState):
         # TODO: Refactor max_step definition
         max_step = step + self.window_size + 3 * self.slide
 
-        processed_keys = self.process_full_windows(terminal)
+        processed_keys, (processed_keys_count, step_cycles, overdue_keys)= self.process_full_windows(terminal)
+
+        message = f"Step {self.current_step} - Processed {processed_keys_count} keys using {step_cycles} cycles - Node load {(step_cycles*100)/self.throughput}%"
+
+        if overdue_keys:
+            message += f" - Overdue keys: {overdue_keys}"
 
         log_default_info(
             self.default_logger,
@@ -94,13 +99,24 @@ class WorkerState(BaseState):
                 self.received_keys.append((key, step, max_step))
                 self.update_windows(key, step)
 
-        self.remove_expired_windows()
+        expired_keys = self.remove_expired_windows()
+
+        if expired_keys:
+            message += f" - Expired keys: {expired_keys}"
+
+        log_node_info(
+            self.node_logger,
+            message,
+            self.node_id,
+        )
+
         self.remove_expired_keys()
 
         log_default_info(
             self.default_logger,
             f"Node {self.node_id} windows at step {step}: {self.windows}\n",
         )
+
         return processed_keys
 
     def update_windows(self, key: str, step: int) -> None:
@@ -156,36 +172,32 @@ class WorkerState(BaseState):
                     del self.windows[start_step]
                 emitted_keys.append((start_step, window_keys))
 
-        message = f"Step {self.current_step} - Processed {processed_keys} keys using {step_cycles} cycles - Node load {(step_cycles*100)/self.throughput}%"
-        if overdue_keys:
-            message += f" - Overdue keys: {overdue_keys}"
-        log_node_info(
-            self.node_logger,
-            message,
-            self.node_id,
-        )
-        return emitted_keys
+        return emitted_keys, (processed_keys, step_cycles, overdue_keys)
 
     def remove_expired_windows(self) -> None:
         """
         Removes windows that have expired based on the current step.
         """
         expired_windows = []
+        expired_keys = 0
         for start_step, window in list(self.windows.items()):
             if window.is_expired(self.current_step):
                 expired_windows.append(window)
+                expired_keys += len(window.keys)
                 self.total_expired += len(window.keys)
-                log_default_info(
-                    self.default_logger,
-                    f"Node {self.node_id} removed {len(window.keys)} expired keys: {window.keys}",
-                )
                 del self.windows[start_step]
 
         if expired_windows:
             log_default_info(
                 self.default_logger,
+                f"Node {self.node_id} removed {len(window.keys)} expired keys.",
+            )
+            log_default_info(
+                self.default_logger,
                 f"Node {self.node_id} removed expired windows: {expired_windows} at step {self.current_step}",
             )
+
+        return expired_keys
 
     def remove_expired_keys(self) -> None:
         """
@@ -195,7 +207,7 @@ class WorkerState(BaseState):
 
         for key, start_step, max_step in self.received_keys:
             if self.current_step <= max_step:
-                updated_received_keys.append((key, start_step, max_step))
+                updated_received_keys.append((key, start_step, max_step))       
 
         self.received_keys = updated_received_keys
 
