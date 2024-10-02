@@ -2,10 +2,14 @@ from abc import ABC, abstractmethod
 
 
 class Operation(ABC):
+    """
+    Abstract base class for defining different operations.
+    """
+
     @abstractmethod
     def calculate_cycles(self, n: int) -> int:
         """
-        Calculate the computational cycles required for processing 'n' keys.
+        Calculates the computational cycles required for processing 'n' keys.
 
         Args:
             n (int): The number of keys being processed.
@@ -18,8 +22,5 @@ class Operation(ABC):
     def to_str(self) -> str:
         """
         Returns the operation type as a string.
-
-        Returns:
-            str: The operation type string.
         """
         pass
