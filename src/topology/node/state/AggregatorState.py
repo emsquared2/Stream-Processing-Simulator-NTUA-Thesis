@@ -6,17 +6,21 @@ from utils.Logging import log_default_info, log_node_info
 
 class AggregatorState(BaseState):
     """
-    Represents the state of an AggregatorNode node in the simulation.
+    Represents the state of an AggregatorNode in the simulation.
+
     Attributes:
         node_id (int): Unique identifier for the node.
         throughput (int): Maximum computational cycles a node can run per step.
         operation_type (str): Operation type used for computational cycle calculation.
         window_size (int): The size of the processing window.
         slide (int): The slide of the processing window.
+        stage_operation (str): The operation simulated by the stage where state's node is located in.
         stage_nodes_count (int): Total number of nodes in the stage.
         windows (Dict[int, Tuple[Window, List[bool]]]): Dictionary to manage windows.
+
         current_step (int): The current step in the simulation.
         minimum_step (int): The minimum step to consider for processing keys.
+
         total_processed (int): Total keys processed.
         total_expired (int): Total expired_keys.
         total_cycles (int): Total number of processing cycles used.
@@ -40,10 +44,11 @@ class AggregatorState(BaseState):
             operation_type (str): Operation type used for computational cycle calculation.
             window_size (int): The size of the processing window.
             slide (int): The slide of the processing window.
+            stage_operation (str): The operation simulated by the stage where state's node is located in.
+            stage_nodes_count (int): Total number of nodes in the stage.
         """
         super().__init__(node_id, throughput, operation_type, window_size, slide)
         self.stage_nodes_count = stage_nodes_count
-
         self.stage_operation = stage_operation
 
         self.windows: Dict[int, Tuple[Window, List[bool]]] = {}
@@ -159,8 +164,6 @@ class AggregatorState(BaseState):
         processed_keys = 0
         overdue_keys = 0
 
-        print(self.windows)
-
         for start_step, (window, finished) in list(self.windows.items()):
             if window.is_processable(self.current_step) and all(finished):
                 step_cycles, win_processed_keys, win_overdue_keys, window_keys = (
@@ -222,12 +225,14 @@ class AggregatorState(BaseState):
 
         if terminal:
             return step_cycles, processed_keys, len(overdue_keys), []
-        else:
-            if self.operation.to_str() == "Sorting" or self.operation.to_str() == "NestedLoop":
-                return step_cycles, processed_keys, len(overdue_keys), [key for key, count in window_key_count.items() for _ in range(count)]
-            else:
-                return step_cycles, processed_keys, len(overdue_keys), list(window_key_count.keys())
 
+        keys_list = (
+            [key for key, count in window_key_count.items() for _ in range(count)]
+            if self.operation.to_str() in {"Sorting", "NestedLoop"}
+            else list(window_key_count.keys())
+        )
+
+        return step_cycles, processed_keys, len(overdue_keys), keys_list
 
     def remove_expired_windows(self) -> None:
         """

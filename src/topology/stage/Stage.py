@@ -1,3 +1,4 @@
+from typing import Dict, Tuple
 from ..node.StatelessNode import StatelessNode
 from ..node.KeyPartitioner import KeyPartitioner
 from ..node.WorkerNode import WorkerNode
@@ -14,13 +15,25 @@ class Stage:
     - id (int): Unique stage identifier.
     - stage_type (str): String that describes the type of the stage.
                         It is equivalent to the node type.
+    - key_splitting (bool): A flag that determines whether key splitting is applied.
     - next_stage (Stage): Object that specifies the next topology stage.
     - next_stage_len (int): The length of the next stage.
     - terminal_stage (bool): Specifies if the current stage is the last
                              stage of the simulation.
     - hash_seed (int): Seed used in case of hashing partitioning to
                        sync the nodes of the stages.
+
+    - key_node_map (Dict[str, int]): Dictionary used in Power of Two Choices (PoTC) to store the
+                                     assigned node for each key. For each key, it stores a single node index,
+                                     ensuring consistent routing for the same key across multiple partitioning steps.
+
+    - key_candidates (Dict[str, Tuple[int, int]]): Dictionary used in Partial Key Grouping (PKG)
+                                                      to map each key to two candidate nodes. For each key,
+                                                      it stores a tuple of two node indices, allowing dynamic
+                                                      selection of the least loaded node during partitioning.
+
     - nodes (list): The nodes of this stage.
+    - aggregator (AggregatorNode): The aggregator of the stage. This is used only when key_splitting is applied.
     """
 
     def __init__(self, stage_data, next_stage_len: int):
@@ -39,7 +52,13 @@ class Stage:
         self.next_stage_len = next_stage_len
         self.terminal_stage = next_stage_len == 0
 
+        # Attributes used in partitioning strategies
+
         self.hash_seed = None
+        # PoTC: Tracks the node to which each key is assigned
+        self.key_node_map: Dict[str, int] = {}
+        # PKG: Tracks two candidate nodes for each key
+        self.key_candidates: Dict[str, Tuple[int, int]] = {}
 
         self.nodes = self._create_nodes(stage_data["nodes"])
 
@@ -81,8 +100,7 @@ class Stage:
             # Here node_type should always be equal to stage_type
             node_type = node_data["type"]
 
-            # Question: Use of throughput / operation_type on
-            #           stateless nodes
+            # TODO: Use of throughput / operation_type on stateless nodes
             throughput = node_data["throughput"]
 
             if node_type == "stateful":
@@ -142,6 +160,7 @@ class Stage:
         return (
             f"\n---------- Stage {self.id} ----------\n"
             f"Total nodes: {len(self.nodes)}\n"
+            f"Key Splitting: {self.key_splitting}\n"
             f"{stage_repr}\n"
             f"----- END  OF  STAGE {self.id} ------\n"
         )

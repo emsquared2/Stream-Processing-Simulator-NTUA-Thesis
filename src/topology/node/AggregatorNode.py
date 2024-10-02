@@ -5,9 +5,22 @@ from utils.Logging import log_default_info
 
 class AggregatorNode(StatefulNode):
     """
-    Represents a node for aggregation tasks in the simulation.
+    Represents a node that performs an aggregation operation in the simulation.
 
     Inherits from the abstract Node class and sets the uid in the format 'stage_node_id_aggr'.
+    Attributes:
+        uid (int): Unique custom (stage_id + "_aggr") identifier for the node.
+        stage_node_id: The stage local node identifier.
+        type (str): The type of the node (stateful).
+        throughput (int): Maximum computational cycles a node can run per step.
+        operation_type (str): Operation type used for computational cycle calculation.
+        stage (Stage): The stage to which the node belongs.
+        window_size (int): The size of the processing window.
+        slide (int): The slide of the processing window.
+        stage_operation (str): The operation simulated by the stage where this node is located in.
+        terminal (bool): Flag indicating wheather the node is terminal (final stage) or not.
+        state (State): Class the represents the internal node State.
+
     """
 
     def __init__(
@@ -25,13 +38,17 @@ class AggregatorNode(StatefulNode):
 
         Args:
             stage_node_id: The stage local node identifier.
-            throughput (int): Maximum computational cycles a node can run per step.
-            stage (Stage): The stage which the node is in.
-            stage_operation (str): The operation simulated by the stage where this node is
-                                   located in.
+            operation_type (str): Operation type used for computational cycle calculation.
+            stage (Stage): The stage to which the node belongs.
+            window_size (int): The size of the processing window.
+            slide (int): The slide of the processing window.
+            stage_operation (str): The operation simulated by the stage where this node is located in.
+            terminal (bool): Flag indicating wheather the node is terminal (final stage) or not.
         """
         # Construct the uid in the desired format
         self.uid = f"{stage_node_id}_aggr"
+
+        self.operation_type = operation_type
 
         # Initialize the base class with the custom uid
         super().__init__(self.uid, stage_node_id, "Aggregator", 1000, stage, terminal)
@@ -50,14 +67,13 @@ class AggregatorNode(StatefulNode):
         self, keys: dict[int, list[dict[str, int]]], step: int, sender_stage_node_id
     ) -> None:
         """
-        Process the keys for this aggregator node.
+        Processes a list of keys and updates the node's internal state.
 
         Args:
             keys (dict): Dict of keys to be processed.
             step (int): Current step in the simulation.
             sender_stage_node_id: The sender stage node ID.
         """
-        print(keys, step, sender_stage_node_id)
 
         log_default_info(
             self.default_logger,
@@ -75,32 +91,11 @@ class AggregatorNode(StatefulNode):
             self.emit_keys(processed_keys_flat, step)
 
     def emit_keys(self, keys: list, step: int) -> None:
-        print(keys)
         log_default_info(
             self.default_logger,
             f"Node {self.uid} emitting {keys} in step {step}",
         )
         self.stage.next_stage.nodes[0].receive_and_process(keys, step)
-
-    def is_expired(self, window_step: int, step: int):
-        return step >= window_step + self.window_size + 3 * self.slide
-
-    def process(self, key_count_list: list[tuple[str, int]]):
-        print(key_count_list)
-        cycles = 0
-        emitting_keys = []
-
-        log_default_info(
-            self.default_logger,
-            f"Node {self.uid} processing {key_count_list}",
-        )
-
-        for key, count in key_count_list.items():
-            if key != "finished":
-                cycles += self.operation.calculate_cycles(count)
-                emitting_keys.append(key)
-
-        return cycles, emitting_keys
 
     def __repr__(self) -> str:
         """
@@ -112,6 +107,8 @@ class AggregatorNode(StatefulNode):
         return (
             f"\n--------------------\n"
             f"AggregatorNode {self.uid} with:\n"
+            f"throughput: 1000\n"
+            f"terminal: {self.terminal}\n"
             f"operation type: {self.operation_type}\n"
             f"state:\n"
             f"{self.state}\n"
