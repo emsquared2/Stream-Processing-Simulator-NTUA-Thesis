@@ -14,6 +14,7 @@ class Stage:
     - id (int): Unique stage identifier.
     - stage_type (str): String that describes the type of the stage.
                         It is equivalent to the node type.
+    - key_splitting (bool): A flag that determines whether key splitting is applied.
     - next_stage (Stage): Object that specifies the next topology stage.
     - next_stage_len (int): The length of the next stage.
     - terminal_stage (bool): Specifies if the current stage is the last
@@ -21,6 +22,7 @@ class Stage:
     - hash_seed (int): Seed used in case of hashing partitioning to
                        sync the nodes of the stages.
     - nodes (list): The nodes of this stage.
+    - aggregator (AggregatorNode): The aggregator of the stage. This is used only when key_splitting is applied.
     """
 
     def __init__(self, stage_data, next_stage_len: int):
@@ -81,8 +83,7 @@ class Stage:
             # Here node_type should always be equal to stage_type
             node_type = node_data["type"]
 
-            # Question: Use of throughput / operation_type on
-            #           stateless nodes
+            # TODO: Use of throughput / operation_type on stateless nodes
             throughput = node_data["throughput"]
 
             if node_type == "stateful":
@@ -142,6 +143,7 @@ class Stage:
         return (
             f"\n---------- Stage {self.id} ----------\n"
             f"Total nodes: {len(self.nodes)}\n"
+            f"Key Splitting: {self.key_splitting}\n"
             f"{stage_repr}\n"
             f"----- END  OF  STAGE {self.id} ------\n"
         )

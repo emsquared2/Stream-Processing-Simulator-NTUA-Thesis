@@ -6,7 +6,7 @@ from utils.Logging import log_default_info
 
 class WorkerNode(StatefulNode):
     """
-    Represents a stateful node in the simulation.
+    Represents a node that performs a processing operation in the simulation.
 
     Attributes:
         uid (int): Unique identifier for the node.
@@ -14,12 +14,14 @@ class WorkerNode(StatefulNode):
         type (str): The type of the node (stateful).
         throughput (int): Maximum computational cycles a node can run per step.
         operation_type (str): Operation type used for computational cycle calculation.
-        stage (Stage): The stage which the node is in.
+        stage (Stage): The stage to which the node belongs.
         window_size (int): The size of the processing window.
         slide (int): The slide of the processing window.
-        terminal (bool): Specifies if the current node is a
-                             terminal (final stage) node.
+        terminal (bool): Flag indicating wheather the node is terminal (final stage) or not.
         state (State): Class the represents the internal node State.
+        key_splitting (bool): A flag that determines whether key splitting is applied. It
+                              indicates whether the node should emit keys to the next stage
+                              or in the aggregator of the current stage.
     """
 
     def __init__(
@@ -40,15 +42,17 @@ class WorkerNode(StatefulNode):
         Args:
             uid (int): Unique identifier for the node.
             stage_node_id (int): Stage node identifier.
-            throughput (int): Maximum computational cycles a node can
-                              run per step.
+            throughput (int): Maximum computational cycles a node can run per step.
             operation_type (str): Operation type used for computational cycle calculation.
-            stage (Stage): The stage which the node is in.
+            stage (Stage): The stage to which the node belongs.
             window_size (int): The size of the processing window.
             slide (int): The slide of the processing window.
-            terminal (bool): Specifies if the current node is a
-                             terminal (final stage) node.
+            terminal (bool): Flag indicating wheather the node is terminal (final stage) or not.
+            key_splitting (bool): A flag that determines whether key splitting is applied. It
+                                  indicates whether the node should emit keys to the next stage
+                                  or in the aggregator of the current stage.
         """
+
         super().__init__(uid, stage_node_id, "Worker", throughput, stage, terminal)
         self.key_splitting = key_splitting
 
@@ -105,7 +109,6 @@ class WorkerNode(StatefulNode):
             step (int): The current simulation step.
         """
         if self.key_splitting:
-            print("Emitting", step, keys)
             self.stage.aggregator.receive_and_process(keys, step, self.stage_node_id)
         else:
             self.stage.next_stage.nodes[self.stage_node_id].receive_and_process(
@@ -118,15 +121,17 @@ class WorkerNode(StatefulNode):
 
     def __repr__(self) -> str:
         """
-        A string representation of the stateful node, including its ID and internal state.
+        A string representation of the worker node, including its ID and internal state.
 
         Returns:
             str: Description of the node.
         """
         return (
             f"\n--------------------\n"
-            f"StatefulNode {self.uid} with:\n"
+            f"WorkerNode {self.uid} with:\n"
             f"throughput: {self.throughput}\n"
+            f"terminal: {self.terminal}\n"
+            f"key_splitting: {self.key_splitting}\n"
             f"state:\n"
             f"{self.state}\n"
             f"--------------------"
