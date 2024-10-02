@@ -10,13 +10,13 @@ from topology.node.state.State import State
 from topology.node.state.Window import Window
 
 
-class MockComplexity:
+class MockOperation:
     """
-    Mock class for Complexity to simulate cycle calculation based on occurrences.
+    Mock class for Operation to simulate cycle calculation based on occurrences.
     """
 
     def calculate_cycles(self, occurrences: int) -> int:
-        # Simulate a complexity calculation based on occurrences O(n^2)
+        # Simulate a operation calculation based on occurrences NestedLoop
         return occurrences * occurrences
 
 
@@ -47,18 +47,21 @@ def load_keys():
 
 
 class TestState(unittest.TestCase):
-
     def setUp(self):
         """
         Set up the State instance with multiple windows for testing process_window.
         """
         # Initialize the state with test parameters
         self.state = State(
-            node_id=1, throughput=100, complexity_type="O(n^2)", window_size=10, slide=5
+            node_id=1,
+            throughput=100,
+            operation_type="NestedLoop",
+            window_size=10,
+            slide=5,
         )
 
-        # Mock the complexity object
-        self.state.complexity = MockComplexity()
+        # Mock the operation object
+        self.state.operation = MockOperation()
 
         # Manually create windows for testing
         self.window1 = Window(start_step=0, window_size=10, slide=5)
@@ -157,11 +160,15 @@ class TestState(unittest.TestCase):
         """
         # Initialize the state with test parameters
         state = State(
-            node_id=1, throughput=50, complexity_type="O(n^2)", window_size=5, slide=2
+            node_id=1,
+            throughput=50,
+            operation_type="NestedLoop",
+            window_size=5,
+            slide=2,
         )
 
-        # Mock the complexity object
-        state.complexity = MockComplexity()
+        # Mock the operation object
+        state.operation = MockOperation()
 
         # Mock the log_node_info to avoid actual logging during the test
         state.node_logger = MagicMock()
@@ -224,7 +231,6 @@ class TestState(unittest.TestCase):
 
             # At step 5, window starting at 0 should be processed
             if step == 5:
-
                 expected_remaining_window_0 = [
                     "key5",
                     "key4",

@@ -1,3 +1,9 @@
+import os
+import sys
+
+# Get the absolute path to the 'src' directory
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
+
 import unittest
 from keygen.KeyGenerator import KeyGenerator
 from utils.ConfigValidator import validate_keygen_config
@@ -9,8 +15,8 @@ class TestKeyGenerator(unittest.TestCase):
         self.valid_config = {
             "streams": 1,
             "steps": 5,
-            "number of keys": 3,
-            "arrival rate": 10,
+            "number_of_keys": 3,
+            "arrival_rate": 10,
             "spike_probability": 20,
             "spike_magnitude": 50,
             "distribution": {"type": "uniform"},
@@ -81,7 +87,7 @@ class TestKeyGenerator(unittest.TestCase):
         # Test generate_stream
         keygen.generate_stream("test_output.txt")
         for i in range(self.valid_config["streams"]):
-            with open(f"test_output{i}.txt", "r") as f:
+            with open(f"test_output.txt", "r") as f:
                 content = f.read()
                 self.assertTrue(content)
 

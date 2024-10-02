@@ -1,7 +1,8 @@
 from typing import Dict, Tuple
 from ..node.StatelessNode import StatelessNode
 from ..node.KeyPartitioner import KeyPartitioner
-from ..node.StatefulNode import StatefulNode
+from ..node.WorkerNode import WorkerNode
+from ..node.AggregatorNode import AggregatorNode
 
 import random
 
@@ -14,6 +15,7 @@ class Stage:
     - id (int): Unique stage identifier.
     - stage_type (str): String that describes the type of the stage.
                         It is equivalent to the node type.
+    - key_splitting (bool): A flag that determines whether key splitting is applied.
     - next_stage (Stage): Object that specifies the next topology stage.
     - next_stage_len (int): The length of the next stage.
     - terminal_stage (bool): Specifies if the current stage is the last
@@ -31,6 +33,7 @@ class Stage:
                                                       selection of the least loaded node during partitioning.
 
     - nodes (list): The nodes of this stage.
+    - aggregator (AggregatorNode): The aggregator of the stage. This is used only when key_splitting is applied.
     """
 
     def __init__(self, stage_data, next_stage_len: int):
@@ -43,6 +46,7 @@ class Stage:
         """
         self.id = stage_data["id"]
         self.stage_type = stage_data["type"]
+        self.key_splitting = stage_data.get("key_splitting", None)
         self.next_stage = None
 
         self.next_stage_len = next_stage_len
@@ -57,6 +61,17 @@ class Stage:
         self.key_candidates: Dict[str, Tuple[int, int]] = {}
 
         self.nodes = self._create_nodes(stage_data["nodes"])
+
+        # Initialize Aggregator
+        if self.key_splitting:
+            self.aggregator = AggregatorNode(
+                self.id,
+                "Aggregation",
+                self,
+                stage_data["nodes"][0]["window_size"],
+                stage_data["nodes"][0]["slide"],
+                stage_data["nodes"][0]["operation_type"],
+            )
 
     def _set_next_stage(self, stage):
         """
@@ -75,7 +90,7 @@ class Stage:
             nodes_data (list): List of dictionaries representing node configurations.
 
         Returns:
-            list: A list of Node instances (StatefulNode or StatelessNode).
+            list: A list of Node instances (WorkerNode or StatelessNode).
         """
         nodes = []
 
@@ -85,23 +100,23 @@ class Stage:
             # Here node_type should always be equal to stage_type
             node_type = node_data["type"]
 
-            # Question: Use of throughput / complexity_type on
-            #           stateless nodes
+            # TODO: Use of throughput / operation_type on stateless nodes
             throughput = node_data["throughput"]
 
             if node_type == "stateful":
-                complexity_type = node_data["complexity_type"]
+                operation_type = node_data["operation_type"]
                 window_size = node_data["window_size"]
                 slide = node_data["slide"]
-                node = StatefulNode(
+                node = WorkerNode(
                     uid,
                     i,
                     throughput,
-                    complexity_type,
+                    operation_type,
                     self,
                     window_size,
                     slide,
                     self.terminal_stage,
+                    self.key_splitting,
                 )
 
             elif node_type == "stateless":
@@ -140,9 +155,12 @@ class Stage:
 
     def __repr__(self):
         stage_repr = "\n".join(f"{node}\n" for node in self.nodes)
+        if self.key_splitting:
+            stage_repr += f"\n {self.aggregator}"
         return (
             f"\n---------- Stage {self.id} ----------\n"
             f"Total nodes: {len(self.nodes)}\n"
+            f"Key Splitting: {self.key_splitting}\n"
             f"{stage_repr}\n"
             f"----- END  OF  STAGE {self.id} ------\n"
         )
