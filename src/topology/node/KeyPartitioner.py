@@ -7,6 +7,8 @@ from .StatelessNode import StatelessNode
 from partitioning_strategies.Hashing import Hashing
 from partitioning_strategies.KeyGrouping import KeyGrouping
 from partitioning_strategies.ShuffleGrouping import ShuffleGrouping
+from partitioning_strategies.PowerOfTwoChoices import PowerOfTwoChoices
+from partitioning_strategies.PartialKeyGrouping import PartialKeyGrouping
 
 
 class KeyPartitioner(StatelessNode):
@@ -89,6 +91,10 @@ class KeyPartitioner(StatelessNode):
         elif strategy_name == "key_grouping":
             prefix_length = strategy_params.get("prefix_length", 1)
             return KeyGrouping(prefix_length)
+        elif strategy_name == "potc":
+            return PowerOfTwoChoices(self.stage.key_node_map)
+        elif strategy_name == "pkg":
+            return PartialKeyGrouping(self.stage.key_candidates)
         else:
             raise ValueError(f"Unknown strategy: {strategy_name}")
 
