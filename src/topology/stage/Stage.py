@@ -1,3 +1,4 @@
+from typing import Dict, Tuple
 from ..node.StatelessNode import StatelessNode
 from ..node.KeyPartitioner import KeyPartitioner
 from ..node.WorkerNode import WorkerNode
@@ -21,6 +22,16 @@ class Stage:
                              stage of the simulation.
     - hash_seed (int): Seed used in case of hashing partitioning to
                        sync the nodes of the stages.
+
+    - key_node_map (Dict[str, int]): Dictionary used in Power of Two Choices (PoTC) to store the
+                                     assigned node for each key. For each key, it stores a single node index,
+                                     ensuring consistent routing for the same key across multiple partitioning steps.
+
+    - key_candidates (Dict[str, Tuple[int, int]]): Dictionary used in Partial Key Grouping (PKG)
+                                                      to map each key to two candidate nodes. For each key,
+                                                      it stores a tuple of two node indices, allowing dynamic
+                                                      selection of the least loaded node during partitioning.
+
     - nodes (list): The nodes of this stage.
     - aggregator (AggregatorNode): The aggregator of the stage. This is used only when key_splitting is applied.
     """
@@ -41,7 +52,13 @@ class Stage:
         self.next_stage_len = next_stage_len
         self.terminal_stage = next_stage_len == 0
 
+        # Attributes used in partitioning strategies
+
         self.hash_seed = None
+        # PoTC: Tracks the node to which each key is assigned
+        self.key_node_map: Dict[str, int] = {}
+        # PKG: Tracks two candidate nodes for each key
+        self.key_candidates: Dict[str, Tuple[int, int]] = {}
 
         self.nodes = self._create_nodes(stage_data["nodes"])
 
