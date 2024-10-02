@@ -22,7 +22,7 @@
                         "id": 0,
                         "type": "key_partitioner",
                         "throughput": 1000, 
-                        "complexity_type": "O(1)",
+                        "operation_type": "StatelessOperation",
                         "strategy": {
                             "name": "hashing",
                             "prefix_length": 3
@@ -38,7 +38,7 @@
                         "id": 1,
                         "type": "stateful",
                         "throughput": 1000,
-                        "complexity_type": "O(n)",
+                        "operation_type": "Aggregation",
                         "window_size": 5,
                         "slide": 2
                     },
@@ -46,7 +46,7 @@
                         "id": 2,
                         "type": "stateful",
                         "throughput": 1000,
-                        "complexity_type": "O(n)",
+                        "operation_type": "Aggregation",
                         "window_size": 5,
                         "slide": 2
                     }
@@ -84,7 +84,7 @@
                         "id": 5,
                         "type": "stateful",
                         "throughput": 1000,
-                        "complexity_type": "O(nlogn)",
+                        "operation_type": "Sorting",
                         "window_size": 5,
                         "slide": 2
                     },
@@ -92,7 +92,7 @@
                         "id": 6,
                         "type": "stateful",
                         "throughput": 1000,
-                        "complexity_type": "O(nlogn)",
+                        "operation_type": "Sorting",
                         "window_size": 5,
                         "slide": 2
                     }

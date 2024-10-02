@@ -1,16 +1,15 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from topology.node.StatefulNode import StatefulNode
+from topology.node.WorkerNode import StatefulNode
 
 
 class TestStatefulNode(unittest.TestCase):
     def setUp(self):
-        """Initializes a non terminal & a terminal node   
-        """ 
+        """Initializes a non terminal & a terminal node"""
         self.node_non_terminal = StatefulNode(
             node_id=1,
             throughput=10,
-            complexity_type="O(1)",
+            operation_type="StatelessOperation",
             window_size=5,
             slide=1,
             terminal=False,
@@ -19,7 +18,7 @@ class TestStatefulNode(unittest.TestCase):
         self.node_terminal = StatefulNode(
             node_id=1,
             throughput=10,
-            complexity_type="O(1)",
+            operation_type="StatelessOperation",
             window_size=5,
             slide=1,
             terminal=True,
@@ -38,17 +37,17 @@ class TestStatefulNode(unittest.TestCase):
         )
 
         # Simulate receiving and processing keys for each step
-        for step in range(0, 8): 
-            keys = [f"key{step}"]  
+        for step in range(0, 8):
+            keys = [f"key{step}"]
             self.node_non_terminal.receive_and_process(keys, step)
 
         # Check the print calls made by emit_keys
         expected_print_calls = [
-            [],                                        # Called at step 0
-            [],                                        # Called at step 1
-            [],                                        # Called at step 2
-            [],                                        # Called at step 3
-            [],                                        # Called at step 4
+            [],  # Called at step 0
+            [],  # Called at step 1
+            [],  # Called at step 2
+            [],  # Called at step 3
+            [],  # Called at step 4
             ["key0", "key1", "key2", "key3", "key4"],  # Called at step 5
             ["key1", "key2", "key3", "key4", "key5"],  # Called at step 6
             ["key2", "key3", "key4", "key5", "key6"],  # Called at step 7
@@ -69,7 +68,7 @@ class TestStatefulNode(unittest.TestCase):
         self.node_terminal.emit_keys = MagicMock()
 
         # Simulate receiving and processing keys up to just before the window is full
-        for step in range(1, 5):  
+        for step in range(1, 5):
             keys = [f"key{step}"]
             self.node_terminal.receive_and_process(keys, step)
 

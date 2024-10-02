@@ -55,7 +55,8 @@ class Simulator:
             self.input_partitioner.receive_and_process(step_keys, step_count)
 
         # Print the final state of all nodes
-        self.report()
+        # TODO: Maybe make it a parameter like (--debug) from the main func
+        # self.report()
 
     def report(self):
         """
