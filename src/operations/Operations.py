@@ -7,7 +7,7 @@ class StatelessOperation(Operation):
         return 1
 
     def to_str(self) -> str:
-        return "StateLessOperation"
+        return "StatelessOperation"
 
 
 class BinaryOperation(Operation):

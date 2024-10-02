@@ -5,7 +5,7 @@ from utils.Logging import initialize_logging
 
 class BaseState:
     """
-    An abstract class representing the state of a node.
+    An abstract class representing the state of a stateful node.
     Attributes:
         node_id (int): Unique identifier for the node.
         throughput (int): Maximum computational cycles a node can run per step.
@@ -47,7 +47,7 @@ class BaseState:
 
     def update(self, keys, step, terminal):
         """
-        Updates the node state with new keys and the current step.
+        Updates the node's state with new keys and the current step.
         """
         pass
 
