@@ -50,6 +50,7 @@ class WorkerState(BaseState):
         self.windows: dict[int, Window] = {}
         self.current_step = 0
         self.minimum_step = 0
+        self.step_cycles = 0
 
         # Metrics
         self.total_keys = 0
@@ -77,13 +78,20 @@ class WorkerState(BaseState):
             f"Updating node {self.node_id} at step {step} with keys: {keys}",
         )
 
+        # Add check for new step to initialize again the step_cycles
+        if self.current_step != step:
+            self.step_cycles = 0
+
         self.current_step = max(self.current_step, step)
         self.minimum_step = max(0, self.current_step - self.window_size + 1)
 
         # TODO: Refactor max_step definition
         max_step = step + self.window_size + 3 * self.slide
 
-        processed_keys, (processed_keys_count, step_cycles, overdue_keys)= self.process_full_windows(terminal)
+        processed_keys, (processed_keys_count, step_cycles, overdue_keys) = self.process_full_windows(terminal)
+
+        # Update total cycles used in current step
+        self.step_cycles = step_cycles
 
         message = f"Step {self.current_step} - Processed {processed_keys_count} keys using {step_cycles} cycles - Node load {(step_cycles*100)/self.throughput}%"
 
@@ -157,7 +165,7 @@ class WorkerState(BaseState):
                         the next stage from each full window.
         """
         emitted_keys = []
-        step_cycles = 0
+        step_cycles = self.step_cycles
         processed_keys = 0
         overdue_keys = 0
 
