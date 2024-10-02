@@ -1,12 +1,12 @@
 import json
 import sys
-from complexities.Complexities import (
-    O1Complexity,
-    OLogNComplexity,
-    ONComplexity,
-    ONLogNComplexity,
-    ON2Complexity,
-    Complexity,
+from operations.Operations import (
+    StatelessOperation,
+    BinaryOperation,
+    Aggregation,
+    Sorting,
+    NestedLoop,
+    Operation,
 )
 
 
@@ -101,16 +101,16 @@ def load_steps_from_file(file_path):
     return steps_data
 
 
-def create_complexity(complexity_type: str) -> Complexity:
-    if complexity_type == "O(1)":
-        return O1Complexity()
-    elif complexity_type == "O(logn)":
-        return OLogNComplexity()
-    elif complexity_type == "O(n)":
-        return ONComplexity()
-    elif complexity_type == "O(nlogn)":
-        return ONLogNComplexity()
-    elif complexity_type == "O(n^2)":
-        return ON2Complexity()
+def create_operation(operation_type: str) -> Operation:
+    if operation_type == "StatelessOperation":
+        return StatelessOperation()
+    elif operation_type == "BinaryOperation":
+        return BinaryOperation()
+    elif operation_type == "Aggregation":
+        return Aggregation()
+    elif operation_type == "Sorting":
+        return Sorting()
+    elif operation_type == "NestedLoop":
+        return NestedLoop()
     else:
-        raise ValueError(f"Unknown complexity type: {complexity_type}")
+        raise ValueError(f"Unknown operation type: {operation_type}")

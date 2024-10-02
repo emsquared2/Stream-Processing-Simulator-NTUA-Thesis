@@ -1,7 +1,6 @@
 from simulator.GlobalConfig import GlobalConfig
 from .Node import Node
-from .state.State import State
-from utils.Logging import initialize_logging, log_default_info
+from utils.Logging import initialize_logging
 
 
 class StatefulNode(Node):
@@ -11,26 +10,19 @@ class StatefulNode(Node):
     Attributes:
         uid (int): Unique identifier for the node.
         stage_node_id: The stage local node identifier.
-        type (str): The type of the node (stateful).
+        node_type (str): The type of the node (Worker | Aggregator).
         throughput (int): Maximum computational cycles a node can run per step.
-        complexity_type (str): Complexity type used for computational cycle calculation.
-        stage (Stage): The stage which the node is in.
-        window_size (int): The size of the processing window.
-        slide (int): The slide of the processing window.
-        terminal (bool): Specifies if the current node is a
-                             terminal (final stage) node.
-        state (State): Class the represents the internal node State.
+        stage (Stage): The stage to which the node belongs.
+        terminal (bool): Flag indicating whether the node is terminal (final stage) or not.
     """
 
     def __init__(
         self,
         uid: int,
         stage_node_id: int,
+        node_type: str,
         throughput: int,
-        complexity_type: str,
         stage,
-        window_size: int,
-        slide: int,
         terminal: bool = False,
     ) -> None:
         """
@@ -41,23 +33,12 @@ class StatefulNode(Node):
             stage_node_id (int): Stage node identifier.
             throughput (int): Maximum computational cycles a node can
                               run per step.
-            complexity_type (str): Complexity type used for computational cycle calculation.
             stage (Stage): The stage which the node is in.
-            window_size (int): The size of the processing window.
-            slide (int): The slide of the processing window.
-            terminal (bool): Specifies if the current node is a
-                             terminal (final stage) node.
+            terminal (bool): Flag indicating wheather the node is terminal (final stage) or not.
         """
-        super().__init__(
-            uid, stage_node_id, "stateful", throughput, stage
-        )
-        self.window_size = window_size
-        self.slide = slide
+        super().__init__(uid, stage_node_id, node_type, throughput, stage)
+
         self.terminal = terminal
-        self.complexity_type = complexity_type
-
-        self.state = State(uid, throughput, complexity_type, window_size, slide)
-
         self.extra_dir = GlobalConfig.extra_dir
 
         # Initialize logging
@@ -73,51 +54,24 @@ class StatefulNode(Node):
             keys (list): List of keys to be processed.
             step (int): Current step in the simulation.
         """
-        log_default_info(
-            self.default_logger, f"Node {self.uid} received keys: {keys} at step {step}"
-        )
-
-        processed_keys = self.state.update(keys, step, self.terminal)
-
-        log_default_info(
-            self.default_logger,
-            f"Node {self.uid} terminal: {self.terminal}, processed_keys: {processed_keys}\n",
-        )
-
-        if not self.terminal:
-            processed_keys_flat = [
-                item for sublist in processed_keys for item in sublist
-            ]
-            self.emit_keys(processed_keys_flat, step)
+        pass
 
     def emit_keys(self, keys: list, step: int) -> None:
-        """Emits stage computed keys to next stage
+        """
+        Emits stage computed keys to next stage (or Aggregator)
 
         Args:
             keys (list): List of keys emitted from current
                          node to the next stage.
             step (int): The current simulation step.
         """
-        self.stage.next_stage.nodes[self.stage_node_id].receive_and_process(keys, step)
-        log_default_info(
-            self.default_logger, f"Node {self.uid} emitted keys: {keys} at step {step}"
-        )
+        pass
 
     def __repr__(self) -> str:
         """
-        A string representation of the stateful node, including its ID and internal state.
+        A string representation of the stateful node.
 
         Returns:
             str: Description of the node.
         """
-        return (
-            f"\n--------------------\n"
-            f"StatefulNode {self.uid} with:\n"
-            f"throughput: {self.throughput}\n"
-            f"complexity type: {self.complexity_type}\n"
-            f"window size: {self.window_size}\n"
-            f"slide: {self.slide}\n"
-            f"state:\n"
-            f"{self.state}\n"
-            f"--------------------"
-        )
+        pass

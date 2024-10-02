@@ -1,18 +1,17 @@
 from collections import Counter
+from .BaseState import BaseState
 from .Window import Window
-from simulator.GlobalConfig import GlobalConfig
-from utils.Logging import initialize_logging, log_default_info, log_node_info
-from utils.utils import create_complexity
+from utils.Logging import log_default_info, log_node_info
 
 
-class State:
+class WorkerState(BaseState):
     """
-    Represents the state of a node in the simulation.
+    Represents the internal state of a Worker node in the simulation.
 
     Attributes:
         node_id (int): Unique identifier for the node.
         throughput (int): Maximum computational cycles a node can run per step.
-        complexity_type (str): Complexity type used for computational cycle calculation.
+        operation_type (str): Operation type used for computational cycle calculation.
         window_size (int): The size of the processing window.
         slide (int): The slide of the processing window.
 
@@ -23,7 +22,7 @@ class State:
 
         total_keys (int): Total keys received.
         total_processed (int): Total keys processed.
-        total_expired (int): Total expired_keys.
+        total_expired (int): Total keys expired.
         total_cycles (int): Total number of processing cycles used.
     """
 
@@ -31,25 +30,21 @@ class State:
         self,
         node_id: int,
         throughput: int,
-        complexity_type: str,
+        operation_type: str,
         window_size: int,
         slide: int,
     ) -> None:
         """
-        Initializes the NodeState with the given parameters.
+        Initializes the WorkerState with the given parameters.
 
         Args:
             node_id (int): Unique identifier for the node.
             throughput (int): Maximum computational cycles a node can run per step.
-            complexity_type (str): Complexity type used for computational cycle calculation.
+            operation_type (str): Operation type used for computational cycle calculation.
             window_size (int): The size of the processing window.
             slide (int): The slide of the processing window.
         """
-        self.node_id = node_id
-        self.throughput = throughput
-        self.complexity = create_complexity(complexity_type)
-        self.window_size = window_size
-        self.slide = slide
+        super().__init__(node_id, throughput, operation_type, window_size, slide)
 
         self.received_keys: list[tuple[str, int, int]] = []
         self.windows: dict[int, Window] = {}
@@ -62,16 +57,9 @@ class State:
         self.total_expired = 0
         self.total_cycles = 0
 
-        self.extra_dir = GlobalConfig.extra_dir
-
-        # Initialize logging
-        self.default_logger, self.node_logger, _ = initialize_logging(
-            self.node_id, self.extra_dir
-        )
-
     def update(self, keys: list[str], step: int, terminal: bool) -> list[list]:
         """
-        Updates the node state with new keys and the current step.
+        Updates the state with new keys and the current step.
 
         Args:
             keys (list[str]): List of keys received.
@@ -79,7 +67,7 @@ class State:
             terminal (bool): Specifies if the current node is a terminal node.
 
         Returns:
-            list[list]: Returns the keys that will be emitted from the current window to the next stage.
+            list[list]: Returns the keys that will be emitted from the current window to the next stage (or aggregator).
                         If the node is terminal it returns an empty list.
         """
         self.total_keys += len(keys)
@@ -91,6 +79,7 @@ class State:
 
         self.current_step = max(self.current_step, step)
         self.minimum_step = max(0, self.current_step - self.window_size + 1)
+
         # TODO: Refactor max_step definition
         max_step = step + self.window_size + 3 * self.slide
 
@@ -158,15 +147,15 @@ class State:
 
         for start_step, window in list(self.windows.items()):
             if window.is_processable(self.current_step):
-
-                step_cycles, win_processed_keys, win_overdue_keys, window_keys = self.process_window(
-                    window, terminal, step_cycles
+                step_cycles, win_processed_keys, win_overdue_keys, window_keys = (
+                    self.process_window(window, terminal, step_cycles)
                 )
                 processed_keys += win_processed_keys
                 overdue_keys += win_overdue_keys
-                emitted_keys.append(window_keys)
                 if len(window.keys) == 0:
+                    window_keys.append("finished")
                     del self.windows[start_step]
+                emitted_keys.append((start_step, window_keys))
 
         message = f"Step {self.current_step} - Processed {processed_keys} keys using {step_cycles} cycles - Node load {(step_cycles*100)/self.throughput}%"
         if overdue_keys:
@@ -213,18 +202,18 @@ class State:
 
     def process_window(self, window: Window, terminal: bool, step_cycles: int) -> list:
         """
-        Processes a full window and updates the node's state.
+        Processes a full window and updates the state.
 
         Args:
             window (Window): The window to process.
-            terminal (bool): Specifies if the current node
-                             is a terminal node.
+            terminal (bool): Specifies if the current node is a terminal node.
             step_cycles (int): Computational cycles used so far in the current step.
 
         Returns:
-            int: The computational cycles used so far in the current step.
-            list: The keys to be emitted from a window.
-                  If it is a terminal node it returns an empty list.
+            step_cycles (int): The computational cycles used so far in the current step.
+            processed_keys (int): The number of keys that were processed in the window.
+            overdue_keys (int): The total number of overdue keys in the window.
+            list: The keys to be emitted from a window. If it is a terminal node it returns an empty list.
         """
         log_default_info(
             self.default_logger,
@@ -232,11 +221,10 @@ class State:
         )
 
         processed_keys, cycles, window_key_count = window.process(
-            self.throughput, self.complexity, step_cycles
+            self.throughput, self.operation, step_cycles
         )
 
-        step_cycles += cycles
-
+        step_cycles += cycles  # Cycles used so far in current step
         overdue_keys = window.keys  # Remaining unprocessed keys in this window
 
         message = f"Node {self.node_id} Processed {processed_keys} keys from window {window.start_step} using {cycles} cycles"
@@ -253,14 +241,18 @@ class State:
 
         if terminal:
             return step_cycles, processed_keys, len(overdue_keys), []
-        else:
-            # The window_key_count is a dictionary that holds
-            # how many times a type of key was processed in the
-            # window. We can extract all the different keys that
-            # were processed in this window as follows.
-            # As we previously clarified that a stateful node
-            # will "simulate" an aggregation function.
-            return step_cycles, processed_keys, len(overdue_keys), list(window_key_count.keys())
+
+        # window_key_count is a dictionary that tracks how many times each key has been
+        # processed in the current window. If the operation is sorting or a nested loop,
+        # we return a list of keys with each key repeated according to its count.
+        # For aggregation operations, we return only the distinct keys.
+        keys_list = (
+            [key for key, count in window_key_count.items() for _ in range(count)]
+            if self.operation.to_str() in {"Sorting", "NestedLoop"}
+            else list(window_key_count.keys())
+        )
+
+        return step_cycles, processed_keys, len(overdue_keys), keys_list
 
     def __repr__(self) -> str:
         """
