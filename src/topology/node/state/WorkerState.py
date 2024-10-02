@@ -254,6 +254,18 @@ class WorkerState(BaseState):
 
         return step_cycles, processed_keys, len(overdue_keys), keys_list
 
+    def load(self) -> int:
+        """
+        Computes the total load in terms of keys.
+        Returns:
+            int: The total number of keys in all active windows.
+        """
+        load = 0
+        for window in self.windows.values():
+            load += len(window.keys)
+
+        return load
+
     def __repr__(self) -> str:
         """
         A string representation of the node's state.
