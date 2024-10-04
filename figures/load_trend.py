@@ -9,8 +9,9 @@ from utils.log_parser import parse_log_file
 from scipy.ndimage import gaussian_filter1d
 
 
-steps, _, node_loads, _, _ = parse_log_file("../experiments/Scenario2 - Increasing Arrival Rate/log_20241002194003/log_node1.log")
-
+steps, _, node_loads, _, _ = parse_log_file(
+    "../experiments/Scenario7 - Scalability/four_workers/Scenario1/topology1/log_node1.log"
+)
 
 plt.style.use("classic")
 
@@ -25,7 +26,7 @@ fig.patch.set_facecolor("white")
 ax.set_facecolor("white")
 
 # Plot the node load percentages as bars
-ax.bar(steps, node_loads, color="lightgreen", label="Node Load (%)")
+ax.bar(steps, node_loads, color="#2ca02c", label="Node Load (%)")
 
 # Plot the smoothed trend line
 ax.plot(
@@ -39,7 +40,7 @@ ax.plot(
 # Add labels and title
 ax.set_xlabel("Steps")
 ax.set_ylabel("Node Load (%)")
-ax.set_title("Node Load Percentage Across Steps with Smoothed Trend Line")
+ax.set_title("Node Load 1")
 
 # Set x-axis limits to start from 0
 ax.set_xlim(left=0)
@@ -50,6 +51,15 @@ ax.legend()
 # Add grid for readability (optional)
 # ax.grid(True, which="both", linestyle="--", linewidth=0.5)
 
+# Add a legend in the bottom-right corner
+ax.legend(loc="lower right")
+
+
 # Display the plot
 plt.tight_layout()
-plt.show()
+plt.savefig(
+    "../experiments/Scenario7 - Scalability/four_workers/Scenario1/load_node1.png",
+    format="png",
+    dpi=300,
+    bbox_inches="tight",
+)

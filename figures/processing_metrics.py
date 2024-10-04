@@ -10,7 +10,7 @@ from utils.log_parser import parse_log_file
 
 # Parse log file
 steps, processed_keys, _, overdue_keys, expired_keys = parse_log_file(
-    "../experiments/Scenario2 - Increasing Arrival Rate/log_20241002211526/log_node1.log"
+    "../experiments/Scenario7 - Scalability/four_workers/Scenario2/topology1/log_node4.log"
 )
 
 # Use a more modern, clean style for the plot
@@ -53,13 +53,16 @@ p3 = ax.bar(
 # Add labels and title with more elegant fonts
 ax.set_xlabel("Steps", fontsize=12)
 ax.set_ylabel("Keys Count", fontsize=12)
-ax.set_title("Processed, Overdue, and Expired Keys Across Steps", fontsize=14, pad=15)
+ax.set_title(
+    "Processed, Overdue, and Expired Keys Across Steps for Node 4", fontsize=14, pad=15
+)
 
 # Set x-axis limits to start from 0
 ax.set_xlim(left=0)
 
 # Add a legend outside the plot
-ax.legend(loc="upper left", bbox_to_anchor=(1, 1), fontsize=10)
+ax.legend(loc="upper left", bbox_to_anchor=(0.001, 0.999), fontsize=15)
+# ax.legend(loc="upper left", bbox_to_anchor=(1, 1), fontsize=10)
 
 # Add grid for readability and set its transparency
 # ax.grid(True, which="both", linestyle="--", linewidth=0.7, alpha=0.7)
@@ -71,4 +74,9 @@ ax.legend(loc="upper left", bbox_to_anchor=(1, 1), fontsize=10)
 plt.tight_layout()
 
 # Display the plot
-plt.show()
+plt.savefig(
+    "../experiments/Scenario7 - Scalability/four_workers/Scenario2/processing_metrics_node4.png",
+    format="png",
+    dpi=300,
+    bbox_inches="tight",
+)
