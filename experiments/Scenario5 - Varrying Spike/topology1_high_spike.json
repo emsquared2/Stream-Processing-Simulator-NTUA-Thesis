@@ -1,11 +1,11 @@
 {
     "keygen": {
         "streams": 1,
-        "steps": 200,
-        "number_of_keys": 10,
+        "steps": 100,
+        "number_of_keys": 15,
         "arrival_rate": 100,
-        "spike_probability": 25,
-        "spike_magnitude": 100,
+        "spike_probability": 50,
+        "spike_magnitude": 150,
         "distribution": {
             "type": "uniform"
         }
@@ -35,17 +35,17 @@
                         "id": 1,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Sorting",
+                        "operation_type": "Aggregation",
                         "window_size": 5,
-                        "slide": 2
+                        "slide": 1
                     },
                     {
                         "id": 2,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Sorting",
+                        "operation_type": "Aggregation",
                         "window_size": 5,
-                        "slide": 2
+                        "slide": 1
                     }
                 ]
             },
@@ -83,15 +83,7 @@
                         "throughput": 1000,
                         "operation_type": "Aggregation",
                         "window_size": 5,
-                        "slide": 2
-                    },
-                    {
-                        "id": 6,
-                        "type": "stateful",
-                        "throughput": 1000,
-                        "operation_type": "Aggregation",
-                        "window_size": 5,
-                        "slide": 2
+                        "slide": 1
                     }
                 ]
             }

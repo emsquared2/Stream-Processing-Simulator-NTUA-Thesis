@@ -1,15 +1,4 @@
 {
-    "keygen": {
-        "streams": 1,
-        "steps": 50,
-        "number_of_keys": 15,
-        "arrival_rate": 200,
-        "spike_probability": 0,
-        "spike_magnitude": 0,
-        "distribution": {
-            "type": "uniform"
-        }
-    },
     "topology": {
         "stages": [
             {
@@ -22,7 +11,7 @@
                         "throughput": 1000, 
                         "operation_type": "StatelessOperation",
                         "strategy": {
-                            "name": "hashing"
+                            "name": "pkg"
                         }
                     }                    
                 ]
@@ -30,22 +19,31 @@
             {
                 "id": 1,
                 "type": "stateful",
+                "key_splitting": true,
                 "nodes": [
                     {
                         "id": 1,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Aggregation",
+                        "operation_type": "Sorting",
                         "window_size": 5,
-                        "slide": 1
+                        "slide": 2
                     },
                     {
                         "id": 2,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Aggregation",
+                        "operation_type": "Sorting",
                         "window_size": 5,
-                        "slide": 1
+                        "slide": 2
+                    },
+                    {
+                        "id": 3,
+                        "type": "stateful",
+                        "throughput": 1000,
+                        "operation_type": "Sorting",
+                        "window_size": 5,
+                        "slide": 2
                     }
                 ]
             },
@@ -54,16 +52,45 @@
                 "type": "stateless",
                 "nodes": [
                     {
-                        "id": 3,
+                        "id": 4,
                         "type": "key_partitioner",
                         "throughput": 1000,
                         "operation_type": "StatelessOperation",
                         "strategy": {
-                            "name": "hashing"
+                            "name": "pkg"
                         }
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "type": "stateful",
+                "key_splitting": true,
+                "nodes": [
+                    {
+                        "id": 7,
+                        "type": "stateful",
+                        "throughput": 1000,
+                        "operation_type": "Aggregation",
+                        "window_size": 5,
+                        "slide": 2
                     },
                     {
-                        "id": 4,
+                        "id": 8,
+                        "type": "stateful",
+                        "throughput": 1000,
+                        "operation_type": "Aggregation",
+                        "window_size": 5,
+                        "slide": 2
+                    }
+                ]
+            },
+            {
+                "id": 4,
+                "type": "stateless",
+                "nodes": [
+                    {
+                        "id": 9,
                         "type": "key_partitioner",
                         "throughput": 1000,
                         "operation_type": "StatelessOperation",
@@ -74,16 +101,16 @@
                 ]
             },
             {
-                "id": 3,
+                "id": 5,
                 "type": "stateful",
                 "nodes": [
                     {
-                        "id": 5,
+                        "id": 11,
                         "type": "stateful",
                         "throughput": 1000,
                         "operation_type": "Aggregation",
                         "window_size": 5,
-                        "slide": 1
+                        "slide": 2
                     }
                 ]
             }

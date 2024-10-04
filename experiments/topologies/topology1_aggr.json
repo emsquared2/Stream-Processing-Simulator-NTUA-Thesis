@@ -1,15 +1,4 @@
 {
-    "keygen": {
-        "streams": 1,
-        "steps": 50,
-        "number_of_keys": 15,
-        "arrival_rate": 200,
-        "spike_probability": 0,
-        "spike_magnitude": 0,
-        "distribution": {
-            "type": "uniform"
-        }
-    },
     "topology": {
         "stages": [
             {
@@ -22,7 +11,7 @@
                         "throughput": 1000, 
                         "operation_type": "StatelessOperation",
                         "strategy": {
-                            "name": "hashing"
+                            "name": "pkg"
                         }
                     }                    
                 ]
@@ -30,6 +19,7 @@
             {
                 "id": 1,
                 "type": "stateful",
+                "key_splitting": true,
                 "nodes": [
                     {
                         "id": 1,
@@ -37,7 +27,7 @@
                         "throughput": 1000,
                         "operation_type": "Aggregation",
                         "window_size": 5,
-                        "slide": 1
+                        "slide": 2
                     },
                     {
                         "id": 2,
@@ -45,7 +35,7 @@
                         "throughput": 1000,
                         "operation_type": "Aggregation",
                         "window_size": 5,
-                        "slide": 1
+                        "slide": 2
                     }
                 ]
             },
@@ -55,15 +45,6 @@
                 "nodes": [
                     {
                         "id": 3,
-                        "type": "key_partitioner",
-                        "throughput": 1000,
-                        "operation_type": "StatelessOperation",
-                        "strategy": {
-                            "name": "hashing"
-                        }
-                    },
-                    {
-                        "id": 4,
                         "type": "key_partitioner",
                         "throughput": 1000,
                         "operation_type": "StatelessOperation",
@@ -83,7 +64,7 @@
                         "throughput": 1000,
                         "operation_type": "Aggregation",
                         "window_size": 5,
-                        "slide": 1
+                        "slide": 2
                     }
                 ]
             }
