@@ -3,13 +3,12 @@
         "streams": 1,
         "steps": 50,
         "number_of_keys": 15,
-        "arrival_rate": 100,
+        "arrival_rate": 200,
         "spike_probability": 0,
         "spike_magnitude": 0,
         "distribution": {
-            "type": "normal",
-            "mean": 8,
-            "stddev": 3 
+            "type": "zipf",
+            "alpha": 1.25
         }
     },
     "topology": {
@@ -37,17 +36,17 @@
                         "id": 1,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Sorting",
+                        "operation_type": "Aggregation",
                         "window_size": 5,
-                        "slide": 2
+                        "slide": 1
                     },
                     {
                         "id": 2,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Sorting",
+                        "operation_type": "Aggregation",
                         "window_size": 5,
-                        "slide": 2
+                        "slide": 1
                     }
                 ]
             },
@@ -85,15 +84,7 @@
                         "throughput": 1000,
                         "operation_type": "Aggregation",
                         "window_size": 5,
-                        "slide": 2
-                    },
-                    {
-                        "id": 6,
-                        "type": "stateful",
-                        "throughput": 1000,
-                        "operation_type": "Aggregation",
-                        "window_size": 5,
-                        "slide": 2
+                        "slide": 1
                     }
                 ]
             }
