@@ -166,4 +166,4 @@ cython_debug/
 input/
 
 #figures
-figures/
+# figures/
