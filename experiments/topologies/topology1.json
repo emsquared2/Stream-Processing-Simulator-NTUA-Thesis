@@ -24,7 +24,7 @@
                         "id": 1,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Sorting",
+                        "operation_type": "Aggregation",
                         "window_size": 5,
                         "slide": 2
                     },
@@ -32,7 +32,7 @@
                         "id": 2,
                         "type": "stateful",
                         "throughput": 1000,
-                        "operation_type": "Sorting",
+                        "operation_type": "Aggregation",
                         "window_size": 5,
                         "slide": 2
                     }
@@ -68,14 +68,6 @@
                 "nodes": [
                     {
                         "id": 5,
-                        "type": "stateful",
-                        "throughput": 1000,
-                        "operation_type": "Aggregation",
-                        "window_size": 5,
-                        "slide": 2
-                    },
-                    {
-                        "id": 6,
                         "type": "stateful",
                         "throughput": 1000,
                         "operation_type": "Aggregation",

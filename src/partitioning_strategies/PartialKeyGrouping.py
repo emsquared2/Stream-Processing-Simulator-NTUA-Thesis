@@ -65,8 +65,8 @@ class PartialKeyGrouping(PartitionStrategy):
                 node1_index, node2_index = self.key_candidates[key]
 
             # Get the load of the two candidate nodes (active keys being processed)
-            load1 = nodes[node1_index].state.load()
-            load2 = nodes[node2_index].state.load()
+            load1 = nodes[node1_index].state.load() + len(buffers[node1_index])
+            load2 = nodes[node2_index].state.load() + len(buffers[node2_index])
 
             # Select the node with the least load
             if load1 <= load2:
