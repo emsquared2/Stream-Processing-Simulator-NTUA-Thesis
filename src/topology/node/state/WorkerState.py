@@ -138,14 +138,21 @@ class WorkerState(BaseState):
         """
 
         # Adjust start_step to align with the sliding windows
+        # start_step = max((self.current_step // self.slide) * self.slide - self.slide, 0)
         start_step = (self.current_step // self.slide) * self.slide
 
+        while(start_step - self.slide + self.window_size > self.current_step):
+            start_step -= self.slide
+
+        start_step = max(start_step, 0)
+
         # Create any new windows needed based on side and start_step
-        if 0 <= step - start_step < self.window_size:
+        while(0 <= step - start_step < self.window_size):
             if start_step not in self.windows:
                 self.windows[start_step] = Window(
                     start_step, self.window_size, self.slide
                 )
+            start_step += self.slide
 
         # Add the step keys to all non expired and non processable windows
         for st_step, window in list(self.windows.items()):
