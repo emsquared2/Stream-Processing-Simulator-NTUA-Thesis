@@ -30,16 +30,15 @@ def compute_totals(log_files_dir, selected_logs):
     return total_processed, total_overdue, total_expired
 
 
-dir_two_workers = "../experiments/Scenario5 - Varying Spike/log_topology1_high_spike/"
-
-dir_one_worker = (
-    "../experiments/Scenario7 - Scalability/one_worker/Scenario5/topology1/"
+dir_one_worker = "../experiments/Scenario7 - Scalability/1_worker/Scenario5/topology1/"
+dir_two_workers = (
+    "../experiments/Scenario7 - Scalability/2_workers/Scenario5/topology1/"
 )
 dir_four_workers = (
-    "../experiments/Scenario7 - Scalability/four_workers/Scenario5/topology1/"
+    "../experiments/Scenario7 - Scalability/4_workers/Scenario5/topology1/"
 )
 dir_six_workers = (
-    "../experiments/Scenario7 - Scalability/six_workers/Scenario5/topology1/"
+    "../experiments/Scenario7 - Scalability/6_workers/Scenario5/topology1/"
 )
 
 # Log files for 2 workers and 4 workers scenarios (specific log files)
@@ -110,7 +109,7 @@ ax.legend()
 # Display the plot
 plt.tight_layout()
 plt.savefig(
-    "../experiments/Scenario7 - Scalability/workers_comparison_high_spike.png",
+    "../experiments/Scenario7 - Scalability/workers_comparison_scenario5.png",
     format="png",
     dpi=300,
     bbox_inches="tight",

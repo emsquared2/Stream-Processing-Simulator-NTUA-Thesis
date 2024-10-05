@@ -9,7 +9,7 @@ from utils.log_parser import parse_log_file
 from scipy.ndimage import gaussian_filter1d
 
 
-steps, _, node_loads, _, _ = parse_log_file(
+steps, _, _, node_loads, _, _ = parse_log_file(
     "../experiments/Scenario7 - Scalability/four_workers/Scenario1/topology1/log_node1.log"
 )
 

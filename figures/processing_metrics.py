@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src"
 from utils.log_parser import parse_log_file
 
 # Parse log file
-steps, processed_keys, _, overdue_keys, expired_keys = parse_log_file(
+steps, processed_keys, _, _, overdue_keys, expired_keys = parse_log_file(
     "../experiments/Scenario7 - Scalability/four_workers/Scenario2/topology1/log_node4.log"
 )
 
