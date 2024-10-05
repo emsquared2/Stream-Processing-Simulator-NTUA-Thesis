@@ -18,7 +18,7 @@ def collect_load_data_from_logs(log_folder, node):
 
     # Check if the log file exists for the node
     if os.path.exists(log_path):
-        steps, _, node_loads, _, _ = parse_log_file(log_path)
+        steps, _, _, node_loads, _, _ = parse_log_file(log_path)
     else:
         print(f"Log file for node '{node}' not found: {log_filename}")
 
@@ -26,16 +26,15 @@ def collect_load_data_from_logs(log_folder, node):
 
 
 # Provide the folder path containing log files
-log_folder = (
-    "../experiments/Scenario7 - Scalability/four_workers/Scenario3/topology1_high_pkg/"
-)
+log_folder = "../experiments/Scenario3 - Data Skewness/log_topology1_high"
 
 # Provide the list of nodes to read logs for
 # nodes = ["node1", "node2", "node1_aggr", "node4"]
 # nodes = ["node1", "node2", "node5"]
+nodes = ["node1", "node2"]
 
 # nodes = ["node1", "node2", "node3", "node4", "node9"]
-nodes = ["node1", "node2", "node3", "node4", "node6", "node1_aggr"]
+# nodes = ["node1", "node2", "node3", "node4", "node9"]
 
 
 # Create a list of colors to pick from
@@ -50,8 +49,8 @@ fig, ax = plt.subplots(figsize=(12, 6))
 fig.patch.set_facecolor("white")
 ax.set_facecolor("white")
 
-# # List of marker styles to cycle through for each node
-# markers = ["o", "s", "^", "D"]
+# List of marker styles to cycle through for each node
+markers = ["o", "s", "^", "D"]
 
 # # Iterate over each node and plot the load trend
 # for idx, node in enumerate(nodes):
@@ -89,6 +88,7 @@ for idx, node in enumerate(nodes):
         steps,
         smoothed_avg,
         label=f"Load Trend: {node}",
+        marker=markers[idx % len(markers)],
         color=color_list[idx % len(color_list)],
         linewidth=3,
     )
@@ -96,13 +96,14 @@ for idx, node in enumerate(nodes):
 # Add labels and title
 ax.set_xlabel("Steps")
 ax.set_ylabel("Node Load (%)")
-ax.set_title("Node Load Percentage Trend Across Nodes")
+ax.set_title("Load Trends for Stage 1 Nodes")
 
 # Set x-axis limits to start from 0
 ax.set_xlim(left=0)
 
 # Add a legend outside the plot
-ax.legend(loc="upper left", bbox_to_anchor=(1, 1))
+# ax.legend(loc="upper left", bbox_to_anchor=(1, 1))
+ax.legend(loc="upper left", framealpha=0.5)
 
 # Add grid for readability
 # ax.grid(True, which="both", linestyle="--", linewidth=0.5)
@@ -110,7 +111,7 @@ ax.legend(loc="upper left", bbox_to_anchor=(1, 1))
 # Display the plot with tight layout to adjust for the legend
 plt.tight_layout()
 plt.savefig(
-    "../experiments/Scenario7 - Scalability/four_workers/Scenario3/topology_load_high_pkg.png",
+    "../experiments/Scenario3 - Data Skewness/topology_load_high.png",
     format="png",
     dpi=300,
     bbox_inches="tight",

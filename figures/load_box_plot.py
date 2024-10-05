@@ -8,31 +8,34 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src"
 from utils.log_parser import parse_log_file
 
 # Load data from log files, slicing to ignore the first 4 steps for each node
-_, _, node1_load_hashing, _, _ = parse_log_file(
+_, _, _, node1_load_hashing, _, _ = parse_log_file(
     "../experiments/Scenario5 - Varrying Spike/log_topology1_high_spike/log_node1.log"
 )
-_, _, node2_load_hashing, _, _ = parse_log_file(
+_, _, _, node2_load_hashing, _, _ = parse_log_file(
     "../experiments/Scenario5 - Varrying Spike/log_topology1_high_spike/log_node2.log"
 )
 
-_, _, node1_load_potc, _, _ = parse_log_file(
+_, _, _, node1_load_potc, _, _ = parse_log_file(
     "../experiments/Scenario6 - Partition Strategies/potc/Scenario5/topology1_high/log_node1.log"
 )
-_, _, node2_load_potc, _, _ = parse_log_file(
+_, _, _, node2_load_potc, _, _ = parse_log_file(
     "../experiments/Scenario6 - Partition Strategies/potc/Scenario5/topology1_high/log_node2.log"
 )
 
-_, _, node1_load_pkg, _, _ = parse_log_file(
+_, _, _, node1_load_pkg, _, _ = parse_log_file(
     "../experiments/Scenario6 - Partition Strategies/pkg/Scenario5/topology1_high/log_node1.log"
 )
-_, _, node2_load_pkg, _, _ = parse_log_file(
+_, _, _, node2_load_pkg, _, _ = parse_log_file(
     "../experiments/Scenario6 - Partition Strategies/pkg/Scenario5/topology1_high/log_node2.log"
 )
 # Prepare the data in a list form
 data = [
-    node1_load_hashing[4:], node2_load_hashing[4:],
-    node1_load_potc[4:], node2_load_potc[4:],
-    node1_load_pkg[4:], node2_load_pkg[4:],
+    node1_load_hashing[4:],
+    node2_load_hashing[4:],
+    node1_load_potc[4:],
+    node2_load_potc[4:],
+    node1_load_pkg[4:],
+    node2_load_pkg[4:],
 ]
 
 plt.style.use("classic")
@@ -48,7 +51,9 @@ node_labels = [""] * len(data)
 
 # Plotting the boxplot
 # Plotting the boxplot with white background
-fig, ax = plt.subplots(figsize=(12, 6), facecolor="white")# Set figure background to white
+fig, ax = plt.subplots(
+    figsize=(12, 6), facecolor="white"
+)  # Set figure background to white
 plt.boxplot(data, labels=node_labels)
 
 # Add central labels for each strategy
