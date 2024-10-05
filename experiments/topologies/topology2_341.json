@@ -1,0 +1,189 @@
+{
+    "keygen": {
+        "streams": 1,
+        "steps": 200,
+        "number_of_keys": 30,
+        "arrival_rate": 300,
+        "spike_probability": 0,
+        "spike_magnitude": 0,
+        "distribution": {
+            "type": "uniform"
+        }
+    },
+    "topology": {
+        "stages": [
+            {
+                "id": 0,
+                "type": "stateless",
+                "nodes": [
+                    {
+                        "id": 0,
+                        "type": "key_partitioner",
+                        "throughput": 3000, 
+                        "operation_type": "StatelessOperation",
+                        "strategy": {
+                            "name": "hashing"
+                        }
+                    }                    
+                ]
+            },
+            {
+                "id": 1,
+                "type": "stateful",
+                "nodes": [
+                    {
+                        "id": 1,
+                        "type": "stateful",
+                        "throughput": 3000,
+                        "operation_type": "Sorting",
+                        "window_size": 5,
+                        "slide": 1
+                    },
+                    {
+                        "id": 2,
+                        "type": "stateful",
+                        "throughput": 3000,
+                        "operation_type": "Sorting",
+                        "window_size": 5,
+                        "slide": 1
+                    },
+                    {
+                        "id": 3,
+                        "type": "stateful",
+                        "throughput": 3000,
+                        "operation_type": "Sorting",
+                        "window_size": 5,
+                        "slide": 1
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "type": "stateless",
+                "nodes": [
+                    {
+                        "id": 4,
+                        "type": "key_partitioner",
+                        "throughput": 3000,
+                        "operation_type": "StatelessOperation",
+                        "strategy": {
+                            "name": "hashing"
+                        }
+                    },
+                    {
+                        "id": 5,
+                        "type": "key_partitioner",
+                        "throughput": 3000,
+                        "operation_type": "StatelessOperation",
+                        "strategy": {
+                            "name": "hashing"
+                        }
+                    },
+                    {
+                        "id": 6,
+                        "type": "key_partitioner",
+                        "throughput": 3000,
+                        "operation_type": "StatelessOperation",
+                        "strategy": {
+                            "name": "hashing"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "type": "stateful",
+                "nodes": [
+                    {
+                        "id": 7,
+                        "type": "stateful",
+                        "throughput": 3000,
+                        "operation_type": "Aggregation",
+                        "window_size": 5,
+                        "slide": 3
+                    },
+                    {
+                        "id": 8,
+                        "type": "stateful",
+                        "throughput": 3000,
+                        "operation_type": "Aggregation",
+                        "window_size": 5,
+                        "slide": 3
+                    },
+                    {
+                        "id": 9,
+                        "type": "stateful",
+                        "throughput": 3000,
+                        "operation_type": "Aggregation",
+                        "window_size": 5,
+                        "slide": 3
+                    },
+                    {
+                        "id": 10,
+                        "type": "stateful",
+                        "throughput": 3000,
+                        "operation_type": "Aggregation",
+                        "window_size": 5,
+                        "slide": 3
+                    }
+                ]
+            },
+            {
+                "id": 4,
+                "type": "stateless",
+                "nodes": [
+                    {
+                        "id": 11,
+                        "type": "key_partitioner",
+                        "throughput": 3000,
+                        "operation_type": "StatelessOperation",
+                        "strategy": {
+                            "name": "hashing"
+                        }
+                    },
+                    {
+                        "id": 12,
+                        "type": "key_partitioner",
+                        "throughput": 3000,
+                        "operation_type": "StatelessOperation",
+                        "strategy": {
+                            "name": "hashing"
+                        }
+                    },
+                    {
+                        "id": 13,
+                        "type": "key_partitioner",
+                        "throughput": 3000,
+                        "operation_type": "StatelessOperation",
+                        "strategy": {
+                            "name": "hashing"
+                        }
+                    },
+                    {
+                        "id": 14,
+                        "type": "key_partitioner",
+                        "throughput": 3000,
+                        "operation_type": "StatelessOperation",
+                        "strategy": {
+                            "name": "hashing"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": 5,
+                "type": "stateful",
+                "nodes": [
+                    {
+                        "id": 15,
+                        "type": "stateful",
+                        "throughput": 3000,
+                        "operation_type": "Aggregation",
+                        "window_size": 1,
+                        "slide": 1
+                    }
+                ]
+            }
+        ]
+    }
+}
