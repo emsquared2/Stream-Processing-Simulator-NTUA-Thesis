@@ -1,0 +1,200 @@
+2024-10-06 00:29:32 - INFO - Key statistics for step 0: {'key20': 208, 'key22': 47, 'key23': 45}
+2024-10-06 00:29:32 - INFO - Key statistics for step 1: {'key20': 204, 'key22': 49, 'key23': 44, 'key28': 3}
+2024-10-06 00:29:32 - INFO - Key statistics for step 2: {'key20': 200, 'key22': 49, 'key23': 51}
+2024-10-06 00:29:32 - INFO - Key statistics for step 3: {'key20': 49, 'key22': 47, 'key23': 204}
+2024-10-06 00:29:32 - INFO - Key statistics for step 4: {'key20': 36, 'key22': 50, 'key23': 213, 'key27': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 5: {'key20': 46, 'key22': 37, 'key23': 217}
+2024-10-06 00:29:32 - INFO - Key statistics for step 6: {'key17': 2, 'key20': 41, 'key22': 60, 'key23': 197}
+2024-10-06 00:29:32 - INFO - Key statistics for step 7: {'key17': 41, 'key20': 1, 'key22': 201, 'key23': 57}
+2024-10-06 00:29:32 - INFO - Key statistics for step 8: {'key20': 42, 'key22': 197, 'key23': 61}
+2024-10-06 00:29:32 - INFO - Key statistics for step 9: {'key17': 45, 'key20': 1, 'key22': 46, 'key23': 208}
+2024-10-06 00:29:32 - INFO - Key statistics for step 10: {'key17': 1, 'key20': 40, 'key22': 43, 'key23': 216}
+2024-10-06 00:29:32 - INFO - Key statistics for step 11: {'key20': 53, 'key22': 41, 'key23': 205, 'key27': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 12: {'key20': 41, 'key22': 54, 'key23': 205}
+2024-10-06 00:29:32 - INFO - Key statistics for step 13: {'key17': 1, 'key20': 43, 'key22': 202, 'key23': 53, 'key9': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 14: {'key17': 34, 'key20': 1, 'key22': 46, 'key23': 218, 'key9': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 15: {'key17': 50, 'key22': 36, 'key23': 214}
+2024-10-06 00:29:32 - INFO - Key statistics for step 16: {'key17': 212, 'key22': 38, 'key23': 50}
+2024-10-06 00:29:32 - INFO - Key statistics for step 17: {'key17': 210, 'key22': 1, 'key23': 46, 'key27': 43}
+2024-10-06 00:29:32 - INFO - Key statistics for step 18: {'key17': 54, 'key22': 38, 'key23': 208}
+2024-10-06 00:29:32 - INFO - Key statistics for step 19: {'key17': 50, 'key22': 44, 'key23': 206}
+2024-10-06 00:29:32 - INFO - Key statistics for step 20: {'key17': 51, 'key23': 204, 'key27': 45}
+2024-10-06 00:29:32 - INFO - Key statistics for step 21: {'key17': 38, 'key22': 1, 'key23': 213, 'key27': 48}
+2024-10-06 00:29:32 - INFO - Key statistics for step 22: {'key22': 34, 'key23': 68, 'key27': 198}
+2024-10-06 00:29:32 - INFO - Key statistics for step 23: {'key17': 1, 'key22': 45, 'key23': 205, 'key27': 47, 'key9': 2}
+2024-10-06 00:29:32 - INFO - Key statistics for step 24: {'key22': 1, 'key23': 196, 'key27': 53, 'key9': 50}
+2024-10-06 00:29:32 - INFO - Key statistics for step 25: {'key23': 197, 'key27': 51, 'key9': 52}
+2024-10-06 00:29:32 - INFO - Key statistics for step 26: {'key17': 2, 'key22': 2, 'key23': 220, 'key27': 35, 'key9': 41}
+2024-10-06 00:29:32 - INFO - Key statistics for step 27: {'key23': 199, 'key27': 53, 'key9': 48}
+2024-10-06 00:29:32 - INFO - Key statistics for step 28: {'key22': 1, 'key23': 215, 'key27': 40, 'key9': 44}
+2024-10-06 00:29:32 - INFO - Key statistics for step 29: {'key23': 48, 'key27': 37, 'key9': 215}
+2024-10-06 00:29:32 - INFO - Key statistics for step 30: {'key23': 56, 'key27': 59, 'key9': 185}
+2024-10-06 00:29:32 - INFO - Key statistics for step 31: {'key23': 44, 'key27': 38, 'key9': 218}
+2024-10-06 00:29:32 - INFO - Key statistics for step 32: {'key23': 201, 'key27': 48, 'key9': 51}
+2024-10-06 00:29:32 - INFO - Key statistics for step 33: {'key23': 49, 'key27': 43, 'key9': 208}
+2024-10-06 00:29:32 - INFO - Key statistics for step 34: {'key23': 203, 'key27': 46, 'key9': 51}
+2024-10-06 00:29:32 - INFO - Key statistics for step 35: {'key23': 212, 'key25': 2, 'key27': 54, 'key9': 32}
+2024-10-06 00:29:32 - INFO - Key statistics for step 36: {'key20': 1, 'key23': 49, 'key27': 202, 'key9': 48}
+2024-10-06 00:29:32 - INFO - Key statistics for step 37: {'key23': 206, 'key25': 1, 'key27': 49, 'key9': 44}
+2024-10-06 00:29:32 - INFO - Key statistics for step 38: {'key20': 1, 'key23': 54, 'key25': 34, 'key27': 210, 'key9': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 39: {'key23': 47, 'key25': 48, 'key27': 205}
+2024-10-06 00:29:32 - INFO - Key statistics for step 40: {'key23': 1, 'key25': 204, 'key27': 53, 'key9': 42}
+2024-10-06 00:29:32 - INFO - Key statistics for step 41: {'key23': 1, 'key25': 206, 'key27': 45, 'key9': 48}
+2024-10-06 00:29:32 - INFO - Key statistics for step 42: {'key23': 41, 'key25': 44, 'key9': 215}
+2024-10-06 00:29:32 - INFO - Key statistics for step 43: {'key17': 1, 'key23': 46, 'key25': 41, 'key27': 1, 'key9': 211}
+2024-10-06 00:29:32 - INFO - Key statistics for step 44: {'key23': 42, 'key25': 45, 'key9': 213}
+2024-10-06 00:29:32 - INFO - Key statistics for step 45: {'key23': 55, 'key25': 45, 'key9': 200}
+2024-10-06 00:29:32 - INFO - Key statistics for step 46: {'key23': 43, 'key25': 53, 'key27': 3, 'key9': 201}
+2024-10-06 00:29:32 - INFO - Key statistics for step 47: {'key23': 41, 'key25': 30, 'key9': 229}
+2024-10-06 00:29:32 - INFO - Key statistics for step 48: {'key23': 44, 'key25': 52, 'key9': 204}
+2024-10-06 00:29:32 - INFO - Key statistics for step 49: {'key17': 37, 'key23': 1, 'key25': 54, 'key9': 208}
+2024-10-06 00:29:32 - INFO - Key statistics for step 50: {'key0': 1, 'key17': 35, 'key25': 217, 'key9': 47}
+2024-10-06 00:29:32 - INFO - Key statistics for step 51: {'key0': 36, 'key25': 46, 'key9': 218}
+2024-10-06 00:29:32 - INFO - Key statistics for step 52: {'key0': 1, 'key17': 45, 'key25': 48, 'key9': 206}
+2024-10-06 00:29:32 - INFO - Key statistics for step 53: {'key0': 42, 'key17': 1, 'key25': 199, 'key9': 58}
+2024-10-06 00:29:32 - INFO - Key statistics for step 54: {'key0': 51, 'key25': 207, 'key9': 42}
+2024-10-06 00:29:32 - INFO - Key statistics for step 55: {'key0': 55, 'key17': 47, 'key25': 197, 'key9': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 56: {'key0': 51, 'key25': 214, 'key9': 35}
+2024-10-06 00:29:32 - INFO - Key statistics for step 57: {'key0': 217, 'key17': 2, 'key25': 44, 'key9': 37}
+2024-10-06 00:29:32 - INFO - Key statistics for step 58: {'key0': 51, 'key17': 1, 'key25': 202, 'key9': 46}
+2024-10-06 00:29:32 - INFO - Key statistics for step 59: {'key0': 210, 'key17': 41, 'key25': 47, 'key9': 2}
+2024-10-06 00:29:32 - INFO - Key statistics for step 60: {'key0': 214, 'key17': 47, 'key25': 39}
+2024-10-06 00:29:32 - INFO - Key statistics for step 61: {'key0': 58, 'key17': 209, 'key2': 1, 'key22': 31, 'key25': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 62: {'key0': 202, 'key17': 57, 'key22': 1, 'key25': 40}
+2024-10-06 00:29:32 - INFO - Key statistics for step 63: {'key0': 53, 'key17': 198, 'key22': 48, 'key25': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 64: {'key0': 44, 'key17': 198, 'key22': 57, 'key25': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 65: {'key0': 56, 'key17': 197, 'key22': 46, 'key25': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 66: {'key0': 191, 'key17': 54, 'key22': 1, 'key25': 54}
+2024-10-06 00:29:32 - INFO - Key statistics for step 67: {'key0': 57, 'key17': 189, 'key22': 53, 'key25': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 68: {'key0': 56, 'key17': 192, 'key22': 52}
+2024-10-06 00:29:32 - INFO - Key statistics for step 69: {'key0': 206, 'key17': 51, 'key2': 1, 'key22': 2, 'key23': 40}
+2024-10-06 00:29:32 - INFO - Key statistics for step 70: {'key0': 64, 'key17': 200, 'key23': 36}
+2024-10-06 00:29:32 - INFO - Key statistics for step 71: {'key0': 35, 'key17': 223, 'key22': 1, 'key23': 41}
+2024-10-06 00:29:32 - INFO - Key statistics for step 72: {'key0': 42, 'key17': 50, 'key2': 2, 'key23': 206}
+2024-10-06 00:29:32 - INFO - Key statistics for step 73: {'key17': 206, 'key2': 45, 'key23': 49}
+2024-10-06 00:29:32 - INFO - Key statistics for step 74: {'key0': 1, 'key17': 201, 'key2': 58, 'key23': 40}
+2024-10-06 00:29:32 - INFO - Key statistics for step 75: {'key0': 44, 'key17': 47, 'key2': 209}
+2024-10-06 00:29:32 - INFO - Key statistics for step 76: {'key0': 53, 'key17': 50, 'key2': 196, 'key22': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 77: {'key0': 190, 'key17': 53, 'key2': 55, 'key22': 1, 'key23': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 78: {'key0': 49, 'key2': 206, 'key23': 45}
+2024-10-06 00:29:32 - INFO - Key statistics for step 79: {'key0': 208, 'key17': 44, 'key2': 47, 'key23': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 80: {'key0': 201, 'key17': 51, 'key2': 47, 'key23': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 81: {'key0': 216, 'key17': 37, 'key2': 47}
+2024-10-06 00:29:32 - INFO - Key statistics for step 82: {'key0': 52, 'key2': 199, 'key20': 49}
+2024-10-06 00:29:32 - INFO - Key statistics for step 83: {'key0': 36, 'key17': 1, 'key2': 217, 'key20': 45, 'key23': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 84: {'key0': 1, 'key2': 54, 'key20': 200, 'key23': 45}
+2024-10-06 00:29:32 - INFO - Key statistics for step 85: {'key2': 201, 'key20': 57, 'key23': 42}
+2024-10-06 00:29:32 - INFO - Key statistics for step 86: {'key2': 188, 'key20': 42, 'key22': 1, 'key23': 69}
+2024-10-06 00:29:32 - INFO - Key statistics for step 87: {'key0': 1, 'key2': 204, 'key20': 48, 'key23': 47}
+2024-10-06 00:29:32 - INFO - Key statistics for step 88: {'key0': 1, 'key2': 212, 'key20': 46, 'key23': 41}
+2024-10-06 00:29:32 - INFO - Key statistics for step 89: {'key17': 1, 'key2': 51, 'key20': 204, 'key23': 44}
+2024-10-06 00:29:32 - INFO - Key statistics for step 90: {'key0': 1, 'key2': 205, 'key20': 48, 'key23': 46}
+2024-10-06 00:29:32 - INFO - Key statistics for step 91: {'key0': 1, 'key2': 47, 'key20': 217, 'key23': 35}
+2024-10-06 00:29:32 - INFO - Key statistics for step 92: {'key0': 41, 'key2': 60, 'key20': 198, 'key23': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 93: {'key2': 222, 'key20': 45, 'key23': 33}
+2024-10-06 00:29:32 - INFO - Key statistics for step 94: {'key0': 2, 'key17': 1, 'key2': 217, 'key20': 41, 'key23': 39}
+2024-10-06 00:29:32 - INFO - Key statistics for step 95: {'key0': 1, 'key17': 1, 'key2': 47, 'key20': 208, 'key23': 43}
+2024-10-06 00:29:32 - INFO - Key statistics for step 96: {'key2': 49, 'key20': 215, 'key23': 36}
+2024-10-06 00:29:32 - INFO - Key statistics for step 97: {'key0': 1, 'key2': 203, 'key20': 49, 'key23': 47}
+2024-10-06 00:29:32 - INFO - Key statistics for step 98: {'key2': 49, 'key20': 212, 'key23': 39}
+2024-10-06 00:29:32 - INFO - Key statistics for step 99: {'key0': 51, 'key2': 195, 'key20': 53, 'key23': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 100: {'key0': 50, 'key2': 55, 'key20': 195}
+2024-10-06 00:29:32 - INFO - Key statistics for step 101: {'key0': 1, 'key17': 44, 'key2': 204, 'key20': 51}
+2024-10-06 00:29:32 - INFO - Key statistics for step 102: {'key0': 37, 'key17': 1, 'key2': 40, 'key20': 222}
+2024-10-06 00:29:32 - INFO - Key statistics for step 103: {'key0': 42, 'key17': 1, 'key2': 35, 'key20': 222}
+2024-10-06 00:29:32 - INFO - Key statistics for step 104: {'key0': 208, 'key17': 41, 'key20': 51}
+2024-10-06 00:29:32 - INFO - Key statistics for step 105: {'key0': 55, 'key17': 1, 'key2': 51, 'key20': 193}
+2024-10-06 00:29:32 - INFO - Key statistics for step 106: {'key0': 32, 'key17': 1, 'key2': 67, 'key20': 199, 'key25': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 107: {'key0': 37, 'key17': 1, 'key2': 218, 'key20': 44}
+2024-10-06 00:29:32 - INFO - Key statistics for step 108: {'key0': 41, 'key2': 46, 'key20': 213}
+2024-10-06 00:29:32 - INFO - Key statistics for step 109: {'key0': 36, 'key17': 1, 'key2': 215, 'key20': 48}
+2024-10-06 00:29:32 - INFO - Key statistics for step 110: {'key0': 57, 'key2': 62, 'key20': 181}
+2024-10-06 00:29:32 - INFO - Key statistics for step 111: {'key0': 64, 'key2': 40, 'key20': 196}
+2024-10-06 00:29:32 - INFO - Key statistics for step 112: {'key0': 201, 'key2': 1, 'key20': 52, 'key27': 46}
+2024-10-06 00:29:32 - INFO - Key statistics for step 113: {'key0': 59, 'key20': 195, 'key27': 46}
+2024-10-06 00:29:32 - INFO - Key statistics for step 114: {'key0': 203, 'key2': 47, 'key20': 49, 'key27': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 115: {'key0': 203, 'key17': 1, 'key2': 48, 'key20': 46, 'key27': 2}
+2024-10-06 00:29:32 - INFO - Key statistics for step 116: {'key0': 205, 'key2': 47, 'key20': 1, 'key27': 47}
+2024-10-06 00:29:32 - INFO - Key statistics for step 117: {'key0': 52, 'key2': 201, 'key20': 1, 'key27': 46}
+2024-10-06 00:29:32 - INFO - Key statistics for step 118: {'key0': 49, 'key2': 210, 'key27': 41}
+2024-10-06 00:29:32 - INFO - Key statistics for step 119: {'key0': 210, 'key2': 45, 'key27': 1, 'key6': 44}
+2024-10-06 00:29:32 - INFO - Key statistics for step 120: {'key0': 220, 'key2': 39, 'key6': 41}
+2024-10-06 00:29:32 - INFO - Key statistics for step 121: {'key0': 201, 'key2': 56, 'key6': 43}
+2024-10-06 00:29:32 - INFO - Key statistics for step 122: {'key0': 50, 'key2': 207, 'key20': 43}
+2024-10-06 00:29:32 - INFO - Key statistics for step 123: {'key0': 60, 'key2': 187, 'key6': 53}
+2024-10-06 00:29:32 - INFO - Key statistics for step 124: {'key0': 47, 'key2': 207, 'key27': 1, 'key6': 45}
+2024-10-06 00:29:32 - INFO - Key statistics for step 125: {'key0': 195, 'key2': 53, 'key6': 52}
+2024-10-06 00:29:32 - INFO - Key statistics for step 126: {'key0': 187, 'key2': 56, 'key27': 1, 'key6': 56}
+2024-10-06 00:29:32 - INFO - Key statistics for step 127: {'key0': 206, 'key2': 49, 'key6': 45}
+2024-10-06 00:29:32 - INFO - Key statistics for step 128: {'key0': 57, 'key2': 193, 'key20': 1, 'key27': 47, 'key6': 2}
+2024-10-06 00:29:32 - INFO - Key statistics for step 129: {'key0': 45, 'key2': 202, 'key27': 53}
+2024-10-06 00:29:32 - INFO - Key statistics for step 130: {'key0': 1, 'key2': 196, 'key20': 51, 'key27': 52}
+2024-10-06 00:29:32 - INFO - Key statistics for step 131: {'key0': 47, 'key2': 56, 'key20': 1, 'key27': 196}
+2024-10-06 00:29:32 - INFO - Key statistics for step 132: {'key2': 208, 'key20': 44, 'key27': 48}
+2024-10-06 00:29:32 - INFO - Key statistics for step 133: {'key2': 50, 'key20': 39, 'key27': 211}
+2024-10-06 00:29:32 - INFO - Key statistics for step 134: {'key0': 43, 'key2': 206, 'key20': 1, 'key27': 50}
+2024-10-06 00:29:32 - INFO - Key statistics for step 135: {'key0': 43, 'key2': 47, 'key27': 210}
+2024-10-06 00:29:32 - INFO - Key statistics for step 136: {'key0': 2, 'key19': 45, 'key2': 200, 'key27': 53}
+2024-10-06 00:29:32 - INFO - Key statistics for step 137: {'key0': 40, 'key2': 59, 'key27': 201}
+2024-10-06 00:29:32 - INFO - Key statistics for step 138: {'key19': 46, 'key2': 200, 'key27': 54}
+2024-10-06 00:29:32 - INFO - Key statistics for step 139: {'key19': 48, 'key2': 51, 'key20': 1, 'key27': 200}
+2024-10-06 00:29:32 - INFO - Key statistics for step 140: {'key0': 2, 'key19': 57, 'key2': 50, 'key27': 191}
+2024-10-06 00:29:32 - INFO - Key statistics for step 141: {'key0': 43, 'key19': 208, 'key27': 49}
+2024-10-06 00:29:32 - INFO - Key statistics for step 142: {'key19': 56, 'key2': 53, 'key27': 191}
+2024-10-06 00:29:32 - INFO - Key statistics for step 143: {'key0': 43, 'key19': 207, 'key2': 1, 'key27': 49}
+2024-10-06 00:29:32 - INFO - Key statistics for step 144: {'key0': 43, 'key19': 211, 'key27': 46}
+2024-10-06 00:29:32 - INFO - Key statistics for step 145: {'key0': 46, 'key19': 217, 'key27': 37}
+2024-10-06 00:29:32 - INFO - Key statistics for step 146: {'key0': 222, 'key19': 40, 'key2': 35, 'key20': 1, 'key27': 2}
+2024-10-06 00:29:32 - INFO - Key statistics for step 147: {'key0': 208, 'key19': 43, 'key2': 47, 'key20': 2}
+2024-10-06 00:29:32 - INFO - Key statistics for step 148: {'key0': 216, 'key19': 42, 'key2': 40, 'key20': 1, 'key27': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 149: {'key0': 201, 'key19': 36, 'key2': 63}
+2024-10-06 00:29:32 - INFO - Key statistics for step 150: {'key0': 213, 'key19': 37, 'key2': 49, 'key27': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 151: {'key0': 207, 'key19': 48, 'key2': 45}
+2024-10-06 00:29:32 - INFO - Key statistics for step 152: {'key0': 183, 'key19': 63, 'key2': 51, 'key20': 2, 'key27': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 153: {'key0': 196, 'key19': 57, 'key2': 46, 'key27': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 154: {'key0': 198, 'key19': 49, 'key2': 53}
+2024-10-06 00:29:32 - INFO - Key statistics for step 155: {'key0': 46, 'key2': 208, 'key20': 46}
+2024-10-06 00:29:32 - INFO - Key statistics for step 156: {'key0': 49, 'key2': 200, 'key20': 50, 'key9': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 157: {'key0': 41, 'key2': 45, 'key20': 213, 'key9': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 158: {'key0': 49, 'key19': 2, 'key2': 35, 'key20': 213, 'key9': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 159: {'key0': 49, 'key2': 50, 'key20': 200, 'key9': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 160: {'key0': 42, 'key19': 4, 'key2': 211, 'key20': 43}
+2024-10-06 00:29:32 - INFO - Key statistics for step 161: {'key0': 1, 'key19': 40, 'key2': 53, 'key20': 206}
+2024-10-06 00:29:32 - INFO - Key statistics for step 162: {'key0': 49, 'key19': 1, 'key2': 197, 'key20': 53}
+2024-10-06 00:29:32 - INFO - Key statistics for step 163: {'key0': 52, 'key19': 1, 'key2': 200, 'key20': 46, 'key9': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 164: {'key0': 53, 'key2': 199, 'key20': 1, 'key9': 47}
+2024-10-06 00:29:32 - INFO - Key statistics for step 165: {'key0': 215, 'key2': 49, 'key20': 35, 'key9': 1}
+2024-10-06 00:29:32 - INFO - Key statistics for step 166: {'key0': 51, 'key19': 1, 'key2': 201, 'key20': 1, 'key9': 46}
+2024-10-06 00:29:32 - INFO - Key statistics for step 167: {'key0': 38, 'key19': 2, 'key2': 210, 'key20': 1, 'key9': 49}
+2024-10-06 00:29:32 - INFO - Key statistics for step 168: {'key0': 46, 'key2': 47, 'key20': 1, 'key9': 206}
+2024-10-06 00:29:32 - INFO - Key statistics for step 169: {'key0': 46, 'key2': 203, 'key20': 1, 'key9': 50}
+2024-10-06 00:29:32 - INFO - Key statistics for step 170: {'key0': 42, 'key2': 54, 'key20': 2, 'key9': 202}
+2024-10-06 00:29:32 - INFO - Key statistics for step 171: {'key0': 47, 'key2': 201, 'key9': 52}
+2024-10-06 00:29:32 - INFO - Key statistics for step 172: {'key0': 1, 'key19': 46, 'key2': 50, 'key9': 203}
+2024-10-06 00:29:32 - INFO - Key statistics for step 173: {'key19': 45, 'key2': 203, 'key9': 52}
+2024-10-06 00:29:32 - INFO - Key statistics for step 174: {'key0': 1, 'key19': 46, 'key2': 55, 'key9': 198}
+2024-10-06 00:29:32 - INFO - Key statistics for step 175: {'key0': 46, 'key2': 47, 'key9': 207}
+2024-10-06 00:29:32 - INFO - Key statistics for step 176: {'key0': 2, 'key19': 43, 'key2': 204, 'key9': 51}
+2024-10-06 00:29:32 - INFO - Key statistics for step 177: {'key0': 45, 'key19': 2, 'key2': 193, 'key9': 60}
+2024-10-06 00:29:32 - INFO - Key statistics for step 178: {'key0': 41, 'key19': 1, 'key2': 203, 'key20': 1, 'key9': 54}
+2024-10-06 00:29:32 - INFO - Key statistics for step 179: {'key0': 40, 'key2': 216, 'key20': 1, 'key9': 43}
+2024-10-06 00:29:32 - INFO - Key statistics for step 180: {'key0': 40, 'key2': 46, 'key20': 2, 'key9': 212}
+2024-10-06 00:29:32 - INFO - Key statistics for step 181: {'key2': 49, 'key20': 47, 'key9': 204}
+2024-10-06 00:29:32 - INFO - Key statistics for step 182: {'key2': 203, 'key20': 46, 'key9': 51}
+2024-10-06 00:29:32 - INFO - Key statistics for step 183: {'key0': 43, 'key2': 50, 'key9': 207}
+2024-10-06 00:29:32 - INFO - Key statistics for step 184: {'key2': 213, 'key20': 40, 'key9': 47}
+2024-10-06 00:29:32 - INFO - Key statistics for step 185: {'key0': 1, 'key2': 52, 'key20': 51, 'key9': 196}
+2024-10-06 00:29:32 - INFO - Key statistics for step 186: {'key17': 1, 'key2': 45, 'key20': 54, 'key9': 200}
+2024-10-06 00:29:32 - INFO - Key statistics for step 187: {'key17': 51, 'key2': 1, 'key20': 52, 'key9': 196}
+2024-10-06 00:29:32 - INFO - Key statistics for step 188: {'key17': 51, 'key20': 47, 'key9': 202}
+2024-10-06 00:29:32 - INFO - Key statistics for step 189: {'key0': 2, 'key17': 208, 'key2': 2, 'key20': 35, 'key9': 53}
+2024-10-06 00:29:32 - INFO - Key statistics for step 190: {'key0': 1, 'key17': 47, 'key2': 45, 'key20': 1, 'key9': 206}
+2024-10-06 00:29:32 - INFO - Key statistics for step 191: {'key17': 196, 'key2': 1, 'key20': 44, 'key9': 59}
+2024-10-06 00:29:32 - INFO - Key statistics for step 192: {'key17': 203, 'key20': 40, 'key9': 57}
+2024-10-06 00:29:32 - INFO - Key statistics for step 193: {'key0': 2, 'key17': 51, 'key2': 2, 'key20': 43, 'key9': 202}
+2024-10-06 00:29:32 - INFO - Key statistics for step 194: {'key0': 41, 'key17': 61, 'key9': 198}
+2024-10-06 00:29:32 - INFO - Key statistics for step 195: {'key0': 38, 'key17': 46, 'key9': 216}
+2024-10-06 00:29:32 - INFO - Key statistics for step 196: {'key0': 53, 'key17': 38, 'key9': 209}
+2024-10-06 00:29:32 - INFO - Key statistics for step 197: {'key0': 46, 'key17': 1, 'key25': 39, 'key9': 214}
+2024-10-06 00:29:32 - INFO - Key statistics for step 198: {'key0': 51, 'key20': 2, 'key25': 53, 'key9': 194}
+2024-10-06 00:29:32 - INFO - Key statistics for step 199: {'key0': 52, 'key17': 1, 'key20': 1, 'key25': 46, 'key9': 200}

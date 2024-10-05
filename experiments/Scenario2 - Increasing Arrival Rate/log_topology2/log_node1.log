@@ -1,0 +1,200 @@
+2024-10-06 00:26:12 - INFO - Step 0 - Processed 0 keys using 0 cycles - Node load 0.0%
+2024-10-06 00:26:12 - INFO - Step 1 - Processed 0 keys using 0 cycles - Node load 0.0%
+2024-10-06 00:26:12 - INFO - Step 2 - Processed 0 keys using 0 cycles - Node load 0.0%
+2024-10-06 00:26:12 - INFO - Step 3 - Processed 0 keys using 0 cycles - Node load 0.0%
+2024-10-06 00:26:12 - INFO - Step 4 - Processed 0 keys using 0 cycles - Node load 0.0%
+2024-10-06 00:26:12 - INFO - Step 5 - Processed 44 keys using 43 cycles - Node load 1.4333333333333333%
+2024-10-06 00:26:12 - INFO - Step 6 - Processed 46 keys using 44 cycles - Node load 1.4666666666666666%
+2024-10-06 00:26:12 - INFO - Step 7 - Processed 47 keys using 45 cycles - Node load 1.5%
+2024-10-06 00:26:12 - INFO - Step 8 - Processed 49 keys using 48 cycles - Node load 1.6%
+2024-10-06 00:26:12 - INFO - Step 9 - Processed 50 keys using 50 cycles - Node load 1.6666666666666667%
+2024-10-06 00:26:12 - INFO - Step 10 - Processed 52 keys using 53 cycles - Node load 1.7666666666666666%
+2024-10-06 00:26:12 - INFO - Step 11 - Processed 53 keys using 55 cycles - Node load 1.8333333333333333%
+2024-10-06 00:26:12 - INFO - Step 12 - Processed 54 keys using 56 cycles - Node load 1.8666666666666667%
+2024-10-06 00:26:12 - INFO - Step 13 - Processed 56 keys using 57 cycles - Node load 1.9%
+2024-10-06 00:26:12 - INFO - Step 14 - Processed 58 keys using 59 cycles - Node load 1.9666666666666666%
+2024-10-06 00:26:12 - INFO - Step 15 - Processed 60 keys using 60 cycles - Node load 2.0%
+2024-10-06 00:26:12 - INFO - Step 16 - Processed 62 keys using 62 cycles - Node load 2.066666666666667%
+2024-10-06 00:26:12 - INFO - Step 17 - Processed 67 keys using 67 cycles - Node load 2.2333333333333334%
+2024-10-06 00:26:12 - INFO - Step 18 - Processed 69 keys using 70 cycles - Node load 2.3333333333333335%
+2024-10-06 00:26:12 - INFO - Step 19 - Processed 72 keys using 74 cycles - Node load 2.466666666666667%
+2024-10-06 00:26:12 - INFO - Step 20 - Processed 75 keys using 78 cycles - Node load 2.6%
+2024-10-06 00:26:12 - INFO - Step 21 - Processed 78 keys using 81 cycles - Node load 2.7%
+2024-10-06 00:26:12 - INFO - Step 22 - Processed 78 keys using 80 cycles - Node load 2.6666666666666665%
+2024-10-06 00:26:12 - INFO - Step 23 - Processed 81 keys using 84 cycles - Node load 2.8%
+2024-10-06 00:26:12 - INFO - Step 24 - Processed 84 keys using 88 cycles - Node load 2.933333333333333%
+2024-10-06 00:26:12 - INFO - Step 25 - Processed 86 keys using 88 cycles - Node load 2.933333333333333%
+2024-10-06 00:26:12 - INFO - Step 26 - Processed 87 keys using 92 cycles - Node load 3.066666666666667%
+2024-10-06 00:26:12 - INFO - Step 27 - Processed 89 keys using 95 cycles - Node load 3.1666666666666665%
+2024-10-06 00:26:12 - INFO - Step 28 - Processed 92 keys using 98 cycles - Node load 3.2666666666666666%
+2024-10-06 00:26:12 - INFO - Step 29 - Processed 95 keys using 102 cycles - Node load 3.4%
+2024-10-06 00:26:12 - INFO - Step 30 - Processed 101 keys using 110 cycles - Node load 3.6666666666666665%
+2024-10-06 00:26:12 - INFO - Step 31 - Processed 105 keys using 114 cycles - Node load 3.8%
+2024-10-06 00:26:12 - INFO - Step 32 - Processed 109 keys using 120 cycles - Node load 4.0%
+2024-10-06 00:26:12 - INFO - Step 33 - Processed 112 keys using 128 cycles - Node load 4.266666666666667%
+2024-10-06 00:26:12 - INFO - Step 34 - Processed 115 keys using 132 cycles - Node load 4.4%
+2024-10-06 00:26:12 - INFO - Step 35 - Processed 116 keys using 136 cycles - Node load 4.533333333333333%
+2024-10-06 00:26:12 - INFO - Step 36 - Processed 119 keys using 139 cycles - Node load 4.633333333333334%
+2024-10-06 00:26:12 - INFO - Step 37 - Processed 124 keys using 148 cycles - Node load 4.933333333333334%
+2024-10-06 00:26:12 - INFO - Step 38 - Processed 129 keys using 153 cycles - Node load 5.1%
+2024-10-06 00:26:12 - INFO - Step 39 - Processed 135 keys using 164 cycles - Node load 5.466666666666667%
+2024-10-06 00:26:12 - INFO - Step 40 - Processed 140 keys using 171 cycles - Node load 5.7%
+2024-10-06 00:26:12 - INFO - Step 41 - Processed 146 keys using 179 cycles - Node load 5.966666666666667%
+2024-10-06 00:26:12 - INFO - Step 42 - Processed 153 keys using 191 cycles - Node load 6.366666666666666%
+2024-10-06 00:26:12 - INFO - Step 43 - Processed 159 keys using 202 cycles - Node load 6.733333333333333%
+2024-10-06 00:26:12 - INFO - Step 44 - Processed 162 keys using 208 cycles - Node load 6.933333333333334%
+2024-10-06 00:26:12 - INFO - Step 45 - Processed 169 keys using 218 cycles - Node load 7.266666666666667%
+2024-10-06 00:26:12 - INFO - Step 46 - Processed 173 keys using 223 cycles - Node load 7.433333333333334%
+2024-10-06 00:26:12 - INFO - Step 47 - Processed 175 keys using 225 cycles - Node load 7.5%
+2024-10-06 00:26:12 - INFO - Step 48 - Processed 176 keys using 225 cycles - Node load 7.5%
+2024-10-06 00:26:12 - INFO - Step 49 - Processed 182 keys using 236 cycles - Node load 7.866666666666666%
+2024-10-06 00:26:12 - INFO - Step 50 - Processed 181 keys using 235 cycles - Node load 7.833333333333333%
+2024-10-06 00:26:12 - INFO - Step 51 - Processed 185 keys using 242 cycles - Node load 8.066666666666666%
+2024-10-06 00:26:12 - INFO - Step 52 - Processed 188 keys using 245 cycles - Node load 8.166666666666666%
+2024-10-06 00:26:12 - INFO - Step 53 - Processed 190 keys using 250 cycles - Node load 8.333333333333334%
+2024-10-06 00:26:12 - INFO - Step 54 - Processed 190 keys using 249 cycles - Node load 8.3%
+2024-10-06 00:26:12 - INFO - Step 55 - Processed 196 keys using 257 cycles - Node load 8.566666666666666%
+2024-10-06 00:26:12 - INFO - Step 56 - Processed 202 keys using 265 cycles - Node load 8.833333333333334%
+2024-10-06 00:26:12 - INFO - Step 57 - Processed 207 keys using 272 cycles - Node load 9.066666666666666%
+2024-10-06 00:26:12 - INFO - Step 58 - Processed 215 keys using 285 cycles - Node load 9.5%
+2024-10-06 00:26:12 - INFO - Step 59 - Processed 224 keys using 301 cycles - Node load 10.033333333333333%
+2024-10-06 00:26:12 - INFO - Step 60 - Processed 231 keys using 311 cycles - Node load 10.366666666666667%
+2024-10-06 00:26:12 - INFO - Step 61 - Processed 235 keys using 318 cycles - Node load 10.6%
+2024-10-06 00:26:12 - INFO - Step 62 - Processed 242 keys using 331 cycles - Node load 11.033333333333333%
+2024-10-06 00:26:12 - INFO - Step 63 - Processed 250 keys using 345 cycles - Node load 11.5%
+2024-10-06 00:26:12 - INFO - Step 64 - Processed 252 keys using 349 cycles - Node load 11.633333333333333%
+2024-10-06 00:26:12 - INFO - Step 65 - Processed 258 keys using 360 cycles - Node load 12.0%
+2024-10-06 00:26:12 - INFO - Step 66 - Processed 266 keys using 375 cycles - Node load 12.5%
+2024-10-06 00:26:12 - INFO - Step 67 - Processed 273 keys using 387 cycles - Node load 12.9%
+2024-10-06 00:26:12 - INFO - Step 68 - Processed 278 keys using 394 cycles - Node load 13.133333333333333%
+2024-10-06 00:26:12 - INFO - Step 69 - Processed 289 keys using 413 cycles - Node load 13.766666666666667%
+2024-10-06 00:26:12 - INFO - Step 70 - Processed 294 keys using 421 cycles - Node load 14.033333333333333%
+2024-10-06 00:26:12 - INFO - Step 71 - Processed 297 keys using 427 cycles - Node load 14.233333333333333%
+2024-10-06 00:26:12 - INFO - Step 72 - Processed 304 keys using 441 cycles - Node load 14.7%
+2024-10-06 00:26:12 - INFO - Step 73 - Processed 309 keys using 450 cycles - Node load 15.0%
+2024-10-06 00:26:12 - INFO - Step 74 - Processed 312 keys using 455 cycles - Node load 15.166666666666666%
+2024-10-06 00:26:12 - INFO - Step 75 - Processed 320 keys using 468 cycles - Node load 15.6%
+2024-10-06 00:26:12 - INFO - Step 76 - Processed 327 keys using 477 cycles - Node load 15.9%
+2024-10-06 00:26:12 - INFO - Step 77 - Processed 332 keys using 487 cycles - Node load 16.233333333333334%
+2024-10-06 00:26:12 - INFO - Step 78 - Processed 341 keys using 504 cycles - Node load 16.8%
+2024-10-06 00:26:12 - INFO - Step 79 - Processed 351 keys using 524 cycles - Node load 17.466666666666665%
+2024-10-06 00:26:12 - INFO - Step 80 - Processed 359 keys using 539 cycles - Node load 17.966666666666665%
+2024-10-06 00:26:12 - INFO - Step 81 - Processed 369 keys using 557 cycles - Node load 18.566666666666666%
+2024-10-06 00:26:12 - INFO - Step 82 - Processed 378 keys using 573 cycles - Node load 19.1%
+2024-10-06 00:26:12 - INFO - Step 83 - Processed 385 keys using 588 cycles - Node load 19.6%
+2024-10-06 00:26:12 - INFO - Step 84 - Processed 393 keys using 605 cycles - Node load 20.166666666666668%
+2024-10-06 00:26:12 - INFO - Step 85 - Processed 401 keys using 621 cycles - Node load 20.7%
+2024-10-06 00:26:12 - INFO - Step 86 - Processed 408 keys using 633 cycles - Node load 21.1%
+2024-10-06 00:26:12 - INFO - Step 87 - Processed 415 keys using 646 cycles - Node load 21.533333333333335%
+2024-10-06 00:26:12 - INFO - Step 88 - Processed 423 keys using 661 cycles - Node load 22.033333333333335%
+2024-10-06 00:26:12 - INFO - Step 89 - Processed 431 keys using 678 cycles - Node load 22.6%
+2024-10-06 00:26:12 - INFO - Step 90 - Processed 437 keys using 690 cycles - Node load 23.0%
+2024-10-06 00:26:12 - INFO - Step 91 - Processed 444 keys using 704 cycles - Node load 23.466666666666665%
+2024-10-06 00:26:12 - INFO - Step 92 - Processed 450 keys using 716 cycles - Node load 23.866666666666667%
+2024-10-06 00:26:13 - INFO - Step 93 - Processed 461 keys using 736 cycles - Node load 24.533333333333335%
+2024-10-06 00:26:13 - INFO - Step 94 - Processed 468 keys using 750 cycles - Node load 25.0%
+2024-10-06 00:26:13 - INFO - Step 95 - Processed 479 keys using 771 cycles - Node load 25.7%
+2024-10-06 00:26:13 - INFO - Step 96 - Processed 493 keys using 798 cycles - Node load 26.6%
+2024-10-06 00:26:13 - INFO - Step 97 - Processed 508 keys using 827 cycles - Node load 27.566666666666666%
+2024-10-06 00:26:13 - INFO - Step 98 - Processed 519 keys using 851 cycles - Node load 28.366666666666667%
+2024-10-06 00:26:13 - INFO - Step 99 - Processed 532 keys using 878 cycles - Node load 29.266666666666666%
+2024-10-06 00:26:13 - INFO - Step 100 - Processed 552 keys using 918 cycles - Node load 30.6%
+2024-10-06 00:26:13 - INFO - Step 101 - Processed 568 keys using 951 cycles - Node load 31.7%
+2024-10-06 00:26:13 - INFO - Step 102 - Processed 581 keys using 978 cycles - Node load 32.6%
+2024-10-06 00:26:13 - INFO - Step 103 - Processed 597 keys using 1012 cycles - Node load 33.733333333333334%
+2024-10-06 00:26:13 - INFO - Step 104 - Processed 615 keys using 1049 cycles - Node load 34.96666666666667%
+2024-10-06 00:26:13 - INFO - Step 105 - Processed 628 keys using 1076 cycles - Node load 35.86666666666667%
+2024-10-06 00:26:13 - INFO - Step 106 - Processed 635 keys using 1090 cycles - Node load 36.333333333333336%
+2024-10-06 00:26:13 - INFO - Step 107 - Processed 649 keys using 1120 cycles - Node load 37.333333333333336%
+2024-10-06 00:26:13 - INFO - Step 108 - Processed 663 keys using 1149 cycles - Node load 38.3%
+2024-10-06 00:26:13 - INFO - Step 109 - Processed 680 keys using 1186 cycles - Node load 39.53333333333333%
+2024-10-06 00:26:13 - INFO - Step 110 - Processed 693 keys using 1215 cycles - Node load 40.5%
+2024-10-06 00:26:13 - INFO - Step 111 - Processed 714 keys using 1261 cycles - Node load 42.03333333333333%
+2024-10-06 00:26:13 - INFO - Step 112 - Processed 735 keys using 1307 cycles - Node load 43.56666666666667%
+2024-10-06 00:26:13 - INFO - Step 113 - Processed 759 keys using 1359 cycles - Node load 45.3%
+2024-10-06 00:26:13 - INFO - Step 114 - Processed 770 keys using 1381 cycles - Node load 46.03333333333333%
+2024-10-06 00:26:13 - INFO - Step 115 - Processed 782 keys using 1409 cycles - Node load 46.96666666666667%
+2024-10-06 00:26:13 - INFO - Step 116 - Processed 801 keys using 1451 cycles - Node load 48.36666666666667%
+2024-10-06 00:26:13 - INFO - Step 117 - Processed 821 keys using 1497 cycles - Node load 49.9%
+2024-10-06 00:26:13 - INFO - Step 118 - Processed 834 keys using 1527 cycles - Node load 50.9%
+2024-10-06 00:26:13 - INFO - Step 119 - Processed 857 keys using 1577 cycles - Node load 52.56666666666667%
+2024-10-06 00:26:13 - INFO - Step 120 - Processed 880 keys using 1629 cycles - Node load 54.3%
+2024-10-06 00:26:13 - INFO - Step 121 - Processed 895 keys using 1663 cycles - Node load 55.43333333333333%
+2024-10-06 00:26:13 - INFO - Step 122 - Processed 915 keys using 1709 cycles - Node load 56.96666666666667%
+2024-10-06 00:26:13 - INFO - Step 123 - Processed 934 keys using 1753 cycles - Node load 58.43333333333333%
+2024-10-06 00:26:13 - INFO - Step 124 - Processed 956 keys using 1802 cycles - Node load 60.06666666666667%
+2024-10-06 00:26:13 - INFO - Step 125 - Processed 975 keys using 1846 cycles - Node load 61.53333333333333%
+2024-10-06 00:26:13 - INFO - Step 126 - Processed 993 keys using 1888 cycles - Node load 62.93333333333333%
+2024-10-06 00:26:13 - INFO - Step 127 - Processed 1007 keys using 1921 cycles - Node load 64.03333333333333%
+2024-10-06 00:26:13 - INFO - Step 128 - Processed 1028 keys using 1970 cycles - Node load 65.66666666666667%
+2024-10-06 00:26:13 - INFO - Step 129 - Processed 1047 keys using 2015 cycles - Node load 67.16666666666667%
+2024-10-06 00:26:13 - INFO - Step 130 - Processed 1071 keys using 2072 cycles - Node load 69.06666666666666%
+2024-10-06 00:26:14 - INFO - Step 131 - Processed 1095 keys using 2127 cycles - Node load 70.9%
+2024-10-06 00:26:14 - INFO - Step 132 - Processed 1124 keys using 2195 cycles - Node load 73.16666666666667%
+2024-10-06 00:26:14 - INFO - Step 133 - Processed 1146 keys using 2249 cycles - Node load 74.96666666666667%
+2024-10-06 00:26:14 - INFO - Step 134 - Processed 1172 keys using 2312 cycles - Node load 77.06666666666666%
+2024-10-06 00:26:14 - INFO - Step 135 - Processed 1196 keys using 2367 cycles - Node load 78.9%
+2024-10-06 00:26:14 - INFO - Step 136 - Processed 1231 keys using 2453 cycles - Node load 81.76666666666667%
+2024-10-06 00:26:14 - INFO - Step 137 - Processed 1253 keys using 2507 cycles - Node load 83.56666666666666%
+2024-10-06 00:26:14 - INFO - Step 138 - Processed 1285 keys using 2584 cycles - Node load 86.13333333333334%
+2024-10-06 00:26:14 - INFO - Step 139 - Processed 1313 keys using 2650 cycles - Node load 88.33333333333333%
+2024-10-06 00:26:14 - INFO - Step 140 - Processed 1341 keys using 2720 cycles - Node load 90.66666666666667%
+2024-10-06 00:26:14 - INFO - Step 141 - Processed 1366 keys using 2779 cycles - Node load 92.63333333333334%
+2024-10-06 00:26:14 - INFO - Step 142 - Processed 1398 keys using 2858 cycles - Node load 95.26666666666667%
+2024-10-06 00:26:14 - INFO - Step 143 - Processed 1425 keys using 2924 cycles - Node load 97.46666666666667%
+2024-10-06 00:26:14 - INFO - Step 144 - Processed 1454 keys using 2999 cycles - Node load 99.96666666666667% - Overdue keys: 2
+2024-10-06 00:26:14 - INFO - Step 145 - Processed 1455 keys using 2999 cycles - Node load 99.96666666666667% - Overdue keys: 40
+2024-10-06 00:26:14 - INFO - Step 146 - Processed 1481 keys using 3000 cycles - Node load 100.0% - Overdue keys: 85
+2024-10-06 00:26:14 - INFO - Step 147 - Processed 1504 keys using 2999 cycles - Node load 99.96666666666667% - Overdue keys: 139
+2024-10-06 00:26:14 - INFO - Step 148 - Processed 1528 keys using 2998 cycles - Node load 99.93333333333334% - Overdue keys: 206
+2024-10-06 00:26:14 - INFO - Step 149 - Processed 1552 keys using 2998 cycles - Node load 99.93333333333334% - Overdue keys: 271
+2024-10-06 00:26:14 - INFO - Step 150 - Processed 1572 keys using 2998 cycles - Node load 99.93333333333334% - Overdue keys: 343
+2024-10-06 00:26:14 - INFO - Step 151 - Processed 1591 keys using 3000 cycles - Node load 100.0% - Overdue keys: 428
+2024-10-06 00:26:14 - INFO - Step 152 - Processed 1607 keys using 2999 cycles - Node load 99.96666666666667% - Overdue keys: 530
+2024-10-06 00:26:14 - INFO - Step 153 - Processed 1625 keys using 2998 cycles - Node load 99.93333333333334% - Overdue keys: 637
+2024-10-06 00:26:15 - INFO - Step 154 - Processed 1637 keys using 2999 cycles - Node load 99.96666666666667% - Overdue keys: 764
+2024-10-06 00:26:15 - INFO - Step 155 - Processed 1643 keys using 2999 cycles - Node load 99.96666666666667% - Overdue keys: 917
+2024-10-06 00:26:15 - INFO - Step 156 - Processed 1644 keys using 2999 cycles - Node load 99.96666666666667% - Overdue keys: 1099
+2024-10-06 00:26:15 - INFO - Step 157 - Processed 1626 keys using 3000 cycles - Node load 100.0% - Overdue keys: 1330
+2024-10-06 00:26:15 - INFO - Step 158 - Processed 1562 keys using 3000 cycles - Node load 100.0% - Overdue keys: 1666
+2024-10-06 00:26:15 - INFO - Step 159 - Processed 1455 keys using 3000 cycles - Node load 100.0% - Overdue keys: 2155
+2024-10-06 00:26:15 - INFO - Step 160 - Processed 1557 keys using 3000 cycles - Node load 100.0% - Overdue keys: 2575
+2024-10-06 00:26:15 - INFO - Step 161 - Processed 1634 keys using 3000 cycles - Node load 100.0% - Overdue keys: 2952
+2024-10-06 00:26:15 - INFO - Step 162 - Processed 1643 keys using 3000 cycles - Node load 100.0% - Overdue keys: 3359
+2024-10-06 00:26:15 - INFO - Step 163 - Processed 1572 keys using 3000 cycles - Node load 100.0% - Overdue keys: 3874
+2024-10-06 00:26:15 - INFO - Step 164 - Processed 1455 keys using 3000 cycles - Node load 100.0% - Overdue keys: 4542
+2024-10-06 00:26:15 - INFO - Step 165 - Processed 1454 keys using 3000 cycles - Node load 100.0% - Overdue keys: 4926 - Expired keys: 333
+2024-10-06 00:26:15 - INFO - Step 166 - Processed 1455 keys using 3000 cycles - Node load 100.0% - Overdue keys: 5056 - Expired keys: 632
+2024-10-06 00:26:15 - INFO - Step 167 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 5187 - Expired keys: 670
+2024-10-06 00:26:15 - INFO - Step 168 - Processed 1455 keys using 3000 cycles - Node load 100.0% - Overdue keys: 5319 - Expired keys: 715
+2024-10-06 00:26:15 - INFO - Step 169 - Processed 1455 keys using 3000 cycles - Node load 100.0% - Overdue keys: 5448 - Expired keys: 761
+2024-10-06 00:26:15 - INFO - Step 170 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 5581 - Expired keys: 801
+2024-10-06 00:26:16 - INFO - Step 171 - Processed 1455 keys using 3000 cycles - Node load 100.0% - Overdue keys: 5718 - Expired keys: 846
+2024-10-06 00:26:16 - INFO - Step 172 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 5862 - Expired keys: 890
+2024-10-06 00:26:16 - INFO - Step 173 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 6009 - Expired keys: 936
+2024-10-06 00:26:16 - INFO - Step 174 - Processed 1455 keys using 3000 cycles - Node load 100.0% - Overdue keys: 6170 - Expired keys: 982
+2024-10-06 00:26:16 - INFO - Step 175 - Processed 1455 keys using 3000 cycles - Node load 100.0% - Overdue keys: 6331 - Expired keys: 1033
+2024-10-06 00:26:16 - INFO - Step 176 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 6502 - Expired keys: 1084
+2024-10-06 00:26:16 - INFO - Step 177 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 6669 - Expired keys: 1142
+2024-10-06 00:26:16 - INFO - Step 178 - Processed 1455 keys using 3000 cycles - Node load 100.0% - Overdue keys: 6845 - Expired keys: 1194
+2024-10-06 00:26:16 - INFO - Step 179 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 7024 - Expired keys: 1255
+2024-10-06 00:26:16 - INFO - Step 180 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 7213 - Expired keys: 1311
+2024-10-06 00:26:16 - INFO - Step 181 - Processed 1457 keys using 3000 cycles - Node load 100.0% - Overdue keys: 7409 - Expired keys: 1368
+2024-10-06 00:26:16 - INFO - Step 182 - Processed 1457 keys using 3000 cycles - Node load 100.0% - Overdue keys: 7606 - Expired keys: 1434
+2024-10-06 00:26:16 - INFO - Step 183 - Processed 1457 keys using 3000 cycles - Node load 100.0% - Overdue keys: 7803 - Expired keys: 1499
+2024-10-06 00:26:16 - INFO - Step 184 - Processed 1457 keys using 3000 cycles - Node load 100.0% - Overdue keys: 7999 - Expired keys: 1563
+2024-10-06 00:26:16 - INFO - Step 185 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 8201 - Expired keys: 1631
+2024-10-06 00:26:17 - INFO - Step 186 - Processed 1455 keys using 3000 cycles - Node load 100.0% - Overdue keys: 8397 - Expired keys: 1697
+2024-10-06 00:26:17 - INFO - Step 187 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 8600 - Expired keys: 1760
+2024-10-06 00:26:17 - INFO - Step 188 - Processed 1457 keys using 3000 cycles - Node load 100.0% - Overdue keys: 8802 - Expired keys: 1834
+2024-10-06 00:26:17 - INFO - Step 189 - Processed 1457 keys using 3000 cycles - Node load 100.0% - Overdue keys: 9010 - Expired keys: 1891
+2024-10-06 00:26:17 - INFO - Step 190 - Processed 1459 keys using 3000 cycles - Node load 100.0% - Overdue keys: 9205 - Expired keys: 1962
+2024-10-06 00:26:17 - INFO - Step 191 - Processed 1458 keys using 3000 cycles - Node load 100.0% - Overdue keys: 9416 - Expired keys: 2036
+2024-10-06 00:26:17 - INFO - Step 192 - Processed 1458 keys using 3000 cycles - Node load 100.0% - Overdue keys: 9650 - Expired keys: 2098
+2024-10-06 00:26:17 - INFO - Step 193 - Processed 1457 keys using 3000 cycles - Node load 100.0% - Overdue keys: 9906 - Expired keys: 2158
+2024-10-06 00:26:17 - INFO - Step 194 - Processed 1457 keys using 3000 cycles - Node load 100.0% - Overdue keys: 10165 - Expired keys: 2247
+2024-10-06 00:26:17 - INFO - Step 195 - Processed 1455 keys using 3000 cycles - Node load 100.0% - Overdue keys: 10438 - Expired keys: 2333
+2024-10-06 00:26:17 - INFO - Step 196 - Processed 1457 keys using 3000 cycles - Node load 100.0% - Overdue keys: 10714 - Expired keys: 2414
+2024-10-06 00:26:17 - INFO - Step 197 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 10971 - Expired keys: 2507
+2024-10-06 00:26:17 - INFO - Step 198 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 11213 - Expired keys: 2604
+2024-10-06 00:26:17 - INFO - Step 199 - Processed 1456 keys using 3000 cycles - Node load 100.0% - Overdue keys: 11458 - Expired keys: 2692
