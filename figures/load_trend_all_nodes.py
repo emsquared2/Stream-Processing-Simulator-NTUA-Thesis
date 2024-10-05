@@ -26,15 +26,17 @@ def collect_load_data_from_logs(log_folder, node):
 
 
 # Provide the folder path containing log files
-log_folder = "../experiments/Scenario3 - Data Skewness/log_topology1_high"
+log_folder = (
+    "../experiments/Scenario7 - Scalability/4_workers/Scenario3/topology1_high_pkg"
+)
 
 # Provide the list of nodes to read logs for
 # nodes = ["node1", "node2", "node1_aggr", "node4"]
 # nodes = ["node1", "node2", "node5"]
-nodes = ["node1", "node2"]
+# nodes = ["node1", "node2"]
 
 # nodes = ["node1", "node2", "node3", "node4", "node9"]
-# nodes = ["node1", "node2", "node3", "node4", "node9"]
+nodes = ["node1", "node2", "node3", "node4"]
 
 
 # Create a list of colors to pick from
@@ -103,7 +105,7 @@ ax.set_xlim(left=0)
 
 # Add a legend outside the plot
 # ax.legend(loc="upper left", bbox_to_anchor=(1, 1))
-ax.legend(loc="upper left", framealpha=0.5)
+ax.legend(loc="lower right", framealpha=0.5)
 
 # Add grid for readability
 # ax.grid(True, which="both", linestyle="--", linewidth=0.5)
@@ -111,7 +113,7 @@ ax.legend(loc="upper left", framealpha=0.5)
 # Display the plot with tight layout to adjust for the legend
 plt.tight_layout()
 plt.savefig(
-    "../experiments/Scenario3 - Data Skewness/topology_load_high.png",
+    "../experiments/Scenario7 - Scalability/4_workers/Scenario3/topology_load_high_pkg.png",
     format="png",
     dpi=300,
     bbox_inches="tight",
