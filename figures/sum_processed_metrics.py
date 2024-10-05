@@ -30,54 +30,36 @@ def compute_totals(log_files_dir, selected_logs):
     return total_processed, total_overdue, total_expired
 
 
-dir_two_workers = "../experiments/Scenario5 - Varying Spike/log_topology1_high_spike/"
+dir_hashing = "../experiments/Scenario5 - Varrying Spike/log_topology1_high_spike/"
 
-dir_one_worker = (
-    "../experiments/Scenario7 - Scalability/one_worker/Scenario5/topology1/"
+dir_potc = (
+    "../experiments/Scenario6 - Partition Strategies/potc/Scenario5/topology1_high/"
 )
-dir_four_workers = (
-    "../experiments/Scenario7 - Scalability/four_workers/Scenario5/topology1/"
+dir_pkg = (
+    "../experiments/Scenario6 - Partition Strategies/pkg/Scenario5/topology1_high/"
 )
-dir_six_workers = (
-    "../experiments/Scenario7 - Scalability/six_workers/Scenario5/topology1/"
-)
+
 
 # Log files for 2 workers and 4 workers scenarios (specific log files)
-log_files_1_worker = ["log_node1.log"]
-log_files_2_workers = ["log_node1.log", "log_node2.log"]
-log_files_4_workers = [
-    "log_node1.log",
-    "log_node2.log",
-    "log_node3.log",
-    "log_node4.log",
-]
-log_files_6_workers = [
-    "log_node1.log",
-    "log_node2.log",
-    "log_node3.log",
-    "log_node4.log",
-    "log_node5.log",
-    "log_node6.log",
-]
+log_files_hashing = ["log_node1.log", "log_node2.log"]
+log_files_potc = ["log_node1.log", "log_node2.log"]
+log_files_pkg = ["log_node1.log", "log_node2.log"]
 
-# Compute totals for 2 workers
-processed_1, overdue_1, expired_1 = compute_totals(dir_one_worker, log_files_1_worker)
 
-# Compute totals for 2 workers
-processed_2, overdue_2, expired_2 = compute_totals(dir_two_workers, log_files_2_workers)
+# Compute totals for hashing
+processed_hashing, overdue_hashing, expired_hashing = compute_totals(dir_hashing, log_files_hashing)
 
-# Compute totals for 4 workers
-processed_4, overdue_4, expired_4 = compute_totals(
-    dir_four_workers, log_files_4_workers
-)
-# Compute totals for 2 workers
-processed_6, overdue_6, expired_6 = compute_totals(dir_six_workers, log_files_6_workers)
+# Compute totals for potc
+processed_potc, overdue_potc, expired_potc = compute_totals(dir_potc, log_files_potc)
+
+# Compute totals for pkg
+processed_pkg, overdue_pkg, expired_pkg = compute_totals(dir_pkg, log_files_pkg)
 
 # Data for plotting
-labels = ["1 Worker", "2 Workers", "4 Workers", "6 Workers"]
-processed_keys = [processed_1, processed_2, processed_4, processed_6]
-overdue_keys = [overdue_1, overdue_2, overdue_4, overdue_6]
-expired_keys = [expired_1, expired_2, expired_4, expired_6]
+labels = ["Hashing", "PoTC", "PKG"]
+processed_keys = [processed_hashing, processed_potc, processed_pkg]
+overdue_keys = [overdue_hashing, overdue_potc, overdue_pkg]
+expired_keys = [expired_hashing, expired_potc, expired_pkg]
 
 # Plotting
 x = np.arange(len(labels))  # the label locations
@@ -86,21 +68,14 @@ bar_width = 0.2  # width of the bars
 fig, ax = plt.subplots(figsize=(10, 6))
 
 # Plotting the bars
-p1 = ax.bar(
-    x - bar_width, processed_keys, bar_width, label="Processed Keys", color="#1f77b4"
-)
+p1 = ax.bar(x - bar_width, processed_keys, bar_width, label="Processed Keys", color="#1f77b4")
 p2 = ax.bar(x, overdue_keys, bar_width, label="Overdue Keys", color="#2ca02c")
-p3 = ax.bar(
-    x + bar_width, expired_keys, bar_width, label="Expired Keys", color="#d62728"
-)
+p3 = ax.bar(x + bar_width, expired_keys, bar_width, label="Expired Keys", color="#d62728")
 
 # Add some labels and title
-ax.set_xlabel("Number of Workers", fontsize=12)
+ax.set_xlabel("Partition Strategy", fontsize=12)
 ax.set_ylabel("Number of Keys", fontsize=12)
-ax.set_title(
-    "Comparison of Processed, Overdue, and Expired Keys for 1, 2, 4 and 6 Workers",
-    fontsize=14,
-)
+ax.set_title("Comparison of Processed, Overdue, and Expired Keys for hashing, PoTC and PKG", fontsize=14)
 ax.set_xticks(x)
 ax.set_xticklabels(labels)
 
@@ -110,7 +85,7 @@ ax.legend()
 # Display the plot
 plt.tight_layout()
 plt.savefig(
-    "../experiments/Scenario7 - Scalability/workers_comparison_high_spike.png",
+    "../experiments/Scenario6 - Partition Strategies/Scenario5 - comparison/total_key_stats.png",
     format="png",
     dpi=300,
     bbox_inches="tight",
