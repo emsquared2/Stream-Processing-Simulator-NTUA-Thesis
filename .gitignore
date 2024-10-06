@@ -167,3 +167,5 @@ input/
 
 #figures
 # figures/
+
+**.DS_STORE
