@@ -1,5 +1,13 @@
 import json
 import sys
+from operations.Operations import (
+    StatelessOperation,
+    BinaryOperation,
+    Aggregation,
+    Sorting,
+    NestedLoop,
+    Operation,
+)
 
 
 def load_config(config_file):
@@ -17,6 +25,40 @@ def load_config(config_file):
             return json.load(file)
     except (FileNotFoundError, IOError) as e:
         sys.exit(f"Error: {e}")
+
+
+def update_config(config, **kwargs):
+    """
+    Update the configuration with the provided keyword arguments.
+
+    Args:
+        config (dict): The original configuration dictionary.
+        **kwargs: Parameters to be modified in the configuration. Supports updating any attribute.
+
+    Returns:
+        dict: The updated configuration dictionary.
+    """
+
+    # Update keygen configuration if needed
+    keygen_updates = {k: v for k, v in kwargs.items() if k in config["keygen"]}
+    config["keygen"].update(keygen_updates)
+
+    # Update topology configurations
+    for stage in config["topology"]["stages"]:
+        for node in stage["nodes"]:
+            # If a specific node ID is provided, update only that node
+            if "node_id" in kwargs and node["id"] == kwargs["node_id"]:
+                # Update attributes of the node
+                for attr, value in kwargs.items():
+                    if attr in node:
+                        node[attr] = value
+            else:
+                # If no specific node ID is provided, update all nodes with relevant attributes
+                for attr, value in kwargs.items():
+                    if attr in node:
+                        node[attr] = value
+
+    return config
 
 
 def write_output(stream, output_file):
@@ -59,95 +101,16 @@ def load_steps_from_file(file_path):
     return steps_data
 
 
-def validate_config(config):
-    """
-    Validates the configuration for the key generation and distribution.
-
-    Args:
-        config (json): Json object that holds the configuration
-
-    Notes:
-        Valid json configurations are the following:
-
-        {
-            "streams": (int),
-            "steps": (int),
-            "number of keys": (int),
-            "arrival rate": (int),
-            "spike_probability": (int),
-            "spike_magnitude": (int),
-            "distribution":
-            {
-                "type": "normal | uniform",
-                "mean": (float)    # Required if type is 'normal'
-                "stddev": (float)  # Required if type is 'normal'
-            }
-        }
-
-    Raises:
-        SystemExit: If any required configuration key is missing or has an invalid value.
-
-    """
-
-    # Define required top-level keys
-    required_keys = [
-        "streams",
-        "steps",
-        "number of keys",
-        "arrival rate",
-        "spike_probability",
-        "spike_magnitude",
-        "distribution",
-    ]
-    distribution_required_keys = {
-        "normal": ["mean", "stddev"],
-        "uniform": [],
-    }
-
-    # Check for missing top-level keys
-    for key in required_keys:
-        if key not in config:
-            sys.exit(f"Missing required key: {key}")
-
-    # Check types of top-level keys
-    if not isinstance(config["streams"], int) or config["streams"] <= 0:
-        sys.exit("Invalid value for 'streams'. Must be a positive integer.")
-    if not isinstance(config["steps"], int) or config["steps"] <= 0:
-        sys.exit("Invalid value for 'steps'. Must be a positive integer.")
-    if not isinstance(config["number of keys"], int) or config["number of keys"] <= 0:
-        sys.exit("Invalid value for 'number of keys'. Must be a positive integer.")
-    if not isinstance(config["arrival rate"], int) or config["arrival rate"] <= 0:
-        sys.exit("Invalid value for 'arrival rate'. Must be a positive integer.")
-    if not isinstance(config["spike_probability"], int) or not (0 <= config["spike_probability"] <= 100):
-        sys.exit("Invalid value for 'spike_probability'. Must be an integer between 0 and 100.")
-    if not isinstance(config["spike_magnitude"], (int, float)) or not (0 <= config["spike_magnitude"]):
-        sys.exit("Invalid value for 'spike_magnitude'. Must be a number greater than 0.")
-
-
-    # Check 'distribution' dictionary
-    if not isinstance(config["distribution"], dict):
-        sys.exit("Invalid value for 'distribution'. Must be a dictionary.")
-
-    # Check 'type' in 'distribution'
-    distribution = config["distribution"]
-    if "type" not in distribution:
-        sys.exit("Missing required key in 'distribution': type")
-
-    dist_type = distribution["type"]
-    if dist_type not in distribution_required_keys:
-        sys.exit(
-            f"Invalid distribution type: {dist_type}. Must be 'uniform' or 'normal'."
-        )
-
-    # Check required keys for specific distribution types
-    required_dist_keys = distribution_required_keys[dist_type]
-    for key in required_dist_keys:
-        if key not in distribution:
-            sys.exit(f"Missing required key for '{dist_type}' distribution: {key}")
-        if not isinstance(distribution[key], (int, float)):
-            sys.exit(
-                f"Invalid value for '{key}' in '{dist_type}' distribution. Must be a number."
-            )
-
-    # If all checks pass
-    print("Config is valid.")
+def create_operation(operation_type: str) -> Operation:
+    if operation_type == "StatelessOperation":
+        return StatelessOperation()
+    elif operation_type == "BinaryOperation":
+        return BinaryOperation()
+    elif operation_type == "Aggregation":
+        return Aggregation()
+    elif operation_type == "Sorting":
+        return Sorting()
+    elif operation_type == "NestedLoop":
+        return NestedLoop()
+    else:
+        raise ValueError(f"Unknown operation type: {operation_type}")

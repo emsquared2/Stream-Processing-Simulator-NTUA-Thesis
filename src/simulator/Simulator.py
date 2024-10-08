@@ -1,9 +1,5 @@
-from typing import Optional, Dict, Any
-
-from node.Node import Node
-from partitioner.Hashing import Hashing
-from partitioner.KeyGrouping import KeyGrouping
-from partitioner.ShuffleGrouping import ShuffleGrouping
+from topology.Topology import Topology
+from utils.ConfigValidator import validate_topology
 
 
 class Simulator:
@@ -11,72 +7,41 @@ class Simulator:
     A class to simulate the distribution and processing of keys across multiple nodes.
 
     Attributes:
-    - num_nodes (int): The number of nodes in the simulation.
-    - window_size (int): The size of the time window for each node.
-    - slide (int): The sliding interval for the windows.
-    - throughput (int): The number of keys each node can process per step.
-    - nodes (list): A list of Node instances.
-    - strategy (PartitionStrategy): The partitioning strategy used for distributing keys.
-    - buffers (dict): A dictionary to buffer keys for each node before processing.
+    - topology (Topology): A class representing the simulator topology.
+    - input_partitioner (KeyPartitioner): A KeyPartitioner class that will
+                                          partition the input keys to the
+                                          first stage.
     """
 
-    def __init__(
-        self,
-        num_nodes: int,
-        strategy_name: str,
-        window_size: int,
-        slide: int,
-        throughput: int,
-        strategy_params: Optional[Dict[str, Any]] = None,
-    ):
+    def __init__(self, topology_config: dict):
         """
         Initializes a new Simulator instance with the given parameters.
 
         Args:
-        - num_nodes (int): The number of nodes in the simulation.
-        - strategy_name (str): The name of the partitioning strategy to use.
-        - window_size (int): The size of the time window for each node.
-        - slide (int): The sliding interval for the time windows.
-        - throughput (int): The number of keys each node can process per step.
-        - strategy_params (dict, optional): Additional parameters for the partitioning strategy.
+        - topology (dict): A dictionary representing the entire topology.
         """
-        self.num_nodes = num_nodes
-        self.window_size = window_size
-        self.slide = slide
-        self.throughput = throughput
 
-        # Create a list of Node instances
-        self.nodes = [Node(i, window_size, slide, throughput) for i in range(num_nodes)]
+        # Validate the topology configuration
+        validate_topology(topology_config)
 
-        # Initialize a buffer for each node to temporarily store keys
-        self.buffers = {i: [] for i in range(num_nodes)}
+        # Initialize the topology
+        self.topology = Topology(topology_config)
 
-        # Initialize the partitioning strategy based on the strategy name
-        self.strategy = self._init_strategy(strategy_name, strategy_params)
+        # Select the first node from stage 0 which is the initial partitioner
+        self.input_partitioner = self._find_stage0_partitioner()
 
-    def _init_strategy(self, strategy_name, strategy_params):
+    def _find_stage0_partitioner(self):
         """
-        Initializes the partitioning strategy based on the provided name and parameters.
-
-        Args:
-        - strategy_name (str): The name of the partitioning strategy.
-        - strategy_params (dict): Parameters for the partitioning strategy.
+        Selects the first node from the stage with id '0' which is the initial partitioner.
 
         Returns:
-        - PartitionStrategy: An instance of the specified partitioning strategy.
-
-        Raises:
-        - ValueError: If the strategy name is not recognized.
+        - Node: Returns the first node of the stage 0. In our case
+                its the initial input (key) partitioner.
         """
-        if strategy_name == "shuffle_grouping":
-            return ShuffleGrouping()
-        elif strategy_name == "hashing":
-            return Hashing()
-        elif strategy_name == "key_grouping":
-            prefix_length = strategy_params.get("prefix_length", 1)
-            return KeyGrouping(prefix_length)
-        else:
-            raise ValueError(f"Unknown strategy: {strategy_name}")
+        for stage in self.topology.stages:
+            if stage.id == 0:
+                return stage.nodes[0]
+        raise ValueError("Stage with id '0' not found in the topology.")
 
     def sim(self, steps_data):
         """
@@ -85,27 +50,13 @@ class Simulator:
         Args:
         - steps_data (list): A list of lists, where each sublist contains keys received in a step.
         """
-        for step_count, step_keys in enumerate(steps_data):
-            # Partition the keys
-            self.strategy.partition(step_keys, self.nodes, self.buffers)
 
-            # Process buffered keys and send them to the nodes
-            self.send_buffered_keys(step_count)
+        for step_count, step_keys in enumerate(steps_data):
+            self.input_partitioner.receive_and_process(step_keys, step_count)
 
         # Print the final state of all nodes
-        self.report()
-
-    def send_buffered_keys(self, step_count):
-        """
-        Sends buffered keys to their respective nodes and clears the buffers.
-
-        Args:
-        - step_count (int): The current step number in the simulation.
-        """
-        for node_id, keys in self.buffers.items():
-            keys.append("step_update")  # Add a step update marker to the keys
-            self.nodes[node_id].receive(keys, step_count)  # Send keys to the node
-            self.buffers[node_id] = []  # Clear the buffer for the next step
+        # TODO: Maybe make it a parameter like (--debug) from the main func
+        # self.report()
 
     def report(self):
         """
@@ -114,10 +65,9 @@ class Simulator:
         final_state_message = """
 ------------------------
 |                      |
-| Final state of nodes |
+|     Final State      |
 |                      |
 ------------------------
 """
         print(final_state_message)
-        for node in self.nodes:
-            print(node)  # Print the state of each node
+        print(self.topology)
