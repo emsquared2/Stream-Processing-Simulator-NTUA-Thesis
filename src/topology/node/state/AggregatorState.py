@@ -228,7 +228,7 @@ class AggregatorState(BaseState):
 
         keys_list = (
             [key for key, count in window_key_count.items() for _ in range(count)]
-            if self.operation.to_str() in {"Sorting", "NestedLoop"}
+            if self.stage_operation in {"Sorting", "NestedLoop"}
             else list(window_key_count.keys())
         )
 
