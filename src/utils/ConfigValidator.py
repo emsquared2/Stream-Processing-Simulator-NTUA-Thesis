@@ -173,18 +173,18 @@ def validate_topology(config):
                 )
 
             if node["type"] == "stateful" and (
-                "complexity_type" not in node
-                or node["complexity_type"]
+                "operation_type" not in node
+                or node["operation_type"]
                 not in [
-                    "O(1)",
-                    "O(logn)",
-                    "O(n)",
-                    "O(nlogn)",
-                    "O(n^2)",
+                    "StatelessOperation",
+                    "BinaryOperation",
+                    "Aggregation",
+                    "Sorting",
+                    "NestedLoop",
                 ]
             ):
                 sys.exit(
-                    f"Invalid or missing complexity_type for node {node['id']} in stage {stage['id']}."
+                    f"Invalid or missing operation_type for node {node['id']} in stage {stage['id']}."
                 )
 
             if node["type"] == "key_partitioner" and (
@@ -200,6 +200,8 @@ def validate_topology(config):
                     "shuffle_grouping",
                     "hashing",
                     "key_grouping",
+                    "potc",
+                    "pkg",
                 ]:
                     sys.exit(
                         f"Invalid or missing strategy name for node {node['id']} in stage {stage['id']}."
