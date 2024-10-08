@@ -20,7 +20,7 @@ def compute_totals(log_files_dir, selected_logs):
     for log_file in selected_logs:
         log_path = os.path.join(log_files_dir, log_file)
         if os.path.exists(log_path):
-            _, processed_keys, _, overdue_keys, expired_keys = parse_log_file(log_path)
+            _, processed_keys, _, _, overdue_keys, expired_keys = parse_log_file(log_path)
 
             # Sum the keys
             total_processed += sum(processed_keys)
@@ -30,53 +30,36 @@ def compute_totals(log_files_dir, selected_logs):
     return total_processed, total_overdue, total_expired
 
 
-dir_one_worker = "../experiments/Scenario7 - Scalability/1_worker/Scenario5/topology1/"
-dir_two_workers = (
-    "../experiments/Scenario7 - Scalability/2_workers/Scenario5/topology1/"
-)
-dir_four_workers = (
-    "../experiments/Scenario7 - Scalability/4_workers/Scenario5/topology1/"
-)
-dir_six_workers = (
-    "../experiments/Scenario7 - Scalability/6_workers/Scenario5/topology1/"
-)
+dir_hashing = "../experiments/Scenario5 - Varying Spike/log_topology2_high_spike/"
+dir_potc = "../experiments/Scenario6 - Partition Strategies/potc/Scenario5/topology2_high/"
+dir_pkg = "../experiments/Scenario6 - Partition Strategies/pkg/Scenario5/topology2_high/"
 
 # Log files for 2 workers and 4 workers scenarios (specific log files)
-log_files_1_worker = ["log_node1.log"]
-log_files_2_workers = ["log_node1.log", "log_node2.log"]
-log_files_4_workers = [
-    "log_node1.log",
-    "log_node2.log",
-    "log_node3.log",
-    "log_node4.log",
-]
-log_files_6_workers = [
-    "log_node1.log",
-    "log_node2.log",
-    "log_node3.log",
-    "log_node4.log",
-    "log_node5.log",
-    "log_node6.log",
-]
+log_files_hashing = ["log_node7.log", "log_node8.log", "log_node9.log"]
+log_files_potc = ["log_node7.log", "log_node8.log", "log_node9.log"]
+log_files_pkg = ["log_node7.log", "log_node8.log", "log_node9.log"]
+# log_files_pkg_aggr = ["log_node7_aggr.log"]
 
 # Compute totals for 2 workers
-processed_1, overdue_1, expired_1 = compute_totals(dir_one_worker, log_files_1_worker)
+processed_hashing, overdue_hashing, expired_hashing = compute_totals(dir_hashing, log_files_hashing)
 
 # Compute totals for 2 workers
-processed_2, overdue_2, expired_2 = compute_totals(dir_two_workers, log_files_2_workers)
+processed_potc, overdue_potc, expired_potc = compute_totals(dir_potc, log_files_potc)
 
 # Compute totals for 4 workers
-processed_4, overdue_4, expired_4 = compute_totals(
-    dir_four_workers, log_files_4_workers
-)
-# Compute totals for 2 workers
-processed_6, overdue_6, expired_6 = compute_totals(dir_six_workers, log_files_6_workers)
+processed_pkg, overdue_pkg, expired_pkg = compute_totals(dir_pkg, log_files_pkg)
+
+# processed_pkg_aggr, overdue_pkg_aggr, expired_pkg_aggr = compute_totals(dir_pkg, log_files_pkg_aggr)
 
 # Data for plotting
-labels = ["1 Worker", "2 Workers", "4 Workers", "6 Workers"]
-processed_keys = [processed_1, processed_2, processed_4, processed_6]
-overdue_keys = [overdue_1, overdue_2, overdue_4, overdue_6]
-expired_keys = [expired_1, expired_2, expired_4, expired_6]
+# labels = ["Hashing", "PoTC", "PKG", "PKG Aggregator"]
+labels = ["Hashing", "PoTC", "PKG"]
+# processed_keys = [processed_hashing, processed_potc, processed_pkg, processed_pkg_aggr]
+# overdue_keys = [overdue_hashing, overdue_potc, overdue_pkg, overdue_pkg_aggr]
+# expired_keys = [expired_hashing, expired_potc, expired_pkg, expired_pkg_aggr]
+processed_keys = [processed_hashing, processed_potc, processed_pkg]
+overdue_keys = [overdue_hashing, overdue_potc, overdue_pkg]
+expired_keys = [expired_hashing, expired_potc, expired_pkg]
 
 # Plotting
 x = np.arange(len(labels))  # the label locations
@@ -94,12 +77,9 @@ p3 = ax.bar(
 )
 
 # Add some labels and title
-ax.set_xlabel("Number of Workers", fontsize=12)
+ax.set_xlabel("Partition Strategies", fontsize=12)
 ax.set_ylabel("Number of Keys", fontsize=12)
-ax.set_title(
-    "Comparison of Processed, Overdue, and Expired Keys for 1, 2, 4 and 6 Workers",
-    fontsize=14,
-)
+ax.set_title("Comparison of Processed, Overdue, and Expired Keys for hashing, potc, pkg strategies", fontsize=14)
 ax.set_xticks(x)
 ax.set_xticklabels(labels)
 
@@ -109,7 +89,7 @@ ax.legend()
 # Display the plot
 plt.tight_layout()
 plt.savefig(
-    "../experiments/Scenario7 - Scalability/workers_comparison_scenario5.png",
+    "../experiments/Scenario6 - Partition Strategies/Scenario5 - comparison/key_stats_stage2_top2.png",
     format="png",
     dpi=300,
     bbox_inches="tight",
