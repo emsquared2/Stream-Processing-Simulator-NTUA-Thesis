@@ -26,18 +26,16 @@ def collect_load_data_from_logs(log_folder, node):
 
 
 # Provide the folder path containing log files
-log_folder = (
-    "../experiments/Scenario7 - Scalability/4_workers/Scenario3/topology1_high_pkg"
-)
+log_folder = "../experiments/topology2/Scenario5/6workers/log_topology2"
 
 # Provide the list of nodes to read logs for
 # nodes = ["node1", "node2", "node1_aggr", "node4"]
 # nodes = ["node1", "node2", "node5"]
 # nodes = ["node1", "node2"]
 
-# nodes = ["node1", "node2", "node3", "node4", "node9"]
-nodes = ["node1", "node2", "node3", "node4"]
-
+nodes = ["node7", "node8", "node9"]
+# nodes = ["node7", "node8", "node9", "node10"]
+# nodes = ["node7", "node8", "node9", "node10", "node11", "node12"]
 
 # Create a list of colors to pick from
 color_list = ["blue", "green", "red", "#b7950b", "#ff7f0e", "magenta", "cyan"]
@@ -90,7 +88,7 @@ for idx, node in enumerate(nodes):
         steps,
         smoothed_avg,
         label=f"Load Trend: {node}",
-        marker=markers[idx % len(markers)],
+        # marker=markers[idx % len(markers)],
         color=color_list[idx % len(color_list)],
         linewidth=3,
     )
@@ -98,7 +96,7 @@ for idx, node in enumerate(nodes):
 # Add labels and title
 ax.set_xlabel("Steps")
 ax.set_ylabel("Node Load (%)")
-ax.set_title("Load Trends for Stage 1 Nodes")
+ax.set_title("Load Trends for Stage 2 Nodes")
 
 # Set x-axis limits to start from 0
 ax.set_xlim(left=0)
@@ -113,7 +111,7 @@ ax.legend(loc="lower right", framealpha=0.5)
 # Display the plot with tight layout to adjust for the legend
 plt.tight_layout()
 plt.savefig(
-    "../experiments/Scenario7 - Scalability/4_workers/Scenario3/topology_load_high_pkg.png",
+    "../experiments/topology2/Scenario5/topology2_6_load.png",
     format="png",
     dpi=300,
     bbox_inches="tight",

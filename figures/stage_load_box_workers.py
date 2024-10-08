@@ -13,12 +13,13 @@ from utils.log_parser import parse_log_file
 def add_median_labels(ax, data):
     medians = [np.median(d) for d in data]
     for i, median in enumerate(medians):
+        # Adjust x and y position to place it next to the box
         ax.text(
-            i + 1,
-            median + 1,
+            i + 1.25,
+            median,
             f"{median:.2f}",
             horizontalalignment="center",
-            verticalalignment="bottom",
+            verticalalignment="center",
             fontsize=12,
             fontweight="bold",
         )
@@ -26,47 +27,47 @@ def add_median_labels(ax, data):
 
 # Three Workers - Stage 2 (dummy data for demo purposes)
 _, _, _, node7_load_3, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/3workers/log_topology2/log_node7.log"
+    "../experiments/topology2/Scenario1/3workers/log_topology2/log_node7.log"
 )
 _, _, _, node8_load_3, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/3workers/log_topology2/log_node8.log"
+    "../experiments/topology2/Scenario1/3workers/log_topology2/log_node8.log"
 )
 _, _, _, node9_load_3, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/3workers/log_topology2/log_node9.log"
+    "../experiments/topology2/Scenario1/3workers/log_topology2/log_node9.log"
 )
 
 # Four Workers - Stage 2
 _, _, _, node7_load_4, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/4workers/log_topology2/log_node7.log"
+    "../experiments/topology2/Scenario1/4workers/log_topology2/log_node7.log"
 )
 _, _, _, node8_load_4, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/4workers/log_topology2/log_node8.log"
+    "../experiments/topology2/Scenario1/4workers/log_topology2/log_node8.log"
 )
 _, _, _, node9_load_4, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/4workers/log_topology2/log_node9.log"
+    "../experiments/topology2/Scenario1/4workers/log_topology2/log_node9.log"
 )
 _, _, _, node10_load_4, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/4workers/log_topology2/log_node10.log"
+    "../experiments/topology2/Scenario1/4workers/log_topology2/log_node10.log"
 )
 
 # Six Workers - Stage 2
 _, _, _, node7_load_6, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/6workers/log_topology2/log_node7.log"
+    "../experiments/topology2/Scenario1/6workers/log_topology2/log_node7.log"
 )
 _, _, _, node8_load_6, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/6workers/log_topology2/log_node8.log"
+    "../experiments/topology2/Scenario1/6workers/log_topology2/log_node8.log"
 )
 _, _, _, node9_load_6, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/6workers/log_topology2/log_node9.log"
+    "../experiments/topology2/Scenario1/6workers/log_topology2/log_node9.log"
 )
 _, _, _, node10_load_6, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/6workers/log_topology2/log_node10.log"
+    "../experiments/topology2/Scenario1/6workers/log_topology2/log_node10.log"
 )
 _, _, _, node11_load_6, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/6workers/log_topology2/log_node11.log"
+    "../experiments/topology2/Scenario1/6workers/log_topology2/log_node11.log"
 )
 _, _, _, node12_load_6, _, _ = parse_log_file(
-    "../experiments/topology2/Scenario2/6workers/log_topology2/log_node12.log"
+    "../experiments/topology2/Scenario1/6workers/log_topology2/log_node12.log"
 )
 
 
@@ -160,7 +161,7 @@ add_median_labels(ax1, data_avg)
 # Adjust layout and save avg load plot
 plt.tight_layout()
 plt.savefig(
-    "../experiments/topology2/Scenario2/worker_load_comparison_avg.png",
+    "../experiments/topology2/Scenario1/worker_load_comparison_avg.png",
     format="png",
     dpi=300,
     bbox_inches="tight",
@@ -184,7 +185,7 @@ add_median_labels(ax2, data_max)
 # Adjust layout and save max load plot
 plt.tight_layout()
 plt.savefig(
-    "../experiments/topology2/Scenario2/worker_load_comparison_max.png",
+    "../experiments/topology2/Scenario1/worker_load_comparison_max.png",
     format="png",
     dpi=300,
     bbox_inches="tight",

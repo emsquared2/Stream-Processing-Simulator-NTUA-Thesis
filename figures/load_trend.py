@@ -10,7 +10,7 @@ from scipy.ndimage import gaussian_filter1d
 
 
 steps, _, _, node_loads, _, _ = parse_log_file(
-    "../experiments/Scenario7 - Scalability/four_workers/Scenario1/topology1/log_node1.log"
+    "../experiments/topology2/Scenario1/6workers/log_topology2/log_node7.log"
 )
 
 plt.style.use("classic")
@@ -58,7 +58,7 @@ ax.legend(loc="lower right")
 # Display the plot
 plt.tight_layout()
 plt.savefig(
-    "../experiments/Scenario7 - Scalability/four_workers/Scenario1/load_node1.png",
+    "../experiments/topology2/Scenario1/load_node7_6.png",
     format="png",
     dpi=300,
     bbox_inches="tight",
