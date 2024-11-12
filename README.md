@@ -200,5 +200,5 @@ For any questions or inquiries, please contact:
 | Name                  | Email                                               | GitHub                                         |
 |-----------------------|-----------------------------------------------------|------------------------------------------------|
 | **Alexandros Ionitsa**| [alexandros.ionitsa@gmail.com](mailto:alexandros.ionitsa@gmail.com) | [alexion](https://github.com/alexion)          |
-| **Emmanouil Emmanouilidis**  | [manosemmanouilidis05@gmail.com](mailto:manosemmanouilidis05@gmail.com) | [emsquared2](https://github.com/emsquared2)    |
+| **Emmanouil Emmanouilidis**  | [manos.emmanouilidis05@gmail.com](mailto:manos.emmanouilidis05@gmail.com) | [emsquared2](https://github.com/emsquared2)    |
 | **Nikolaos Chalvantzis**        | [nchalv@cslab.ece.ntua.gr](mailto:nchalv@cslab.ece.ntua.gr) | [nchalv](https://github.com/nchalv)  |
