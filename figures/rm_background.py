@@ -26,12 +26,22 @@ def remove_white_background(image_path, output_path, threshold=200):
 
 
 # Usage
-# remove_white_background(
-#     "../experiments/Scenario6 - Partition Strategies/Scenario1 - comparison/worker_load_comparison_top2_stage2.png",
-#     "../experiments/Scenario6 - Partition Strategies/Scenario1 - comparison/worker_load_comparison_top2_stage2_no_background.png",
-# )
+remove_white_background(
+    "../experiments/Scenario6 - Partition Strategies/Scenario5 - comparison/key_stats_stage1_top2.png",
+    "../experiments/Scenario6 - Partition Strategies/Scenario5 - comparison/key_stats_stage1_top2_no_background.png",
+)
 
 remove_white_background(
-    "../experiments/topology2/Scenario1/worker_load_comparison_max.png",
-    "../experiments/topology2/Scenario1/worker_load_comparison_max_no_background.png",
+    "../experiments/Scenario6 - Partition Strategies/Scenario5 - comparison/stage_cycles_comparison.png",
+    "../experiments/Scenario6 - Partition Strategies/Scenario5 - comparison/stage_cycles_comparison_no_background.png",
 )
+
+# remove_white_background(
+#     "../experiments/topology2/Scenario1/worker_load_comparison_max.png",
+#     "../experiments/topology2/Scenario1/worker_load_comparison_max_no_background.png",
+# )
+
+# remove_white_background(
+#     "../experiments/topology2/Scenario1/worker_load_comparison_max.png",
+#     "../experiments/topology2/Scenario1/worker_load_comparison_max_no_background.png",
+# )
